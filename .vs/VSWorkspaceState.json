@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\public",
+    "\\src",
+    "\\src\\assets",
+    "\\src\\assets\\styles",
+    "\\src\\components",
+    "\\src\\layouts",
+    "\\src\\router",
+    "\\src\\views",
+    "\\src\\views\\auth"
+  ],
+  "SelectedNode": "\\src\\assets\\styles",
+  "PreviewInSolutionExplorer": false
+}
