@@ -1428,6 +1428,34 @@ select {
     background-color: rgba(185, 28, 28, var(--tw-bg-opacity));
 }
 
+/* bg-green-500 */
+.bg-green-500 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(34, 197, 94, var(--tw-bg-opacity));
+    /* Helles Grün */
+}
+
+/* bg-blue-500 */
+.bg-blue-500 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(59, 130, 246, var(--tw-bg-opacity));
+    /* Blau */
+}
+
+/* bg-green-200 */
+.bg-green-200 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(187, 247, 208, var(--tw-bg-opacity));
+    /* Helles Grün (schwächer) */
+}
+
+/* bg-blue-200 */
+.bg-blue-200 {
+    --tw-bg-opacity: 1;
+    background-color: rgba(191, 219, 254, var(--tw-bg-opacity));
+    /* Helles Blau (schwächer) */
+}
+
 .bg-gray-100 {
     --tw-bg-opacity: 1;
     background-color: rgba(244, 244, 245, var(--tw-bg-opacity));

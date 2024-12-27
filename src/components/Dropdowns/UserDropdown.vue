@@ -26,24 +26,24 @@
         block: dropdownPopoverShow,
       }"
     >
-       <router-link
+    <router-link
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
         to="/kunde/profile"
         >
         Profile
     </router-link>
-      <a
-        href="javascript:void(0);"
+      <router-link
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-      >
-        Action
-      </a>
-      <a
-        href="javascript:void(0);"
+        to="/kunde/events"
+        >
+        Buy Ticket
+    </router-link>
+      <router-link
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-      >
-        Something else here
-      </a>
+        to="/kunde/tickets"
+        >
+        Purchased Tickets
+    </router-link>
       <div class="h-0 my-2 border border-solid border-blueGray-100" />
       <router-link
         class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"

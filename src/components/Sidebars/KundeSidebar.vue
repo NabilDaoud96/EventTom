@@ -113,7 +113,7 @@
                 ]"
               >
                 <i
-                  class="fas fa-table mr-2 text-sm"
+                  class="fas fa-ticket-alt mr-2 text-sm"
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
                 My Tickets
@@ -138,7 +138,7 @@
                 ]"
               >
                 <i
-                  class="fas fa-table mr-2 text-sm"
+                  class="fas fa-calendar-alt mr-2 text-sm"
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
                 Events

@@ -117,7 +117,7 @@ export default {
           return {
             id: item.id,
             name: item.title.split(" ").slice(0, 8).join(" "),
-            date: eventDate.toISOString().split("T")[0], // Format as YYYY-MM-DD
+            date : eventDate.toLocaleDateString('en-GB').replace(/\//g, '-'),
             location: cities[Math.floor(Math.random() * cities.length)], // Random city from the list
             price: (Math.random() * 100).toFixed(2),
             daysLeft: daysLeft, // How many days until the event

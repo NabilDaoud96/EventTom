@@ -2,9 +2,20 @@
   <div class="flex items-center justify-center min-h-screen">
     <div class="w-full max-w-lg px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
-        <div class="rounded-t bg-white mb-0 px-6 py-6">
+      
+      <div class="rounded-t bg-white mb-0 px-6 py-6">
+        <div class="flex justify-center -mt-10 mb-3">
+          <div class="w-20 h-20 bg-blueGray-200 inline-flex items-center justify-center rounded-full shadow-lg">
+            <img
+              alt="Profile Picture"
+              class="w-full h-full rounded-full align-middle"
+              :src="profilePicture"
+            />
+          </div>
+        </div>
+
           <div class="text-center">
-            <h6 class="text-blueGray-700 text-xl font-bold">My account</h6>
+            <h6 class="text-blueGray-700 text-xl font-bold">My Profile</h6>
           </div>
         </div>
         <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
@@ -95,6 +106,8 @@
 </template>
 
 <script>
+import image from "@/assets/img/team-1-800x800.jpg"; // Default Profile Image
+
 export default {
   data() {
     return {
@@ -104,6 +117,7 @@ export default {
         email: 'jesse@example.com',
         password: '*********',
       },
+      profilePicture: image, // Default profile image
     };
   },
 };
@@ -113,4 +127,13 @@ export default {
 .min-h-screen {
   min-height: 100vh;
 }
+
+.w-16 {
+  width: 4rem; /* Avatar width */
+}
+
+.h-16 {
+  height: 4rem; /* Avatar height */
+  }
+
 </style>
