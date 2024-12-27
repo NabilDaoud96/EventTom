@@ -171,6 +171,20 @@
             </router-link>
           </li>
         </ul>
+
+        <!-- Divider -->
+        <hr class="my-4 md:min-w-full" />
+        <!-- Logout -->
+        <ul class="md:flex-col md:min-w-full flex flex-col list-none">
+          <li class="items-center">
+            <router-link to="/auth/login">
+              <a class="text-xs uppercase py-3 font-bold block text-red-500 hover:text-red-600">
+                <i class="fas fa-sign-out-alt mr-2 text-sm"></i>
+                Logout
+              </a>
+            </router-link>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
