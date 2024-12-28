@@ -40,12 +40,12 @@
                             <button class="bg-gray-300 text-blueGray-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mx-2"
                                     :disabled="currentUpcomingPage === totalUpcomingPages"
                                     @click="nextUpcomingPage">
-                                Nächste Seite
+                                Nï¿½chste Seite
                             </button>
                         </div>
                     </div>
                     <div v-else class="text-center text-blueGray-600 text-lg">
-                        Keine Veranstaltungen verfügbar.
+                        Keine Veranstaltungen verfï¿½gbar.
                     </div>
                 </div>
             </div>
@@ -89,12 +89,12 @@
                             <button class="bg-gray-300 text-blueGray-700 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mx-2"
                                     :disabled="currentTicketsPage === totalTicketsPages"
                                     @click="nextTicketsPage">
-                                Nächste Seite
+                                NÃ¤chste Seite
                             </button>
                         </div>
                     </div>
                     <div v-else class="text-center text-blueGray-600 text-lg">
-                        Keine Tickets verfügbar.
+                        Keine Tickets verfÃ¼gbar.
                     </div>
                 </div>
             </div>
@@ -102,11 +102,11 @@
 
         <!-- Buttons -->
         <div class="flex justify-between w-full max-w-6xl mt-6 px-4">
-            <router-link to="/voucher"
+            <router-link to="/kunde/redeem-voucher"
                          class="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-xs px-6 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150">
-                Gutschein einlösen
+                Gutschein einlÃ¶sen
             </router-link>
-            <router-link to="/tickets"
+            <router-link to="/kunde/events"
                          class="bg-blue-500 text-white active:bg-blue-600 font-bold uppercase text-xs px-6 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150">
                 Tickets kaufen
             </router-link>
