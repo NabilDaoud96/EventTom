@@ -5,14 +5,14 @@
         <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
           <div class="rounded-t mb-0 px-6 py-6">
             <div class="text-center mb-3">
-              <h6 class="text-blueGray-500 text-sm font-bold">Redeem Your Voucher</h6>
+              <h6 class="text-blueGray-500 text-sm font-bold">Gutschein einlösen</h6>
             </div>
           </div>
           <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
             <form>
               <div class="relative w-full mb-3">
                 <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2" for="voucher-code">
-                  Voucher Code
+                  Gutscheincode
                 </label>
                 <input
                   id="voucher-code"
@@ -26,7 +26,7 @@
                   class="bg-green-500 text-white font-bold px-6 py-3 rounded shadow hover:shadow-md transition-all duration-150"
                   type="button"
                 >
-                  Redeem Voucher
+                  Einlösen
                 </button>
               </div>
             </form>
