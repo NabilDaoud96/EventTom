@@ -1,33 +1,80 @@
 import { createRouter, createWebHistory } from "vue-router";
-import UserLogin from "../views/UserLogin.vue"; // Import der Login-Seite
+
+// Layouts
+import Kunde from "../layouts/Kunde.vue";
+import Auth from "../layouts/Auth.vue";
+
+// Kunde Views
+import Dashboard from "../views/kunde/Dashboard.vue";
+import Tickets from "../views/kunde/Tickets.vue";
+import Profile from "../views/kunde/Profile.vue";
+import Events from "../views/kunde/Events.vue";
+import BuyTickets from "../views/kunde/BuyTickets.vue";
+import RedeemVoucher from "../views/kunde/RedeemVoucher.vue";
+
+// Auth Views
+import Login from "../views/auth/Login.vue";
+import Register from "../views/auth/Register.vue";
+
+// // routes
 
 const routes = [
     {
-        path: "/login",
-        name: "UserLogin",
-        component: UserLogin,
+        path: "/kunde",
+        redirect: "/kunde/dashboard",
+        component: Kunde,
+        children: [
+        {
+            path: "/kunde/dashboard",
+            component: Dashboard,
+        },
+        {
+            path: "/kunde/tickets",
+            component: Tickets,
+        },
+        {
+            path: "/kunde/events",
+            component: Events,
+        },
+        {
+            path: "/kunde/profile",
+            component: Profile,
+        },
+        {
+            path: "/kunde/buy_tickets",
+            component: BuyTickets,
+        },
+        {
+            path: "/kunde/redeem-voucher",
+            component: RedeemVoucher,
+        }
+        ],
     },
     {
-        path: "/dashboard",
-        name: "Dashboard",
-        component: Dashboard, // Dashboard Route
+        path: "/",
+        redirect: "/auth/login",
+        component: Auth,
+        children: [
+            {
+                path: "/auth/login",
+                component: Login,
+            },
+            {
+                path: "/auth/register",
+                component: Register,
+            },
+        ],
     },
     {
-        path: "/redeem-voucher",
-        name: "RedeemVoucher",
-        component: RedeemVoucher, // Gutschein-Seite
+        path: "/:pathMatch(.*)*", redirect: "/"
+        
     },
-    {
-        path: "/buy-tickets",
-        name: "BuyTickets",
-        component: BuyTickets, // Ticketkauf-Seite
-    },
-    // Weitere Routen...
+    
 ];
 
 const router = createRouter({
-  history: createWebHistory(), // Nutzt das moderne Browser-History-API
-  routes,
+    history: createWebHistory(),
+    routes,
 });
 
 export default router;
