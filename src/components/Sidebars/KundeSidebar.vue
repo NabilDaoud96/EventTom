@@ -96,10 +96,10 @@
             </router-link>
           </li>
 
-          <!-- My Tickets -->
-          <li class="items-center">
+          <!-- Buy Ticket -->
+           <li class="items-center">
             <router-link
-              to="/kunde/tickets"
+              to="/kunde/buy_ticket"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -113,10 +113,10 @@
                 ]"
               >
                 <i
-                  class="fas fa-ticket-alt mr-2 text-sm"
+                  class="fas fa-shopping-cart mr-2 text-sm"
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                My Tickets
+                Buy Ticket
               </a>
             </router-link>
           </li>
@@ -141,7 +141,32 @@
                   class="fas fa-calendar-alt mr-2 text-sm"
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                Events
+                All Events
+              </a>
+            </router-link>
+          </li>
+
+          <!-- My Tickets -->
+          <li class="items-center">
+            <router-link
+              to="/kunde/tickets"
+              v-slot="{ href, navigate, isActive }"
+            >
+              <a
+                :href="href"
+                @click="navigate"
+                class="text-xs uppercase py-3 font-bold block"
+                :class="[
+                  isActive
+                    ? 'text-emerald-500 hover:text-emerald-600'
+                    : 'text-blueGray-700 hover:text-blueGray-500',
+                ]"
+              >
+                <i
+                  class="fas fa-ticket-alt mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
+                ></i>
+                My Tickets
               </a>
             </router-link>
           </li>

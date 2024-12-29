@@ -9,11 +9,11 @@
           <h2 class="text-xl font-bold text-gray-700">🎫 Booked Events</h2>
           <p class="text-sm text-gray-500 mt-2">You have <br> {{ events.length }} events booked.</p>
           <router-link
-              to="/kunde/events"
+              to="/kunde/tickets"
             >
             <div class="mt-4">
             <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              Show All Events
+              Show my tickets
             </button>
           </div>
           </router-link>
@@ -27,11 +27,15 @@
           <p class="text-sm text-gray-500 mt-2">
             Next event: {{ nextEvent.name }} in {{ nextEvent.location }} on {{ nextEvent.date }}.
           </p>
-          <div class="mt-4">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              View Event Details
-            </button>
-          </div>
+          <router-link
+              to="/kunde/Events"
+            >
+            <div class="mt-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                View all Events
+                </button>
+            </div>
+          </router-link>    
         </div>
       </div>
 
@@ -40,11 +44,15 @@
         <div class="text-center">
           <h2 class="text-xl font-bold text-gray-700">🎁 Vouchers</h2>
           <p class="text-sm text-gray-500 mt-2">2 Voucher available <br>Total Voucher Value: {{ totalVoucherValue }}€</p>
-          <div class="mt-4">
-            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-              Use Vouchers
-            </button>
+          <router-link
+              to="/kunde/buy_ticket"
+            >
+            <div class="mt-4">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                Use Vouchers
+                </button>
           </div>
+          </router-link>
         </div>
       </div>
       
@@ -61,7 +69,7 @@ export default {
         { id: 2, name: "Play", location: "Munich", date: "2024-02-20" },
         { id: 3, name: "Theater", location: "Hamburg", date: "2024-03-10" },
       ], // Example list of events
-      vouchers: [{ value: 25 }, { value: 25 }], // Example vouchers
+      vouchers: [{ value: 10 }, { value: 10 }], // Example vouchers
     };
   },
   computed: {

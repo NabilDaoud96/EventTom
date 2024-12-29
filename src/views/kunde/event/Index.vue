@@ -10,6 +10,7 @@
           <th class="px-4 py-2 border text-left">Datum</th>
           <th class="px-4 py-2 border text-left">Ort</th>
           <th class="px-4 py-2 border text-left">Preis</th>
+          <th class="px-4 py-2 border text-left">Verfügbare Tickets</th>
           <th class="px-4 py-2 border text-left">Aktion</th>
         </tr>
       </thead>
@@ -19,24 +20,18 @@
           <td class="px-4 py-2 border">{{ event.date }}</td>
           <td class="px-4 py-2 border">{{ event.location }}</td>
           <td class="px-4 py-2 border">{{ event.price }}€</td>
-          <td class="px-4 py-2 border text-center">
-            <!-- Action buttons in the same line -->
-            <div class="flex justify-center space-x-4">
-                <button 
-                @click="buyTicket(event)" 
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
-                >
-                <i class="fa fa-shopping-cart"></i> <!-- Shopping cart icon -->
-                </button>
-                <button 
-                @click="useVoucher(event)" 
-                class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none"
-                >
-                <i class="fa fa-gift"></i> <!-- Gift icon for voucher -->
-                </button>
-            </div>
+          <td class="px-4 py-2 border">
+            {{ event.availableTickets === 0 ? "Ausverkauft" : event.availableTickets }}
           </td>
-
+          <td class="px-6 py-2 border text-center">
+            <!-- Show Event Link -->
+            <router-link
+              to="/Kunde/event_show"
+              class="px-1 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 focus:outline-none flex justify-center items-center"
+            >
+              <i class="fa fa-eye" ></i>
+            </router-link>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -120,44 +115,6 @@ export default {
     goToPage(page) {
       this.currentPage = page;
     },
-    // Sort Table Based on Column and Order
-    sortTable(column) {
-      // Toggle the sorting order if the same column is clicked again
-      if (this.sortBy === column) {
-        this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-      } else {
-        this.sortBy = column;
-        this.sortOrder = 'asc'; // Default to ascending when changing columns
-      }
-
-      this.events.sort((a, b) => {
-        let valueA, valueB;
-        if (column === 'date') {
-          valueA = new Date(a.date);
-          valueB = new Date(b.date);
-        } else if (column === 'price') {
-          valueA = parseFloat(a.price);
-          valueB = parseFloat(b.price);
-        } else {
-          valueA = a[column].toLowerCase();
-          valueB = b[column].toLowerCase();
-        }
-
-        if (this.sortOrder === 'asc') {
-          return valueA < valueB ? -1 : valueA > valueB ? 1 : 0;
-        } else {
-          return valueA > valueB ? -1 : valueA < valueB ? 1 : 0;
-        }
-      });
-    },
-    // Placeholder method for buying a ticket
-    buyTicket(event) {
-      alert(`Buying ticket for event: ${event.name}`);
-    },
-    // Placeholder method for using a voucher
-    useVoucher(event) {
-      alert(`Using voucher for event: ${event.name}`);
-    },
   },
   created() {
     // Fetch Events from the API
@@ -170,12 +127,14 @@ export default {
         this.events = response.data.map((item) => {
           const eventDate = new Date();
           eventDate.setDate(today.getDate() + Math.floor(Math.random() * 30)); // Random days ahead
+          const availableTickets = Math.floor(Math.random() * 20); // Random number of tickets
           return {
             id: item.id,
             name: item.title.split(" ").slice(0, 5).join(" "),
             date : eventDate.toLocaleDateString('en-GB').replace(/\//g, '-'),
             location: cities[Math.floor(Math.random() * cities.length)], // Random city from the list
             price: (Math.random() * 100).toFixed(2),
+            availableTickets,
           };
         });
         // Sort events by default column (date) in ascending order
@@ -187,7 +146,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 table {

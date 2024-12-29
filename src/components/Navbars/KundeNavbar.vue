@@ -41,6 +41,9 @@ export default {
       } else if (this.$route.path === '/kunde/events') {
         return 'Events';
       }
+      else if (this.$route.path === '/kunde/buy_ticket') {
+        return 'Buy Ticket';
+      }
       else {
         return 'Unknown Page';
       }
