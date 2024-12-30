@@ -22,36 +22,36 @@ import Register from "../views/auth/Register.vue";
 // // routes
 
 const routes = [
-    
+
     {
         path: "/kunde",
         redirect: "/kunde/dashboard",
         component: Kunde,
         children: [
-        {
-            path: "/kunde/dashboard",
-            component: Dashboard,
-        },
-        {
-            path: "/kunde/tickets",
-            component: IndexTickets,
-        },
-        {
-            path: "/kunde/events",
-            component: IndexEvents,
-        },
-        {
-            path: "/kunde/profile",
-            component: Profile,
-        },
-        {
-            path: "/kunde/buy_ticket",
-            component: BuyTicket,
-        }, 
-        {
-            path: "/kunde/event_show",
-            component: Show,
-        }, 
+            {
+                path: "/kunde/dashboard",
+                component: Dashboard,
+            },
+            {
+                path: "/kunde/tickets",
+                component: IndexTickets,
+            },
+            {
+                path: "/kunde/events",
+                component: IndexEvents,
+            },
+            {
+                path: "/kunde/profile",
+                component: Profile,
+            },
+            {
+                path: "/kunde/buy_ticket",
+                component: BuyTicket,
+            },
+            {
+                path: "/kunde/event_show",
+                component: Show,
+            },
         ],
     },
     {
@@ -71,9 +71,9 @@ const routes = [
     },
     {
         path: "/:pathMatch(.*)*", redirect: "/"
-        
+
     },
-    
+
 ];
 
 const router = createRouter({

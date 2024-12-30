@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\views",
+    "\\src\\views\\eventmanager",
+    "\\src\\views\\eventmanager\\Managerdashboard",
+    "\\src\\views\\eventmanager\\Managerevent",
+    "\\src\\views\\eventmanager\\Managerticket",
+    "\\src\\views\\kunde",
+    "\\src\\views\\kunde\\profile",
+    "\\src\\views\\kunde\\ticket"
+  ],
+  "SelectedNode": "\\src\\router\\index.js",
+  "PreviewInSolutionExplorer": false
+}
