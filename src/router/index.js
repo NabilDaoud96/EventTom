@@ -3,15 +3,24 @@ import { createRouter, createWebHistory } from "vue-router";
 
 // Layouts
 import Kunde from "../layouts/Kunde.vue";
+import EventManager from "../layouts/EventManager.vue";
 import Auth from "../layouts/Auth.vue";
 
 // Kunde Views
-import Dashboard from "../views/kunde/dashboard/Index.vue";
+import KundeDashboard from "../views/kunde/dashboard/Index.vue";
 import IndexTickets from "../views/kunde/ticket/Index.vue";
 import BuyTicket from "../views/kunde/ticket/BuyTicket.vue";
-import Profile from "../views/kunde/profile/Edit.vue";
-import IndexEvents from "../views/kunde/event/Index.vue";
-import Show from "../views/kunde/event/Show.vue";
+import KundeProfile from "../views/kunde/profile/Edit.vue";
+import IndexEventsKunde from "../views/kunde/event/Index.vue";
+import ShowEventsKunde from "../views/kunde/event/Show.vue";
+
+// EventManager Views
+import EventManagerDashboard from "../views/eventmanager/Managerdashboard/Index.vue";
+import IndexKunde from "../views/eventmanager/ManagerKunden/Index.vue";
+import IndexEventsEventManger from "../views/eventmanager/ManagerEvent/Index.vue";
+import ShowEventsEventManger from "../views/eventmanager/ManagerEvent/Show.vue";
+import EventMangerProfile from "../views/eventmanager/Profile/Profile.vue";
+import VourcherCreate from "../views/eventmanager/Vourcher/Create.vue";
 
 
 
@@ -22,7 +31,7 @@ import Register from "../views/auth/Register.vue";
 // // routes
 
 const routes = [
-
+    // Kunde Routes
     {
         path: "/kunde",
         redirect: "/kunde/dashboard",
@@ -30,7 +39,7 @@ const routes = [
         children: [
             {
                 path: "/kunde/dashboard",
-                component: Dashboard,
+                component: KundeDashboard,
             },
             {
                 path: "/kunde/tickets",
@@ -38,11 +47,11 @@ const routes = [
             },
             {
                 path: "/kunde/events",
-                component: IndexEvents,
+                component: IndexEventsKunde,
             },
             {
                 path: "/kunde/profile",
-                component: Profile,
+                component: KundeProfile,
             },
             {
                 path: "/kunde/buy_ticket",
@@ -50,10 +59,44 @@ const routes = [
             },
             {
                 path: "/kunde/event_show",
-                component: Show,
+                component: ShowEventsKunde,
             },
         ],
     },
+    // EventManger Routes
+    {
+        path: "/EventManger",
+        redirect: "/EventManger/dashboard",
+        component: EventManager,
+        children: [
+            {
+                path: "/event_manager/dashboard",
+                component: EventManagerDashboard,
+            },
+            {
+                path: "/event_manager/events",
+                component: IndexEventsEventManger,
+            },
+            {
+                path: "/event_manager/event_show",
+                component: ShowEventsEventManger,
+            },
+            {
+                path: "/event_manager/kunden",
+                component: IndexKunde,
+            },
+            {
+                path: "/event_manager/create_vourcher",
+                component: VourcherCreate,
+            },
+            {
+                path: "/event_manager/profile",
+                component: EventMangerProfile,
+            },
+            
+        ],
+    },
+    // Auth Router
     {
         path: "/",
         redirect: "/auth/login",

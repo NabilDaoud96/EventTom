@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import UserDropdown from "../Dropdowns/UserDropdowns/KundeDropdown/KundeDropdown.vue";
-import NotificationDropdown from "../Dropdowns/NotificationDropdown/KundeNotification/KundeNotificationDropdown.vue";
+import UserDropdown from "../Dropdowns/UserDropdowns/EventMangerDropdown/EventMangerDropDown.vue";
+import NotificationDropdown from "../Dropdowns/NotificationDropdown/EventManagerNotification/EventMangerNotificationDropdown.vue";
 
 export default {
   components: {
@@ -30,17 +30,18 @@ export default {
   computed: {
     // Berechnet den aktuellen Seitentitel basierend auf der Route
     currentPage() {
-      if (this.$route.path === '/kunde/dashboard') {
+      if (this.$route.path === '/event_manager/dashboard') {
         return 'Dashboard';
-      } else if (this.$route.path === '/kunde/tickets') {
-        return 'Tickets';
-      } else if (this.$route.path === '/kunde/profile') {
+      } else if (this.$route.path === '/event_manager/profile') {
         return 'Profile';
-      } else if (this.$route.path === '/kunde/events') {
-        return 'Events';
+      } else if (this.$route.path === '/event_manager/kunden') {
+        return 'Customers';
       }
-      else if (this.$route.path === '/kunde/buy_ticket') {
-        return 'Buy Ticket';
+       else if (this.$route.path === '/event_manager/create_vourcher') {
+        return 'Add Vourcher';
+      }
+       else if (this.$route.path === '/event_manager/events') {
+        return 'Events';
       }
       else {
         return 'Unknown Page';

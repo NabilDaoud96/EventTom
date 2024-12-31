@@ -74,7 +74,7 @@
           <!-- Dashboard -->
           <li class="items-center">
             <router-link
-              to="/kunde/dashboard"
+              to="/event_manager/dashboard"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -96,35 +96,10 @@
             </router-link>
           </li>
 
-          <!-- Buy Ticket -->
-           <li class="items-center">
-            <router-link
-              to="/kunde/buy_ticket"
-              v-slot="{ href, navigate, isActive }"
-            >
-              <a
-                :href="href"
-                @click="navigate"
-                class="text-xs uppercase py-3 font-bold block"
-                :class="[
-                  isActive
-                    ? 'text-emerald-500 hover:text-emerald-600'
-                    : 'text-blueGray-700 hover:text-blueGray-500',
-                ]"
-              >
-                <i
-                  class="fas fa-shopping-cart mr-2 text-sm"
-                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
-                ></i>
-                Buy Ticket
-              </a>
-            </router-link>
-          </li>
-
           <!-- Events -->
            <li class="items-center">
             <router-link
-              to="/kunde/events"
+              to="/event_manager/events"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -146,10 +121,35 @@
             </router-link>
           </li>
 
-          <!-- My Tickets -->
+          <!-- customers -->
+           <li class="items-center">
+            <router-link
+              to="/event_manager/kunden"
+              v-slot="{ href, navigate, isActive }"
+            >
+              <a
+                :href="href"
+                @click="navigate"
+                class="text-xs uppercase py-3 font-bold block"
+                :class="[
+                  isActive
+                    ? 'text-emerald-500 hover:text-emerald-600'
+                    : 'text-blueGray-700 hover:text-blueGray-500',
+                ]"
+              >
+                <i
+                  class="fas fa-user-alt mr-2 text-sm"
+                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
+                ></i>
+                All Customers
+              </a>
+            </router-link>
+          </li>
+
+          <!-- create vourcher -->
           <li class="items-center">
             <router-link
-              to="/kunde/tickets"
+              to="/event_manager/create_vourcher"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -166,7 +166,7 @@
                   class="fas fa-ticket-alt mr-2 text-sm"
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                My Tickets
+                Create Vourcher
               </a>
             </router-link>
           </li>
@@ -174,7 +174,7 @@
           <!-- Profile -->
            <li class="items-center">
             <router-link
-              to="/kunde/profile"
+              to="/event_manager/profile"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -217,7 +217,7 @@
 ); }
 
 <script>
-import NotificationDropdown from "../Dropdowns/NotificationDropdown/KundeNotification/KundeNotificationDropdown.vue";
+import NotificationDropdown from "../Dropdowns/NotificationDropdown/EventManagerNotification/EventMangerNotificationDropdown.vue";
 import UserDropdown from "../Dropdowns/UserDropdowns/KundeDropdown/KundeDropdown.vue";
 
 export default {
@@ -237,3 +237,4 @@ export default {
   },
 };
 </script>
+
