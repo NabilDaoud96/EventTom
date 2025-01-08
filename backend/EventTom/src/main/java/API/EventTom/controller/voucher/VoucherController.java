@@ -75,6 +75,7 @@ public class VoucherController {
         Voucher voucher = voucherClaimService.claimVoucher(code, userId);
         return ResponseEntity.ok(VoucherResponse.fromVoucher(voucher));
     }
+
     @GetMapping("/my-vouchers")
     public ResponseEntity<List<VoucherResponse>> getMyVouchers(@AuthenticatedUserId Long userId) {
         List<VoucherResponse> vouchers = voucherQueryService.getVouchersByCustomerId(userId);

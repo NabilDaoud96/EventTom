@@ -17,13 +17,15 @@ public class VoucherResponse {
     private BigDecimal amount;
     private LocalDateTime expirationDate;
     private VoucherType type;
+    private Long id;
 
     public static VoucherResponse fromVoucher(Voucher voucher) {
         return new VoucherResponse(
                 voucher.getCode(),
                 voucher.getAmount(),
                 voucher.getExpirationDate(),
-                voucher.getType()
+                voucher.getType(),
+                voucher.getId()
         );
     }
 }
