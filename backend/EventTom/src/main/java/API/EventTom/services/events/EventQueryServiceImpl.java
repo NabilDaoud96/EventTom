@@ -6,6 +6,10 @@ import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.Event;
 import API.EventTom.repositories.EventRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +22,13 @@ public class EventQueryServiceImpl implements IEventQueryService {
     EventRepository eventRepository;
     StandardDTOMapper standardDTOMapper;
     @Override
-    public List<EventDTO> getAllEvents() {
-        List<Event> events = eventRepository.findAll();
+    public Page<EventDTO> getAllEvents(int page, int size, String sortBy, String direction) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        return events.stream()
-                .map(standardDTOMapper::mapEventToEventDTO)
-                .collect(Collectors.toList());
+        Page<Event> eventPage = eventRepository.findAll(pageable);
+
+        return eventPage.map(standardDTOMapper::mapEventToEventDTO);
     }
 
     @Override
