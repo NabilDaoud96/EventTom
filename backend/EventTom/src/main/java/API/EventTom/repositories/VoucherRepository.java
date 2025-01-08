@@ -12,8 +12,10 @@ import java.util.Optional;
 @Repository
 public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     @Query("SELECT v FROM Voucher v WHERE v.customer.customerNumber = :customerNumber")
-    List<Voucher> findAllVouchersByCustomerNumber(@Param("customerNumber") String customerNumber);
     Optional<Voucher> findByCode(String code);
+
+    @Query("SELECT v FROM Voucher v WHERE v.customer.user.id = :userId")
+    List<Voucher> findByUserId(@Param("userId") Long userId);
 
     boolean existsByCode(String code);
 

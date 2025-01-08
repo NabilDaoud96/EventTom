@@ -16,12 +16,10 @@ import java.util.Map;
 public class WebSocketNotificationService {
     private final SimpMessagingTemplate messagingTemplate;
     private final StandardDTOMapper standardDTOMapper;
-    public void notifyEventCreated(EventDTO event) {
-        System.out.println("test1235");
 
+    public void notifyEventCreated(EventDTO event) {
         messagingTemplate.convertAndSend("/topic/events/new", event);
     }
-
 
     // hierfür müssen alle Events auf der Seite subscribed werden
     public void notifyAllTicketSale(Event event) {
@@ -30,17 +28,12 @@ public class WebSocketNotificationService {
     }
 
     public void notifyEventManagersTicketSale(Event event) {
-        Map<String, Object> notification = Map.of(
-                "eventId", event.getEventId(),
-                "soldTickets", event.getTickets(),
-                "threshold", event.getThresholdValue(),
-                "deviation", event.getAvailableTickets()
-        );
+        EventDTO eventDTO = standardDTOMapper.mapEventToEventDTO(event);
 
         for (Employee manager : event.getManagers()) {
             messagingTemplate.convertAndSend(
                     "/topic/managers/" + manager.getId() + "/events/" + event.getEventId(),
-                    notification
+                    eventDTO
             );
         }
     }

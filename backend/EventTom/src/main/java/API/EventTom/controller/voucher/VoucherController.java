@@ -1,12 +1,15 @@
 package API.EventTom.controller.voucher;
 
+import API.EventTom.DTO.VoucherDTO;
 import API.EventTom.DTO.VoucherResponse;
 import API.EventTom.DTO.request.BulkVoucherGenerationRequest;
 import API.EventTom.DTO.request.VoucherGenerationRequest;
 import API.EventTom.config.AuthenticatedUserId;
 import API.EventTom.models.Voucher;
+import API.EventTom.services.vouchers.VoucherQueryServiceImpl;
 import API.EventTom.services.vouchers.interfaces.IVoucherClaimService;
 import API.EventTom.services.vouchers.interfaces.IVoucherGenerationService;
+import API.EventTom.services.vouchers.interfaces.IVoucherQueryService;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
@@ -28,6 +31,7 @@ public class VoucherController {
     private final IVoucherGenerationService voucherGenerationService;
     private final IVoucherClaimService voucherClaimService;
     private final IVoucherUsageService voucherUsageService;
+    private final IVoucherQueryService voucherQueryService;
 
     @PostMapping
     @PreAuthorize("hasRole('EVENT_MANAGER')")
@@ -71,5 +75,9 @@ public class VoucherController {
         Voucher voucher = voucherClaimService.claimVoucher(code, userId);
         return ResponseEntity.ok(VoucherResponse.fromVoucher(voucher));
     }
-
+    @GetMapping("/my-vouchers")
+    public ResponseEntity<List<VoucherResponse>> getMyVouchers(@AuthenticatedUserId Long userId) {
+        List<VoucherResponse> vouchers = voucherQueryService.getVouchersByCustomerId(userId);
+        return ResponseEntity.ok(vouchers);
+    }
 }
