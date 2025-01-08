@@ -26,7 +26,7 @@
           <td class="px-6 py-2 border text-center">
             <!-- Show Event Link -->
             <router-link
-              to="/Kunde/event_show"
+              to="/event_manager/event_show"
               class="px-1 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 focus:outline-none flex justify-center items-center"
             >
               <i class="fa fa-eye" ></i>

@@ -17,8 +17,8 @@ import ShowEventsKunde from "../views/kunde/event/Show.vue";
 // EventManager Views
 import EventManagerDashboard from "../views/eventmanager/Managerdashboard/Index.vue";
 import IndexKunde from "../views/eventmanager/ManagerKunden/Index.vue";
-import IndexEventsEventManger from "../views/eventmanager/ManagerEvent/Index.vue";
-import ShowEventsEventManger from "../views/eventmanager/ManagerEvent/Show.vue";
+import IndexEventsEventManger from "../views/eventmanager/Managerevent/Index.vue";
+import ShowEventsEventManger from "../views/eventmanager/Managerevent/Show.vue";
 import EventMangerProfile from "../views/eventmanager/Profile/Profile.vue";
 import VourcherCreate from "../views/eventmanager/Vourcher/Create.vue";
 
