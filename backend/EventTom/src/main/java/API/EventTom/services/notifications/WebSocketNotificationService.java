@@ -1,6 +1,7 @@
 package API.EventTom.services.notifications;
 
 import API.EventTom.DTO.EventDTO;
+import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.Employee;
 import API.EventTom.models.Event;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +15,18 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WebSocketNotificationService {
     private final SimpMessagingTemplate messagingTemplate;
-
+    private final StandardDTOMapper standardDTOMapper;
     public void notifyEventCreated(EventDTO event) {
         System.out.println("test1235");
 
         messagingTemplate.convertAndSend("/topic/events/new", event);
+    }
+
+
+    // hierfür müssen alle Events auf der Seite subscribed werden
+    public void notifyAllTicketSale(Event event) {
+        EventDTO eventDTO = standardDTOMapper.mapEventToEventDTO(event);
+        messagingTemplate.convertAndSend("/topic/events/tickets/" + event.getEventId(), eventDTO);
     }
 
     public void notifyEventManagersTicketSale(Event event) {

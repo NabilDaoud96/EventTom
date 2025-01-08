@@ -81,6 +81,7 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
 
         eventRepository.save(event);
         webSocketService.notifyEventManagersTicketSale(event);
+        webSocketService.notifyAllTicketSale(event);
 
         return createPurchaseResponse(event, purchaseResult, baseTicketPrice);
     }
