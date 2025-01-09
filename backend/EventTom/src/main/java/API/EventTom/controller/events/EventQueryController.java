@@ -32,7 +32,6 @@ public class EventQueryController {
 
     @GetMapping("/manager")
     public ResponseEntity<List<EventDTO>> getEventsByManager(@AuthenticatedUserId Long userId) {
-        // falls UserID hier gebraucht wird, kann einfach Annotation verwendet werden, damit die aus den UserDetails genommen wird.
         return ResponseEntity.ok(eventQueryService.getEventsByManagerId(userId));
     }
 }

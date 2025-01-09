@@ -2,22 +2,14 @@ package API.EventTom.services.tickets;
 
 import API.EventTom.DTO.request.PurchaseTicketDTO;
 import API.EventTom.DTO.response.TicketPurchaseResponseDTO;
-import API.EventTom.exceptions.EventDatePassedException;
-import API.EventTom.exceptions.InvalidPurchaseAmountException;
-import API.EventTom.exceptions.RuntimeExceptions.CustomerNotFoundException;
-import API.EventTom.exceptions.RuntimeExceptions.EventNotFoundException;
-import API.EventTom.exceptions.RuntimeExceptions.InsufficientTicketsException;
+import API.EventTom.exceptions.notFoundExceptions.CustomerNotFoundException;
+import API.EventTom.exceptions.notFoundExceptions.EventNotFoundException;
 import API.EventTom.models.Customer;
 import API.EventTom.models.Event;
-import API.EventTom.models.Ticket;
 import API.EventTom.models.Voucher;
-import API.EventTom.observers.TicketPurchaseEvent;
 import API.EventTom.repositories.CustomerRepository;
 import API.EventTom.repositories.EventRepository;
-import API.EventTom.repositories.TicketRepository;
-import API.EventTom.services.notifications.INotificationService;
 import API.EventTom.services.notifications.WebSocketNotificationService;
-import API.EventTom.services.notifications.WebsiteNotificationServiceImpl;
 import API.EventTom.services.tickets.interfaces.ITicketCreationService;
 import API.EventTom.services.tickets.interfaces.ITicketPriceCalculator;
 import API.EventTom.services.tickets.interfaces.ITicketPurchaseService;
@@ -25,15 +17,10 @@ import API.EventTom.services.tickets.interfaces.ITicketValidator;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 

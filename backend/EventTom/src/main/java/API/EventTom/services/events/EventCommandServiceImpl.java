@@ -2,7 +2,7 @@ package API.EventTom.services.events;
 import API.EventTom.DTO.EventDTO;
 import API.EventTom.DTO.request.EventCreateDTO;
 import API.EventTom.DTO.request.EventUpdateDTO;
-import API.EventTom.exceptions.RuntimeExceptions.ResourceNotFoundException;
+import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
 import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.Employee;
 import API.EventTom.models.Event;
