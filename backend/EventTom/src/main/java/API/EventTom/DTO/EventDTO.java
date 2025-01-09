@@ -16,6 +16,7 @@ public class EventDTO {
     public LocalDateTime dateOfEvent;
     public long soldTickets;
     public long thresholdValue;
+    public int availableTickets;
     public BigDecimal basePrice;
     public long location;
 }

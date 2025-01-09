@@ -41,6 +41,7 @@ public class StandardDTOMapper {
         eventDTO.setSoldTickets(event.getTotalSoldTickets());
         eventDTO.setBasePrice(event.getBasePrice());
         eventDTO.setThresholdValue(event.getThresholdValue());
+        eventDTO.setAvailableTickets(event.getAvailableTickets());
         eventDTO.setDateOfEvent(event.getDateOfEvent());
         return eventDTO;
     }

@@ -16,6 +16,5 @@ public class PurchaseTicketDTO {
 
     Long eventId;
     int amount;
-    private List<String> voucherCodes; // Changed from single String to List
-
+    private List<String> voucherCodes;
 }
