@@ -8,7 +8,7 @@ import java.util.UUID;
 
 import API.EventTom.DTO.response.TokenRefreshResponse;
 import API.EventTom.config.jwt.JwtUtils;
-import API.EventTom.exceptions.RuntimeExceptions.UserNotFoundException;
+import API.EventTom.exceptions.notFoundExceptions.UserNotFoundException;
 import API.EventTom.exceptions.tokenException.TokenRefreshException;
 import API.EventTom.models.RefreshToken;
 import API.EventTom.models.User;

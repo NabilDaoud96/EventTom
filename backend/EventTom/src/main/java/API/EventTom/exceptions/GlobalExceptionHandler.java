@@ -2,7 +2,9 @@ package API.EventTom.exceptions;
 
 import API.EventTom.DTO.response.ErrorMessageDTO;
 
+import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
 import io.jsonwebtoken.JwtException;
+import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 
@@ -51,12 +53,23 @@ public class GlobalExceptionHandler {
         return buildResponseEntity("Invalid token", HttpStatus.UNAUTHORIZED, e);
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorMessageDTO> handleResourceNotFoundException(ResourceNotFoundException e) {
+        return buildResponseEntity("An unexpected error occurred", HttpStatus.NOT_FOUND, e);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorMessageDTO> handleValidationException(ValidationException e) {
+        return buildResponseEntity("An unexpected error occurred", HttpStatus.BAD_REQUEST, e);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorMessageDTO> handleRuntimeException(RuntimeException e) {
         return buildResponseEntity("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
+
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorMessageDTO> handleRuntimeException(IllegalArgumentException e) {
+    public ResponseEntity<ErrorMessageDTO> handleIllegalArgumentException(IllegalArgumentException e) {
         return buildResponseEntity("An unexpected error occurred", HttpStatus.BAD_REQUEST, e);
     }
 

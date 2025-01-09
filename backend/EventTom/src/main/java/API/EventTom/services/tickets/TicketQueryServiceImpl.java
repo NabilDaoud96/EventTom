@@ -32,8 +32,16 @@ public class TicketQueryServiceImpl implements ITicketQueryService {
     }
 
     @Override
-    public List<TicketDTO> getTicketsByCustomerId(String customerId) {
-        List<Ticket> tickets = ticketRepository.findAllTicketsByCustomerNumber(customerId);
+    public List<TicketDTO> getTicketsByUserId(Long userId) {
+        List<Ticket> tickets = ticketRepository.findAllByUserId(userId);
+        return tickets.stream()
+                .map(standardDTOMapper::mapTicketToTicketDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TicketDTO> getTicketsByCustomerNumber(String customerNumber) {
+        List<Ticket> tickets = ticketRepository.findAllTicketsByCustomerNumber(customerNumber);
         return tickets.stream()
                 .map(standardDTOMapper::mapTicketToTicketDTO)
                 .collect(Collectors.toList());

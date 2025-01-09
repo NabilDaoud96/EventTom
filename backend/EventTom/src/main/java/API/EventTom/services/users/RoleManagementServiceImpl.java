@@ -1,12 +1,11 @@
 package API.EventTom.services.users;
 
-import API.EventTom.exceptions.RuntimeExceptions.RoleNotFoundException;
-import API.EventTom.exceptions.RuntimeExceptions.UserNotFoundException;
+import API.EventTom.exceptions.notFoundExceptions.RoleNotFoundException;
+import API.EventTom.exceptions.notFoundExceptions.UserNotFoundException;
 import API.EventTom.models.*;
 import API.EventTom.repositories.RoleRepository;
 import API.EventTom.repositories.UserRepository;
 import API.EventTom.services.users.interfaces.IRoleManagementService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
