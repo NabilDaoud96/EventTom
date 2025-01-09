@@ -60,7 +60,7 @@ public class StandardDTOMapper {
         ticketDTO.setCustomerId(ticket.getCustomer().getUser().getId());
         ticketDTO.setStatusUsed(ticket.isStatusUsed());
         ticketDTO.setPurchaseDate(ticket.getPurchaseDate());
-        ticketDTO.setEventId(ticket.getEvent().getEventId());
+        ticketDTO.setEventId(ticket.getEvent().getId());
         return ticketDTO;
     }
 }

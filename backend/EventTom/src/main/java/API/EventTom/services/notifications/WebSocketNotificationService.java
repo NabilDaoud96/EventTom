@@ -24,7 +24,7 @@ public class WebSocketNotificationService {
     // hierfür müssen alle Events auf der Seite subscribed werden
     public void notifyAllTicketSale(Event event) {
         EventDTO eventDTO = standardDTOMapper.mapEventToEventDTO(event);
-        messagingTemplate.convertAndSend("/topic/events/tickets/" + event.getEventId(), eventDTO);
+        messagingTemplate.convertAndSend("/topic/events/tickets/" + event.getId(), eventDTO);
     }
 
     public void notifyEventManagersTicketSale(Event event) {
@@ -32,7 +32,7 @@ public class WebSocketNotificationService {
 
         for (Employee manager : event.getManagers()) {
             messagingTemplate.convertAndSend(
-                    "/topic/managers/" + manager.getId() + "/events/" + event.getEventId(),
+                    "/topic/managers/" + manager.getId() + "/events/" + event.getId(),
                     eventDTO
             );
         }
