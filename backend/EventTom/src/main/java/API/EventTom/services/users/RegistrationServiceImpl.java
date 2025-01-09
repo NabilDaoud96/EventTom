@@ -3,7 +3,7 @@ package API.EventTom.services.users;
 import API.EventTom.DTO.request.EmployeeRegisterRequest;
 import API.EventTom.DTO.request.CustomerRegisterRequest;
 import API.EventTom.DTO.response.RegisterResponse;
-import API.EventTom.exceptions.RuntimeExceptions.EmailAlreadyExistsException;
+import API.EventTom.exceptions.userExceptions.EmailAlreadyExistsException;
 import API.EventTom.models.*;
 import API.EventTom.repositories.CustomerRepository;
 import API.EventTom.repositories.EmployeeRepository;

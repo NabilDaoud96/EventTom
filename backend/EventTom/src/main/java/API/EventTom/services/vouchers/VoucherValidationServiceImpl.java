@@ -1,9 +1,9 @@
 package API.EventTom.services.vouchers;
-import API.EventTom.exceptions.RuntimeExceptions.ExpiredVoucherException;
-import API.EventTom.exceptions.RuntimeExceptions.VoucherNotFoundException;
-import API.EventTom.exceptions.UnauthorizedVoucherUseException;
-import API.EventTom.exceptions.VoucherAlreadyClaimedException;
-import API.EventTom.exceptions.VoucherAlreadyUsedException;
+import API.EventTom.exceptions.validationExceptions.ExpiredVoucherException;
+import API.EventTom.exceptions.notFoundExceptions.VoucherNotFoundException;
+import API.EventTom.exceptions.userExceptions.UnauthorizedVoucherUseException;
+import API.EventTom.exceptions.validationExceptions.VoucherAlreadyClaimedException;
+import API.EventTom.exceptions.validationExceptions.VoucherAlreadyUsedException;
 import API.EventTom.models.Voucher;
 import API.EventTom.repositories.VoucherRepository;
 

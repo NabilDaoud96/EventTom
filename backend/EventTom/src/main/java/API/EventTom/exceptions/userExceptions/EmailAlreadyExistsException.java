@@ -1,4 +1,4 @@
-package API.EventTom.exceptions.RuntimeExceptions;
+package API.EventTom.exceptions.userExceptions;
 
 public class EmailAlreadyExistsException extends RuntimeException {
     public EmailAlreadyExistsException(String message) {
