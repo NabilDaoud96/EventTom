@@ -7,7 +7,7 @@ import java.util.List;
 public interface ITicketQueryService {
 
     List<TicketDTO> getTicketsByEventId(Long id);
-    List<TicketDTO> getTicketsByCustomerId(String customerId);
     TicketDTO getTicketById(long ticketId);
-
+    List<TicketDTO> getTicketsByUserId(Long userId);
+    List<TicketDTO> getTicketsByCustomerNumber(String customerNumber);
 }
