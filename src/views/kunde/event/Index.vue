@@ -15,11 +15,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="event in paginatedEvents" :key="event.id">
-          <td class="px-4 py-2 border">{{ event.name }}</td>
-          <td class="px-4 py-2 border">{{ event.date }}</td>
+        <tr v-for="event in paginatedEvents" :key="event.title">
+          <td class="px-4 py-2 border">{{ event.title }}</td>
+          <td class="px-4 py-2 border">{{ formatDate(event.dateOfEvent) }}</td>
           <td class="px-4 py-2 border">{{ event.location }}</td>
-          <td class="px-4 py-2 border">{{ event.price }}€</td>
+          <td class="px-4 py-2 border">{{ event.basePrice }}€</td>
           <td class="px-4 py-2 border">
             {{ event.availableTickets === 0 ? "Ausverkauft" : event.availableTickets }}
           </td>
@@ -29,7 +29,7 @@
               to="/Kunde/event_show"
               class="px-1 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 focus:outline-none flex justify-center items-center"
             >
-              <i class="fa fa-eye" ></i>
+              <i class="fa fa-eye"></i>
             </router-link>
           </td>
         </tr>
@@ -82,8 +82,8 @@ export default {
       events: [], // All events
       currentPage: 1, // Current page
       rowsPerPage: 10, // Rows per page
-      sortBy: 'date', // Default sorting by date
-      sortOrder: 'asc', // Default sorting order is ascending
+      totalElements: 0, // Total number of events
+      totalPages: 0, // Total pages for pagination
     };
   },
   computed: {
@@ -92,10 +92,6 @@ export default {
       const start = (this.currentPage - 1) * this.rowsPerPage;
       const end = start + this.rowsPerPage;
       return this.events.slice(start, end);
-    },
-    // Total Pages Calculation
-    totalPages() {
-      return Math.ceil(this.events.length / this.rowsPerPage);
     },
   },
   methods: {
@@ -115,30 +111,23 @@ export default {
     goToPage(page) {
       this.currentPage = page;
     },
+    // Format date to DD.MM.YYYY
+    formatDate(date) {
+      const eventDate = new Date(date);
+      const day = String(eventDate.getDate()).padStart(2, '0');
+      const month = String(eventDate.getMonth() + 1).padStart(2, '0');
+      const year = eventDate.getFullYear();
+      return `${day}.${month}.${year}`;
+    },
   },
   created() {
     // Fetch Events from the API
     axios
-      .get("https://jsonplaceholder.typicode.com/posts")
+      .get("http://localhost:8080/api/events")
       .then((response) => {
-        const cities = ["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Stuttgart", "Düsseldorf", "Leipzig", "Dortmund", "Essen"];
-        const today = new Date();
-        // Map the response data to match the event structure
-        this.events = response.data.map((item) => {
-          const eventDate = new Date();
-          eventDate.setDate(today.getDate() + Math.floor(Math.random() * 30)); // Random days ahead
-          const availableTickets = Math.floor(Math.random() * 20); // Random number of tickets
-          return {
-            id: item.id,
-            name: item.title.split(" ").slice(0, 5).join(" "),
-            date : eventDate.toLocaleDateString('en-GB').replace(/\//g, '-'),
-            location: cities[Math.floor(Math.random() * cities.length)], // Random city from the list
-            price: (Math.random() * 100).toFixed(2),
-            availableTickets,
-          };
-        });
-        // Sort events by default column (date) in ascending order
-        this.sortTable('date');
+        this.events = response.data.content; // Store events in the events array
+        this.totalElements = response.data.totalElements; // Store total number of events
+        this.totalPages = response.data.totalPages; // Store total number of pages for pagination
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
