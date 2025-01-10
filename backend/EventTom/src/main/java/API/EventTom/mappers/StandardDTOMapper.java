@@ -44,6 +44,7 @@ public class StandardDTOMapper {
         eventDTO.setThresholdValue(event.getThresholdValue());
         eventDTO.setAvailableTickets(event.getAvailableTickets());
         eventDTO.setDateOfEvent(event.getDateOfEvent());
+        eventDTO.setLocation(event.getLocation());
         return eventDTO;
     }
 

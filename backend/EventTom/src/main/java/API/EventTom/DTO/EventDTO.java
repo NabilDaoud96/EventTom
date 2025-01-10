@@ -18,5 +18,5 @@ public class EventDTO {
     public long thresholdValue;
     public int availableTickets;
     public BigDecimal basePrice;
-    public long location;
+    public String location;
 }
