@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from "vue-router";
 // Layouts
 import Kunde from "../layouts/Kunde.vue";
 import Auth from "../layouts/Auth.vue";
+import EventCreator from "../layouts/EventCreator.vue";
 
 // Kunde Views
 import Dashboard from "../views/kunde/dashboard/Index.vue";
@@ -13,6 +14,11 @@ import Profile from "../views/kunde/profile/Edit.vue";
 import IndexEvents from "../views/kunde/event/Index.vue";
 import Show from "../views/kunde/event/Show.vue";
 
+
+// Event Creator Views
+import EventCreatorProfile from "../views/event_creator/profile/Edit.vue";
+import EventCreatorEvents from "../views/event_creator/event/Index.vue";
+import EventCreatorCreateEvent from "../views/event_creator/create_event/Create.vue"
 
 
 // Auth Views
@@ -52,6 +58,26 @@ const routes = [
             path: "/kunde/event_show",
             component: Show,
         }, 
+        ],
+    },
+    {
+        path: "/event_creator",
+        redirect: "/event_creator/dashboard",
+        component: EventCreator,
+        children: [
+        {
+            path: "/event_creator/profile",
+            component: EventCreatorProfile,
+        },
+        {
+            path: "/event_creator/events",
+            component: EventCreatorEvents,
+        },
+        {
+            path: "/event_creator/create_event",
+            component: EventCreatorCreateEvent,
+            
+        },
         ],
     },
     {
