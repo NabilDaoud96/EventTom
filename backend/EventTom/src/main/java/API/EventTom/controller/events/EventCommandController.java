@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 @RestController
 @AllArgsConstructor
@@ -20,20 +21,21 @@ public class EventCommandController {
     private final IEventCommandService eventCommandService;
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('EVENT_CREATOR')")
     public ResponseEntity<EventDTO> createEvent(@RequestBody EventCreateDTO eventCreateDTO, @Nonnull @AuthenticatedUserId Long userId) {
         return new ResponseEntity<>(eventCommandService.createEvent(eventCreateDTO, userId), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('EVENT_MANAGER')")
-    public ResponseEntity<EventDTO> updateEvent(@PathVariable long id, @RequestBody EventUpdateDTO eventUpdateDTO) {
-        return ResponseEntity.ok(eventCommandService.updateEvent(id, eventUpdateDTO));
+    @PreAuthorize("hasRole('EVENT_MANAGER') or hasRole('EVENT_CREATOR')")
+    public ResponseEntity<EventDTO> updateEvent(@PathVariable long id, @RequestBody EventUpdateDTO eventUpdateDTO, @AuthenticatedUserId Long userId) throws AccessDeniedException {
+        return ResponseEntity.ok(eventCommandService.updateEvent(id, eventUpdateDTO, userId));
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('EVENT_MANAGER')")
-    public ResponseEntity<Void> deleteEvent(@PathVariable long id) {
-        eventCommandService.deleteEvent(id);
+    @PreAuthorize("hasRole('EVENT_MANAGER') or hasRole('EVENT_CREATOR') or hasRole('ADMINISTRATOR')")
+    public ResponseEntity<Void> deleteEvent(@PathVariable long id, @AuthenticatedUserId Long userId) throws AccessDeniedException {
+        eventCommandService.deleteEvent(id, userId);
         return ResponseEntity.noContent().build();
     }
 }

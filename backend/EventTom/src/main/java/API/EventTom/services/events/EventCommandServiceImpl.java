@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,9 +59,16 @@ public class EventCommandServiceImpl implements IEventCommandService {
     }
     @Override
     @Transactional
-    public EventDTO updateEvent(long id, EventUpdateDTO eventUpdateDTO) {
+    public EventDTO updateEvent(long id, EventUpdateDTO eventUpdateDTO, Long userId) throws AccessDeniedException {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+
+        boolean isAuthorized = event.getCreator().getId().equals(userId) ||
+                event.getManagers().stream().anyMatch(manager -> manager.getId().equals(userId));
+
+        if (!isAuthorized) {
+            throw new AccessDeniedException("User is not authorized to update this event");
+        }
 
         event.setTitle(eventUpdateDTO.getTitle());
         event.setDateOfEvent(eventUpdateDTO.getDateOfEvent());
@@ -74,10 +82,17 @@ public class EventCommandServiceImpl implements IEventCommandService {
 
     @Override
     @Transactional
-    public void deleteEvent(long id) {
-        if (!eventRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Event not found");
+    public void deleteEvent(long id, Long userId) throws AccessDeniedException {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+
+        boolean isAuthorized = event.getCreator().getId().equals(userId) ||
+                event.getManagers().stream().anyMatch(manager -> manager.getId().equals(userId));
+
+        if (!isAuthorized) {
+            throw new AccessDeniedException("User is not authorized to delete this event");
         }
+
         eventRepository.deleteById(id);
     }
 }
