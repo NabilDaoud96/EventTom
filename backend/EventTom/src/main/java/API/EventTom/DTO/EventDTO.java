@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventDTO {
-
+    public Long id;
     public String title;
     public LocalDateTime dateOfEvent;
     public long soldTickets;
     public long thresholdValue;
     public int availableTickets;
     public BigDecimal basePrice;
-    public long location;
+    public String location;
 }

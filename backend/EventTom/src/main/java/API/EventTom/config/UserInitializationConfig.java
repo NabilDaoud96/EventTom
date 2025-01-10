@@ -20,15 +20,13 @@ public class UserInitializationConfig {
     private final RegistrationServiceImpl registrationService;
 
     @Bean
-    @Order(1) // Ensure this runs before event initialization
+    @Order(1)
     public CommandLineRunner initializeUsers() {
         return args -> {
-            // Initialize employees first
             createAdminEmployee();
             createEventManagerEmployee();
             createSalesRepEmployee();
 
-            // Then initialize customers
             createSampleCustomers();
         };
     }

@@ -28,7 +28,7 @@ public class TicketPurchaseInitializationConfig {
     private final Random random = new Random();
 
     @Bean
-    @Order(4) // Run after events, users, and vouchers are initialized
+    @Order(4)
     public CommandLineRunner initializeTicketPurchases() {
         return args -> {
             List<Customer> customers = customerRepository.findAll();
@@ -39,7 +39,6 @@ public class TicketPurchaseInitializationConfig {
                 return;
             }
 
-            // Simulate various ticket purchases
             simulateRegularPurchases(customers, events);
             simulateVoucherPurchases(customers, events);
             simulateBulkPurchases(customers, events);
@@ -48,13 +47,12 @@ public class TicketPurchaseInitializationConfig {
 
     private void simulateRegularPurchases(List<Customer> customers, List<Event> events) {
         try {
-            // Regular purchases without vouchers
             for (Customer customer : customers) {
                 Event randomEvent = events.get(random.nextInt(events.size()));
 
                 PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO();
                 purchaseDTO.setEventId(randomEvent.getId());
-                purchaseDTO.setAmount(1 + random.nextInt(3)); // Purchase 1-3 tickets
+                purchaseDTO.setAmount(1 + random.nextInt(3));
                 purchaseDTO.setVoucherCodes(new ArrayList<>());
 
                 ticketPurchaseService.purchaseTicket(purchaseDTO, customer.getUser().getId());
@@ -66,7 +64,6 @@ public class TicketPurchaseInitializationConfig {
 
     private void simulateVoucherPurchases(List<Customer> customers, List<Event> events) {
         try {
-            // Purchases with vouchers
             var vouchers = voucherRepository.findAll();
             if (!vouchers.isEmpty()) {
                 for (int i = 0; i < 3; i++) { // Create 3 purchases with vouchers
@@ -76,7 +73,7 @@ public class TicketPurchaseInitializationConfig {
 
                     PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO();
                     purchaseDTO.setEventId(randomEvent.getId());
-                    purchaseDTO.setAmount(2); // Purchase 2 tickets
+                    purchaseDTO.setAmount(2);
                     purchaseDTO.setVoucherCodes(List.of(randomVoucherCode));
 
                     ticketPurchaseService.purchaseTicket(purchaseDTO, randomCustomer.getUser().getId());
@@ -89,13 +86,12 @@ public class TicketPurchaseInitializationConfig {
 
     private void simulateBulkPurchases(List<Customer> customers, List<Event> events) {
         try {
-            // Bulk purchases (5+ tickets)
             for (Event event : events) {
                 Customer randomCustomer = customers.get(random.nextInt(customers.size()));
 
                 PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO();
                 purchaseDTO.setEventId(event.getId());
-                purchaseDTO.setAmount(5 + random.nextInt(6)); // Purchase 5-10 tickets
+                purchaseDTO.setAmount(5 + random.nextInt(6));
                 purchaseDTO.setVoucherCodes(new ArrayList<>());
 
                 ticketPurchaseService.purchaseTicket(purchaseDTO, randomCustomer.getUser().getId());

@@ -14,13 +14,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class WebsiteNotificationServiceImpl implements INotificationService {
+public class WebsiteNotificationServiceImpl implements IWebsiteNotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
 
     @Override
     @Transactional
-    public void notifyUser(User recipient, String message, String notificationType) {
+    public void sendNotification(User recipient, String message, String notificationType) {
         Notification notification = new Notification();
         notification.setRecipient(recipient);
         notification.setMessage(message);
@@ -31,20 +31,16 @@ public class WebsiteNotificationServiceImpl implements INotificationService {
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getUnreadNotificationsByPersonId(Long personId) {
-        // TODO: vllt. Nutzen von CustomerNumber / EmployeeNumber
-        //  indem da erst Anfrage gemacht wird und dann
-        //  dadurch die Anfrage (aber eig. nich gut, weil für jeden Nutzertyp einzelne Methode)
-
-        User user = userRepository.findById(personId)
-                .orElseThrow(() -> new RuntimeException("Person not found"));
+    public List<Notification> getUnreadNotifications(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return notificationRepository.findByRecipientAndIsReadOrderByCreatedAtDesc(user, false);
     }
 
     @Transactional(readOnly = true)
-    public List<Notification> getAllNotificationsByPersonId(Long personId) {
-        User user = userRepository.findById(personId)
-                .orElseThrow(() -> new RuntimeException("Person not found"));
+    public List<Notification> getAllNotifications(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return notificationRepository.findByRecipientOrderByCreatedAtDesc(user);
     }
 
@@ -57,27 +53,11 @@ public class WebsiteNotificationServiceImpl implements INotificationService {
     }
 
     @Transactional
-    public void markAllAsReadByPersonId(Long personId) {
-        User user = userRepository.findById(personId)
+    public void markAllAsRead(Long userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Person not found"));
         notificationRepository.markAllAsRead(user);
     }
-
-    // Method for testing/prototyping
-    @Transactional
-    public void createTestNotification(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Person not found"));
-
-        Notification notification = new Notification();
-        notification.setRecipient(user);
-        notification.setMessage("Test notification at " + LocalDateTime.now());
-        notification.setCreatedAt(LocalDateTime.now());
-        notification.setNotificationType("TEST");
-
-        notificationRepository.save(notification);
-    }
-
 
 
 }
