@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -22,11 +23,12 @@ public class TicketNotificationListener {
 
     @Async
     @EventListener
+    @Transactional
     public void handleTicketPurchase(TicketPurchaseEvent event) {
         sendCustomerNotification(event, "TICKET_PURCHASE");
 
         if (shouldNotifyEventManager(event)) {
-            sendManagerNotification(event, "TICKET_PURCHASE");
+            sendManagerNotification(event, "EVENT_MANAGER_TICKET_PURCHASE");
         }
     }
 
@@ -40,6 +42,7 @@ public class TicketNotificationListener {
 
     private void sendManagerNotification(TicketPurchaseEvent event, String notificationType) {
         String message = createManagerMessage(event);
+
         employeeRepository.findByRoleAndEvent(Roles.EVENT_MANAGER, event.getEvent())
                 .forEach(manager -> {
                     User userManager = manager.getUser();
@@ -49,26 +52,22 @@ public class TicketNotificationListener {
     }
 
     private boolean shouldNotifyEventManager(TicketPurchaseEvent event) {
+        return true;
+        /*
         return event.getEvent().isThresholdReached() ||
                 event.getSoldPercentage() >= 90.0 ||
                 event.getRemainingTickets() <= 10;
+        */
     }
 
+
     private String createManagerMessage(TicketPurchaseEvent event) {
-        return String.format(
-                "Event Update: %s\n" +
-                        "Tickets Sold: %d/%d (%.1f%%)\n" +
-                        "Remaining Tickets: %d\n" +
-                        "Latest Purchase: %s\n" +
-                        "Purchase Time: %s",
+        return String.format("Event: %s\nSold: %d/%d (%.1f%%)\nRemaining: %d",
                 event.getEvent().getTitle(),
                 event.getEvent().getTotalSoldTickets(),
                 event.getEvent().getMaxTotalTickets(),
                 event.getSoldPercentage(),
-                event.getRemainingTickets(),
-                event.getTicket().getCustomer().toString(),
-                event.getTicket().getPurchaseDate()
-        );
+                event.getRemainingTickets());
     }
 
     private String createCustomerMessage(TicketPurchaseEvent event) {
