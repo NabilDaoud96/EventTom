@@ -1,9 +1,11 @@
 package API.EventTom.observers;
 
+import API.EventTom.DTO.WebSocketMessageDTO;
 import API.EventTom.models.Roles;
 import API.EventTom.models.User;
 import API.EventTom.repositories.EmployeeRepository;
-import API.EventTom.services.notifications.INotificationService;
+import API.EventTom.services.notifications.IWebsiteNotificationService;
+import API.EventTom.services.websockets.interfaces.IUserBroadcastService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -15,7 +17,8 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class TicketNotificationListener {
     private final EmployeeRepository employeeRepository;
-    private final INotificationService notificationService;
+    private final IWebsiteNotificationService websiteNotificationService;
+    private final IUserBroadcastService userBroadcastService;
 
     @Async
     @EventListener
@@ -30,7 +33,9 @@ public class TicketNotificationListener {
     private void sendCustomerNotification(TicketPurchaseEvent event, String notificationType) {
         String message = createCustomerMessage(event);
         User recipient = event.getTicket().getCustomer().getUser();
-        notificationService.notifyUser(recipient, message, notificationType);
+        websiteNotificationService.sendNotification(recipient, message, notificationType);
+        userBroadcastService.broadcastToUser(recipient.getId(), new WebSocketMessageDTO(message, notificationType));
+
     }
 
     private void sendManagerNotification(TicketPurchaseEvent event, String notificationType) {
@@ -38,7 +43,8 @@ public class TicketNotificationListener {
         employeeRepository.findByRoleAndEvent(Roles.EVENT_MANAGER, event.getEvent())
                 .forEach(manager -> {
                     User userManager = manager.getUser();
-                    notificationService.notifyUser(userManager, message, notificationType);
+                    websiteNotificationService.sendNotification(userManager, message, notificationType);
+                    userBroadcastService.broadcastToUser(userManager.getId(), new WebSocketMessageDTO(message, notificationType));
                 });
     }
 

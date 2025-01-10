@@ -33,7 +33,7 @@ public class EventCommandController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('EVENT_MANAGER') or hasRole('EVENT_CREATOR') or hasRole('ADMINISTRATOR')")
+    @PreAuthorize("hasRole('EVENT_MANAGER') or hasRole('EVENT_CREATOR')")
     public ResponseEntity<Void> deleteEvent(@PathVariable long id, @AuthenticatedUserId Long userId) throws AccessDeniedException {
         eventCommandService.deleteEvent(id, userId);
         return ResponseEntity.noContent().build();

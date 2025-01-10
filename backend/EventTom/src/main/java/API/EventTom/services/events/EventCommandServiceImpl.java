@@ -8,8 +8,7 @@ import API.EventTom.models.Employee;
 import API.EventTom.models.Event;
 import API.EventTom.repositories.EmployeeRepository;
 import API.EventTom.repositories.EventRepository;
-import API.EventTom.services.notifications.WebSocketNotificationService;
-import API.EventTom.services.notifications.WebsiteNotificationServiceImpl;
+import API.EventTom.services.websockets.interfaces.IEventBroadcastService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,19 +23,15 @@ public class EventCommandServiceImpl implements IEventCommandService {
     private final EventRepository eventRepository;
     private final EmployeeRepository employeeRepository;
     private final StandardDTOMapper standardDTOMapper;
-    private final WebsiteNotificationServiceImpl dbNotificationService;
-    private final WebSocketNotificationService wsNotificationService;
-
+    private final IEventBroadcastService eventBroadcastService;
     @Override
     @Transactional
     public EventDTO createEvent(EventCreateDTO eventCreateDTO, Long userId) {
-        // Find all managers
         List<Employee> managers = eventCreateDTO.getManagerIds().stream()
                 .map(id -> employeeRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Manager not found with ID: " + id)))
                 .collect(Collectors.toList());
 
-        // Find the creator (assuming creator ID is separate from manager IDs)
         Employee creator = employeeRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Creator not found"));
 
@@ -53,7 +48,7 @@ public class EventCommandServiceImpl implements IEventCommandService {
         Event savedEvent = eventRepository.save(event);
         EventDTO eventDTO = standardDTOMapper.mapEventToEventDTO(savedEvent);
 
-        wsNotificationService.notifyEventCreated(eventDTO);
+        eventBroadcastService.broadcastEventCreation(eventDTO);
 
         return eventDTO;
     }

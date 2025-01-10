@@ -37,6 +37,7 @@ public class StandardDTOMapper {
 
     public EventDTO mapEventToEventDTO(Event event) {
         EventDTO eventDTO = new EventDTO();
+        eventDTO.setId(event.getId());
         eventDTO.setTitle(event.getTitle());
         eventDTO.setSoldTickets(event.getTotalSoldTickets());
         eventDTO.setBasePrice(event.getBasePrice());
