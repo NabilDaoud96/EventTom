@@ -18,8 +18,6 @@ import java.util.List;
 public class EmployeeController{
     IEmployeeService employeeService;
 
-    // TODO: WRITE DTO FOR EACH REQUEST
-    // TODO: CREATE EMPLOYEE / REGISTER
 
     @GetMapping
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {

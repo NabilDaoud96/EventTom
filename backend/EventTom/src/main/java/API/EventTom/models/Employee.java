@@ -33,7 +33,6 @@ public class Employee {
     @OneToMany(mappedBy = "creator", cascade = CascadeType.ALL)
     private List<Event> createdEvents = new ArrayList<>();
 
-    // Events managed by this employee
     @ManyToMany(mappedBy = "managers")
     private List<Event> managedEvents = new ArrayList<>();
 }

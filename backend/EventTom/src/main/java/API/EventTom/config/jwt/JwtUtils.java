@@ -40,10 +40,10 @@ public class JwtUtils {
 
     public String getEmailFromJwtToken(String token) {
         return Jwts.parser()
-                .verifyWith(key())  // changed from setSigningKey to verifyWith
+                .verifyWith(key())
                 .build()
-                .parseSignedClaims(token)  // changed from parseClaimsJws
-                .getPayload()  // changed from getBody
+                .parseSignedClaims(token)
+                .getPayload()
                 .getSubject();
     }
 
@@ -56,7 +56,7 @@ public class JwtUtils {
             Jwts.parser()
                     .verifyWith(key())
                     .build()
-                    .parseSignedClaims(authToken);  // Changed from parse() to parseSignedClaims()
+                    .parseSignedClaims(authToken);
             return true;
         } catch (SecurityException e) {
             logger.error("Invalid JWT signature: {}", e.getMessage());
@@ -79,12 +79,15 @@ public class JwtUtils {
                 .map(role -> role.startsWith("ROLE_") ? role : "ROLE_" + role)
                 .toList();
 
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + jwtExpirationMs);
+
         return Jwts.builder()
                 .subject(email)
                 .claim("roles", formattedRoles)
-                .issuedAt(new Date())
-                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(key(), Jwts.SIG.HS512)  // Explicitly specify HS512
+                .issuedAt(now)
+                .expiration(expirationDate)
+                .signWith(key(), Jwts.SIG.HS512)
                 .compact();
     }
 }

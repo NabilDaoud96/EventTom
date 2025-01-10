@@ -9,12 +9,12 @@ import API.EventTom.models.Event;
 import API.EventTom.models.Voucher;
 import API.EventTom.repositories.CustomerRepository;
 import API.EventTom.repositories.EventRepository;
-import API.EventTom.services.notifications.WebSocketNotificationService;
 import API.EventTom.services.tickets.interfaces.ITicketCreationService;
 import API.EventTom.services.tickets.interfaces.ITicketPriceCalculator;
 import API.EventTom.services.tickets.interfaces.ITicketPurchaseService;
 import API.EventTom.services.tickets.interfaces.ITicketValidator;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
+import API.EventTom.services.websockets.interfaces.IEventBroadcastService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
     private final ITicketPriceCalculator priceCalculator;
     private final ITicketValidator ticketValidator;
     private final ITicketCreationService ticketCreationService;
-    private final WebSocketNotificationService webSocketService;
+    private final IEventBroadcastService eventBroadcastService;
 
     @Override
     public BigDecimal calculateTotalPrice(PurchaseTicketDTO purchaseTicketDTO, Long userId) {
@@ -67,8 +67,7 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
         );
 
         eventRepository.save(event);
-        webSocketService.notifyEventManagersTicketSale(event);
-        webSocketService.notifyAllTicketSale(event);
+        eventBroadcastService.broadcastTicketSale(event, true);
 
         return createPurchaseResponse(event, purchaseResult, baseTicketPrice);
     }
