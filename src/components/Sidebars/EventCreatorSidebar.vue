@@ -42,7 +42,7 @@
             <div class="w-6/12">
               <router-link
                 class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-xl font-bold p-4 px-0"
-                to="/event_creator/Dashboard"
+                to="/event-creator/dashboard"
               >
                 EventTom
               </router-link>
@@ -74,7 +74,7 @@
           <!-- Dashboard -->
           <li class="items-center">
             <router-link
-              to="/event_creator/dashboard"
+              to="event-creator/dashboard"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -99,7 +99,7 @@
           <!-- Events -->
            <li class="items-center">
             <router-link
-              to="/event_creator/events"
+              to="/event-creator/events"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -124,7 +124,7 @@
           <!-- Create Event -->
             <li class="items-center">
               <router-link
-                to="/event_creator/create_event"
+                to="/event-creator/create_event"
                 v-slot="{ href, navigate, isActive }"
               >
                 <a
