@@ -9,7 +9,7 @@
           <h2 class="text-xl font-bold text-gray-700">🎫 Booked Events</h2>
           <p class="text-sm text-gray-500 mt-2">You have <br> {{ events.length }} events booked.</p>
           <router-link
-              to="/kunde/tickets"
+              to="/tickets"
             >
             <div class="mt-4">
             <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -28,7 +28,7 @@
             Next event: {{ nextEvent.name }} in {{ nextEvent.location }} on {{ nextEvent.date }}.
           </p>
           <router-link
-              to="/kunde/Events"
+              to="/events"
             >
             <div class="mt-4">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
@@ -45,7 +45,7 @@
           <h2 class="text-xl font-bold text-gray-700">🎁 Vouchers</h2>
           <p class="text-sm text-gray-500 mt-2">2 Voucher available <br>Total Voucher Value: {{ totalVoucherValue }}€</p>
           <router-link
-              to="/kunde/buy_ticket"
+              to="vouchers"
             >
             <div class="mt-4">
                 <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">

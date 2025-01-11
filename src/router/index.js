@@ -33,56 +33,56 @@ import IndexVoucher from "@/views/kunde/voucher/Index.vue";
 const routes = [
     
     {
-        path: "/kunde",
-        redirect: "/kunde/dashboard",
+        path: "/",
+        redirect: "/dashboard",
         component: Kunde,
         children: [
         {
-            path: "/kunde/dashboard",
+            path: "/dashboard",
             component: Dashboard,
         },
         {
-            path: "/kunde/tickets",
+            path: "/tickets",
             component: IndexTickets,
         },
         {
-            path: "/kunde/vouchers",
+            path: "/vouchers",
             component: IndexVoucher,
         },
         {
-            path: "/kunde/events",
+            path: "/events",
             component: IndexEvents,
         },
         {
-            path: "/kunde/profile",
+            path: "/profile",
             component: Profile,
         },
         {
-            path: "/kunde/buy_ticket",
+            path: "/buy_ticket",
             component: BuyTicket,
         }, 
         {
-            path: "/kunde/event_show/:id",
+            path: "/event/:id",
             name: 'EventShow',
             component: EventShow,
         }, 
         ],
     },
     {
-        path: "/event_creator",
-        redirect: "/event_creator/dashboard",
+        path: "/event-creator",
+        redirect: "/event-creator/dashboard",
         component: EventCreator,
         children: [
         {
-            path: "/event_creator/profile",
+            path: "/event-creator/profile",
             component: EventCreatorProfile,
         },
         {
-            path: "/event_creator/events",
+            path: "/event-creator/events",
             component: EventCreatorEvents,
         },
         {
-            path: "/event_creator/create_event",
+            path: "/event-creator/create_event",
             component: EventCreatorCreateEvent,
             
         },
@@ -90,7 +90,7 @@ const routes = [
     },
     {
         path: "/",
-        redirect: "/auth/login",
+        redirect: "/dashboard",
         component: Auth,
         children: [
             {
