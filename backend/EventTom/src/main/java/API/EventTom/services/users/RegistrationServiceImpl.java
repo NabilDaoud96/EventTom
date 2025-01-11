@@ -29,7 +29,7 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> registerCustomer(CustomerRegisterRequestDTO request) {
+    public RegisterResponseDTO registerCustomer(CustomerRegisterRequestDTO request) {
         validateEmailUniqueness(request.email());
 
         User user = createBaseUser(request.email(), request.password(), request.firstName(), request.lastName(), UserType.CUSTOMER);
@@ -40,32 +40,28 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
         customer.setCustomerNumber(userNumberGenerator.generateCustomerNumber());
 
-        // Save user first
         user = userRepository.save(user);
         customer = customerRepository.save(customer);
 
-        return ResponseEntity.ok(createRegisterResponse(user));
+        return createRegisterResponse(user);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> registerEmployee(EmployeeRegisterRequestDTO request) {
+    public RegisterResponseDTO registerEmployee(EmployeeRegisterRequestDTO request) {
         validateEmailUniqueness(request.email());
 
-        // Create and setup the user
         User user = createBaseUser(request.email(), request.password(), request.firstName(), request.lastName(), UserType.EMPLOYEE);
         user.setRoles(roleManagementService.getRolesByNames(request.roles()));
 
-        // Create and setup the employee
         Employee employee = new Employee();
         employee.setUser(user);
         employee.setEmployeeNumber(userNumberGenerator.generateEmployeeNumber());
 
-        // Save both entities
         user = userRepository.save(user);
         employee = employeeRepository.save(employee);
 
-        return ResponseEntity.ok(createRegisterResponse(user));
+        return createRegisterResponse(user);
     }
 
     private void validateEmailUniqueness(String email) {

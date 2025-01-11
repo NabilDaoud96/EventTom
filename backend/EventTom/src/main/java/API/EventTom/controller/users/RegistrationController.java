@@ -2,6 +2,7 @@ package API.EventTom.controller.users;
 
 import API.EventTom.DTO.request.CustomerRegisterRequestDTO;
 import API.EventTom.DTO.request.EmployeeRegisterRequestDTO;
+import API.EventTom.DTO.response.RegisterResponseDTO;
 import API.EventTom.services.users.interfaces.IRegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,12 @@ public class RegistrationController {
     private final IRegistrationService registrationService;
 
     @PostMapping("/customer")
-    public ResponseEntity<?> registerCustomer(@RequestBody CustomerRegisterRequestDTO request) {
-        return registrationService.registerCustomer(request);
+    public ResponseEntity<RegisterResponseDTO> registerCustomer(@RequestBody CustomerRegisterRequestDTO request) {
+        return ResponseEntity.ok(registrationService.registerCustomer(request));
     }
 
     @PostMapping("/employee")
-    public ResponseEntity<?> registerEmployee(@RequestBody EmployeeRegisterRequestDTO request) {
-        return registrationService.registerEmployee(request);
+    public ResponseEntity<RegisterResponseDTO> registerEmployee(@RequestBody EmployeeRegisterRequestDTO request) {
+        return ResponseEntity.ok(registrationService.registerEmployee(request));
     }
 }
