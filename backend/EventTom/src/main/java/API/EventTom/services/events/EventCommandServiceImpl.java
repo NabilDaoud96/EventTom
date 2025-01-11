@@ -36,6 +36,7 @@ public class EventCommandServiceImpl implements IEventCommandService {
                 .orElseThrow(() -> new ResourceNotFoundException("Creator not found"));
 
         Event event = new Event();
+        System.out.println(eventCreateDTO.dateOfEvent());
         event.setTitle(eventCreateDTO.title());
         event.setDateOfEvent(eventCreateDTO.dateOfEvent());
         event.setMaxTotalTickets(eventCreateDTO.totalTickets());

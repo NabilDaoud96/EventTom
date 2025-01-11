@@ -24,4 +24,5 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
 
     boolean existsByCode(String code);
 
+
 }

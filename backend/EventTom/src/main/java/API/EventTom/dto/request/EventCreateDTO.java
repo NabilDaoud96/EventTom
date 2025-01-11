@@ -29,7 +29,7 @@ public record EventCreateDTO(
         @Positive(message = "Base price must be positive")
         BigDecimal basePrice,
 
-        @NotEmpty(message = "At least one manager must be assigned")
+        // @NotEmpty(message = "At least one manager must be assigned")
         List<Long> managerIds
 ) {}
 

@@ -1,6 +1,8 @@
 package API.EventTom.controller.users;
 
+import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.dto.CustomerDTO;
+import API.EventTom.dto.response.VoucherDashboardDTO;
 import API.EventTom.services.users.interfaces.ICustomerQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +29,10 @@ public class CustomerController {
     public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
         CustomerDTO customerDTO = customerService.getById(id);
         return ResponseEntity.ok(customerDTO);
+    }
+
+    @GetMapping("/voucher-information")
+    public ResponseEntity<VoucherDashboardDTO> getVoucherInformation(@AuthenticatedUserId Long userId) {
+        return ResponseEntity.ok(customerService.getCustomerVoucherDashboardByUserId(userId));
     }
 }

@@ -12,4 +12,5 @@ import java.util.Optional;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
      Optional<Customer> findCustomerByCustomerNumber(String customerNumber);
      Optional<Customer> findByUserId(Long userId);
+     Long countAllVoucherByUserId(Long userId);
 }
