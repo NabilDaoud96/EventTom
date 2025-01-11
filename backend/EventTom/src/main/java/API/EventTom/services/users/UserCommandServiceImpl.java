@@ -4,6 +4,7 @@ package API.EventTom.services.users;
 import API.EventTom.dto.request.UserEditProfileRequestDTO;
 import API.EventTom.dto.response.UserDTO;
 import API.EventTom.exceptions.notFoundExceptions.UserNotFoundException;
+import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.user.User;
 import API.EventTom.repositories.UserRepository;
 import API.EventTom.services.users.interfaces.IUserCommandService;
@@ -17,10 +18,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserCommandServiceImpl implements IUserCommandService {
     private final UserRepository userRepository;
-
+    private final StandardDTOMapper standardDTOMapper;
 
     @Override
-    public UserEditProfileRequestDTO editProfile(UserEditProfileRequestDTO userEditProfileRequestDTO, Long userId) {
+    public UserDTO editProfile(UserEditProfileRequestDTO userEditProfileRequestDTO, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new UserNotFoundException("User with ID " + userId + " could not be found" ));
 
@@ -31,7 +32,7 @@ public class UserCommandServiceImpl implements IUserCommandService {
         user.setUpdatedAt(LocalDateTime.now());
 
         userRepository.save(user);
-        return userEditProfileRequestDTO;
+        return standardDTOMapper.mapUserToUserDTO(user);
     }
 }
 

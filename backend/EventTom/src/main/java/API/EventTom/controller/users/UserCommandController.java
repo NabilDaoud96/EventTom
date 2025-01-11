@@ -18,7 +18,7 @@ public class UserCommandController {
     private final IUserCommandService userCommandService;
 
     @PostMapping("/edit")
-    public ResponseEntity<UserEditProfileRequestDTO> editUser(@RequestBody UserEditProfileRequestDTO userDTO, @AuthenticatedUserId Long userId) {
+    public ResponseEntity<UserDTO> editUser(@RequestBody UserEditProfileRequestDTO userDTO, @AuthenticatedUserId Long userId) {
         return ResponseEntity.ok(userCommandService.editProfile(userDTO, userId));
     }
 }

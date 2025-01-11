@@ -1,6 +1,7 @@
 package API.EventTom.mappers;
 
 import API.EventTom.dto.*;
+import API.EventTom.dto.response.UserDTO;
 import API.EventTom.models.Notification;
 import API.EventTom.models.event.Event;
 import API.EventTom.models.event.Ticket;
@@ -73,6 +74,15 @@ public class StandardDTOMapper {
     }
     public NotificationDTO mapNotificationToNotificationDTO(Notification notification) {
         return new NotificationDTO(notification.getId(), notification.getUser().getId(), notification.getCreatedAt(), notification.getMessage());
+    }
+
+    public UserDTO mapUserToUserDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail()
+        );
     }
 
 }
