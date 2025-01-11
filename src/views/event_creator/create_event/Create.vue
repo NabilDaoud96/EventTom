@@ -76,14 +76,14 @@
                   <div class="relative w-full mb-3">
                     <label
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                      for="password"
+                      for="price"
                     >
-                      Password
+                      Price
                     </label>
                     <input
-                      id="password"
+                      id="price"
                       type="text"
-                      v-model="event.password"
+                      v-model="event.price"
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                     />
                   </div>
@@ -94,6 +94,7 @@
                 <button
                   class="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
                   type="button"
+                  @click="submitEvent"
                 >
                   Save
                 </button>
@@ -107,18 +108,45 @@
   
   <script>
   import image from "@/assets/img/events-1.jpg"; // Default event Image
+  //import apiClient from "../../../../apiService";
+  import axios from "axios"
   
   export default {
     data() {
       return {
         event: {
-          title: 'Circus',
-          location: 'Berlin',
-          Date: '5/1/2025',
+          title: '',
+          location: '',
+          Date: '',
+          price: ''
         },
+        responese: null,
+        error: null,
         eventPicture: image, // Default event image
       };
     },
+    methods: {
+      async submitEvent() {
+    try {
+
+      const response = await axios.post(
+        "http://localhost:8080/api/events/create", 
+        this.event,
+        {
+          headers: {
+            'Content-Type' : 'application/json'
+          }
+        }
+      );
+
+      // Success handling
+      alert("Event created successfully: " + response.data.title);
+    } catch (error) {
+      console.error("Error creating event:", error);
+      alert("Failed to create event");
+    }
+  }
+  },
   };
   </script>
   
