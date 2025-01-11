@@ -26,7 +26,9 @@ export const useAuth = (options = {}) => {  // Accept options as parameter
             })
             router.push(loginRedirect)
         } catch (e) {
-            error.value = e.message
+            if (e.response) {
+                error.value = e.response.data.error
+            }
         } finally {
             loading.value = false
         }
@@ -38,15 +40,18 @@ export const useAuth = (options = {}) => {  // Accept options as parameter
             await store.dispatch('auth/logout')
             router.push(logoutRedirect)
         } catch (e) {
-            error.value = e.message
-            console.error('Logout error:', e)
+            if (e.response) {
+                error.value = e.response.data.error
+            }
         }
     }
     const checkAuth = async () => {
         try {
             return await store.dispatch('auth/checkAuthentication')
         } catch (e) {
-            error.value = e.message
+            if (e.response) {
+                error.value = e.response.data.error
+            }
             return false
         }
     }

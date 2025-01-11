@@ -3,11 +3,8 @@
     <div class="flex content-center items-center justify-center h-full">
       <div class="w-full lg:w-4/12 px-4">
         <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200 border-0">
-          <div class="rounded-t mb-0 px-6 py-6">
 
-
-          </div>
-          <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
+          <div class="flex-auto mt-5 px-4 lg:px-10 py-10 pt-0">
             <div class="text-black text-center mb-3 font-bold">
               <h1>Sign in with</h1>
             </div>
@@ -93,9 +90,7 @@
 <script setup>
 /* eslint-disable no-unused-vars */
 import { useAuth } from '@/composables/useAuth'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
 const { email, password, loading, error, login } = useAuth()
 
 const handleLogin = async () => {

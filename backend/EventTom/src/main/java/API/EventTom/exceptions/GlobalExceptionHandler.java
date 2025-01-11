@@ -8,6 +8,8 @@ import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import javax.naming.AuthenticationException;
 import java.util.stream.Collectors;
 
 import static API.EventTom.exceptions.ExceptionUtils.buildResponseEntity;
@@ -41,6 +44,21 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessageDTO> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         return buildResponseEntity("Error handling Data", HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorMessageDTO> handleBadCredentialsException(BadCredentialsException e) {
+        return buildResponseEntity("Invalid username or password", HttpStatus.UNAUTHORIZED, e);
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorMessageDTO> handleAuthenticationException(AuthenticationException e) {
+        return buildResponseEntity("Authentication failed", HttpStatus.UNAUTHORIZED, e);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorMessageDTO> handleAccessDeniedException(AccessDeniedException e) {
+        return buildResponseEntity("Access denied", HttpStatus.FORBIDDEN, e);
+    }
+
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorMessageDTO> handleMethodNotAllowedException(Exception e) {
