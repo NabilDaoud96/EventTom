@@ -4,6 +4,10 @@ import API.EventTom.dto.TicketDTO;
 import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.services.tickets.interfaces.ITicketQueryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,8 +25,15 @@ public class TicketQueryController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<TicketDTO>> getLoggedInUserTickets(@AuthenticatedUserId Long userId) {
-        List<TicketDTO> tickets = ticketQueryService.findAllByUserId(userId);
+    public ResponseEntity<Page<TicketDTO>> getLoggedInUserTickets(@AuthenticatedUserId Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<TicketDTO> tickets = ticketQueryService.findAllByUserId(userId, pageable);
         return ResponseEntity.ok(tickets);
     }
 

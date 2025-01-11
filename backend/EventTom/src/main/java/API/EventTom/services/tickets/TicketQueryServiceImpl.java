@@ -23,14 +23,14 @@ import java.util.stream.Collectors;
 @Service
 public class TicketQueryServiceImpl extends BaseQueryService<Ticket, TicketDTO, Long> implements ITicketQueryService {
 
-    TicketRepository ticketRepository;
-    StandardDTOMapper standardDTOMapper;
-    EventRepository eventRepository;
-    CustomerRepository customerRepository;
+    private final TicketRepository ticketRepository;
+    private final StandardDTOMapper standardDTOMapper;
+    private final EventRepository eventRepository;
+    private final CustomerRepository customerRepository;
 
     public TicketQueryServiceImpl(
             TicketRepository ticketRepository,
-            StandardDTOMapper standardDTOMapper,
+            StandardDTOMapper standardDTOMapper, StandardDTOMapper standardDTOMapper1,
             EventRepository eventRepository,
             CustomerRepository customerRepository) {
         super(ticketRepository,
@@ -38,6 +38,7 @@ public class TicketQueryServiceImpl extends BaseQueryService<Ticket, TicketDTO, 
                 standardDTOMapper::mapTicketToTicketDTO,
                 "Ticket");
         this.ticketRepository = ticketRepository;
+        this.standardDTOMapper = standardDTOMapper1;
         this.eventRepository = eventRepository;
         this.customerRepository = customerRepository;
     }
@@ -69,6 +70,7 @@ public class TicketQueryServiceImpl extends BaseQueryService<Ticket, TicketDTO, 
     @Override
     public List<TicketDTO> findAllByUserId(Long userId) {
         List<Ticket> tickets = ticketRepository.findAllByUserId(userId);
+        System.out.println(tickets.size());
         return tickets.stream()
                 .map(standardDTOMapper::mapTicketToTicketDTO)
                 .collect(Collectors.toList());

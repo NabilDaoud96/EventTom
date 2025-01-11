@@ -34,10 +34,8 @@ const actions = {
         try {
             await api.post('/auth/signout')
 
-            // Clear local storage
             localStorage.removeItem('user')
 
-            // Remove token from axios headers
             delete axios.defaults.headers.common['Authorization']
 
             commit('SET_LOGOUT')

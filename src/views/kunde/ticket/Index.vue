@@ -14,12 +14,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="event in paginatedEvents" :key="event.id">
-          <td class="px-4 py-2 border">{{ event.name }}</td>
-          <td class="px-4 py-2 border">{{ event.date }}</td>
-          <td class="px-4 py-2 border">{{ event.location }}</td>
-          <td class="px-4 py-2 border">{{ event.price }}€</td>
-          <td class="px-4 py-2 border">{{ event.daysLeft }}</td>
+        <tr v-for="ticket in paginatedTickets" :key="ticket.id">
+          <td class="px-4 py-2 border">{{ ticket.id }}</td>
+          <td class="px-4 py-2 border">{{ ticket.id }}</td>
+          <td class="px-4 py-2 border">{{ ticket.purchaseDate }}</td>
+          <td class="px-4 py-2 border">{{ ticket.statusUsed }}</td>
+          <td class="px-4 py-2 border">{{ ticket.finalPrice }}</td>
+
         </tr>
       </tbody>
     </table>
@@ -62,73 +63,65 @@
 </template>
 
 <script>
-import axios from "axios";
+import { useTickets } from '@/composables/useTickets'
+
+const {error, loading, getUserTickets} = useTickets()
 
 export default {
   data() {
     return {
-      events: [], // All events
+      tickets: [], // All events
       currentPage: 1, // Current page
-      rowsPerPage: 10, // Rows per page
+      rowsPerPage: 10, // Anzahl der Events pro Seite
+      totalElements: 0, // Gesamtanzahl der Events
+      totalPages: 0, // Gesamtanzahl der Seiten
     };
   },
   computed: {
-    // Paginated Events for the Current Page
-    paginatedEvents() {
+    paginatedTickets() {
       const start = (this.currentPage - 1) * this.rowsPerPage;
       const end = start + this.rowsPerPage;
-      return this.events.slice(start, end);
+      return this.tickets.slice(start, end);
     },
-    // Total Pages Calculation
     totalPages() {
-      return Math.ceil(this.events.length / this.rowsPerPage);
+      return Math.ceil(this.tickets.length / this.rowsPerPage);
     },
   },
   methods: {
-    // Move to the Previous Page
+
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
     },
-    // Move to the Next Page
+
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
     },
-    // Go to Specific Page
+
     goToPage(page) {
       this.currentPage = page;
     },
+
+    async fetchTickets() {
+      try {
+        const response = await getUserTickets();
+        this.tickets = response.content
+        this.totalElements = response.data.totalElements;
+        this.totalPages = response.data.totalPages;
+
+      } catch (err) {
+        console.log(err);
+      }
+    }
   },
   created() {
-    // Fetch Events from the API
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => {
-        const cities = ["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Stuttgart", "Düsseldorf", "Leipzig", "Dortmund", "Essen"];
-        const today = new Date();
-        // Map the response data to match the event structure
-        this.events = response.data.map((item) => {
-          const eventDate = new Date();
-          eventDate.setDate(today.getDate() + Math.floor(Math.random() * 30)); // Random days ahead
-          const daysLeft = Math.ceil((eventDate - today) / (1000 * 60 * 60 * 24)); // Days until the event
-          return {
-            id: item.id,
-            name: item.title.split(" ").slice(0, 8).join(" "),
-            date : eventDate.toLocaleDateString('en-GB').replace(/\//g, '-'),
-            location: cities[Math.floor(Math.random() * cities.length)], // Random city from the list
-            price: (Math.random() * 100).toFixed(2),
-            daysLeft: daysLeft, // How many days until the event
-          };
-        });
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  },
-};
+    this.fetchTickets();
+  }
+}
+
 </script>
 
 
