@@ -2,7 +2,7 @@
 
 
     import API.EventTom.DTO.VoucherDTO;
-    import API.EventTom.DTO.VoucherResponse;
+    import API.EventTom.DTO.response.VoucherResponseDTO;
     import API.EventTom.mappers.StandardDTOMapper;
     import API.EventTom.models.Voucher;
     import API.EventTom.repositories.VoucherRepository;
@@ -21,11 +21,11 @@
         StandardDTOMapper standardDTOMapper;
 
         @Override
-        public List<VoucherResponse> getVouchersByCustomerId(Long userId) {
+        public List<VoucherResponseDTO> getVouchersByCustomerId(Long userId) {
             List<Voucher> vouchers = voucherRepository.findByUserId(userId);
 
             return vouchers.stream()
-                    .map(VoucherResponse::fromVoucher)
+                    .map(VoucherResponseDTO::fromVoucher)
                     .collect(Collectors.toList());
         }
 

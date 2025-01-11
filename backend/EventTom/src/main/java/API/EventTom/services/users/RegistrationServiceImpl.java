@@ -1,8 +1,8 @@
 package API.EventTom.services.users;
 
-import API.EventTom.DTO.request.EmployeeRegisterRequest;
-import API.EventTom.DTO.request.CustomerRegisterRequest;
-import API.EventTom.DTO.response.RegisterResponse;
+import API.EventTom.DTO.request.EmployeeRegisterRequestDTO;
+import API.EventTom.DTO.request.CustomerRegisterRequestDTO;
+import API.EventTom.DTO.response.RegisterResponseDTO;
 import API.EventTom.exceptions.userExceptions.EmailAlreadyExistsException;
 import API.EventTom.models.*;
 import API.EventTom.repositories.CustomerRepository;
@@ -29,10 +29,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
     @Override
     @Transactional
-    public ResponseEntity<?> registerCustomer(CustomerRegisterRequest request) {
-        validateEmailUniqueness(request.getEmail());
+    public RegisterResponseDTO registerCustomer(CustomerRegisterRequestDTO request) {
+        validateEmailUniqueness(request.email());
 
-        User user = createBaseUser(request.getEmail(), request.getPassword(), request.getFirstName(), request.getLastName(), UserType.CUSTOMER);
+        User user = createBaseUser(request.email(), request.password(), request.firstName(), request.lastName(), UserType.CUSTOMER);
         user.setRoles(roleManagementService.getDefaultRoles());
 
         Customer customer = new Customer();
@@ -40,32 +40,28 @@ public class RegistrationServiceImpl implements IRegistrationService {
 
         customer.setCustomerNumber(userNumberGenerator.generateCustomerNumber());
 
-        // Save user first
         user = userRepository.save(user);
         customer = customerRepository.save(customer);
 
-        return ResponseEntity.ok(createRegisterResponse(user));
+        return createRegisterResponse(user);
     }
 
     @Override
     @Transactional
-    public ResponseEntity<?> registerEmployee(EmployeeRegisterRequest request) {
-        validateEmailUniqueness(request.getEmail());
+    public RegisterResponseDTO registerEmployee(EmployeeRegisterRequestDTO request) {
+        validateEmailUniqueness(request.email());
 
-        // Create and setup the user
-        User user = createBaseUser(request.getEmail(), request.getPassword(), request.getFirstName(), request.getLastName(), UserType.EMPLOYEE);
-        user.setRoles(roleManagementService.getRolesByNames(request.getRoles()));
+        User user = createBaseUser(request.email(), request.password(), request.firstName(), request.lastName(), UserType.EMPLOYEE);
+        user.setRoles(roleManagementService.getRolesByNames(request.roles()));
 
-        // Create and setup the employee
         Employee employee = new Employee();
         employee.setUser(user);
         employee.setEmployeeNumber(userNumberGenerator.generateEmployeeNumber());
 
-        // Save both entities
         user = userRepository.save(user);
         employee = employeeRepository.save(employee);
 
-        return ResponseEntity.ok(createRegisterResponse(user));
+        return createRegisterResponse(user);
     }
 
     private void validateEmailUniqueness(String email) {
@@ -85,8 +81,8 @@ public class RegistrationServiceImpl implements IRegistrationService {
         return user;
     }
 
-    private RegisterResponse createRegisterResponse(User user) {
-        return new RegisterResponse(
+    private RegisterResponseDTO createRegisterResponse(User user) {
+        return new RegisterResponseDTO(
                 user.getId(),
                 user.getEmail(),
                 "User registered successfully"

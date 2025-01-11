@@ -17,4 +17,7 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
      @Query("SELECT t FROM Ticket t WHERE t.customer.user.id = :userId")
      List<Ticket> findAllByUserId(Long userId);
+
+     @Query("SELECT t FROM Ticket t WHERE t.customer.user.id = :userId AND t.event.id = :eventId")
+     List<Ticket> findAllByUserIdAndEventId(Long userId, Long eventId);
 }

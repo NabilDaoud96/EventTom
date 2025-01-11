@@ -27,7 +27,7 @@ public class EventCommandServiceImpl implements IEventCommandService {
     @Override
     @Transactional
     public EventDTO createEvent(EventCreateDTO eventCreateDTO, Long userId) {
-        List<Employee> managers = eventCreateDTO.getManagerIds().stream()
+        List<Employee> managers = eventCreateDTO.managerIds().stream()
                 .map(id -> employeeRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("Manager not found with ID: " + id)))
                 .collect(Collectors.toList());
@@ -36,14 +36,14 @@ public class EventCommandServiceImpl implements IEventCommandService {
                 .orElseThrow(() -> new ResourceNotFoundException("Creator not found"));
 
         Event event = new Event();
-        event.setTitle(eventCreateDTO.getTitle());
-        event.setDateOfEvent(eventCreateDTO.getDateOfEvent());
-        event.setMaxTotalTickets(eventCreateDTO.getTotalTickets());
-        event.setThresholdValue(eventCreateDTO.getThresholdValue());
-        event.setBasePrice(eventCreateDTO.getBasePrice());
+        event.setTitle(eventCreateDTO.title());
+        event.setDateOfEvent(eventCreateDTO.dateOfEvent());
+        event.setMaxTotalTickets(eventCreateDTO.totalTickets());
+        event.setThresholdValue(eventCreateDTO.thresholdValue());
+        event.setBasePrice(eventCreateDTO.basePrice());
         event.setManagers(managers);
         event.setCreator(creator);
-        event.setLocation(eventCreateDTO.getLocation());
+        event.setLocation(eventCreateDTO.location());
 
         Event savedEvent = eventRepository.save(event);
         EventDTO eventDTO = standardDTOMapper.mapEventToEventDTO(savedEvent);
@@ -65,11 +65,11 @@ public class EventCommandServiceImpl implements IEventCommandService {
             throw new AccessDeniedException("User is not authorized to update this event");
         }
 
-        event.setTitle(eventUpdateDTO.getTitle());
-        event.setDateOfEvent(eventUpdateDTO.getDateOfEvent());
-        event.setMaxTotalTickets(eventUpdateDTO.getTotalTickets());
-        event.setThresholdValue(eventUpdateDTO.getThresholdValue());
-        event.setBasePrice(eventUpdateDTO.getBasePrice());
+        event.setTitle(eventUpdateDTO.title());
+        event.setDateOfEvent(eventUpdateDTO.dateOfEvent());
+        event.setMaxTotalTickets(eventUpdateDTO.totalTickets());
+        event.setThresholdValue(eventUpdateDTO.thresholdValue());
+        event.setBasePrice(eventUpdateDTO.basePrice());
 
         Event updatedEvent = eventRepository.save(event);
         return standardDTOMapper.mapEventToEventDTO(updatedEvent);

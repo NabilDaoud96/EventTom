@@ -10,59 +10,58 @@ import java.util.stream.Collectors;
 public class StandardDTOMapper {
 
     public CustomerDTO mapCustomerToCustomerDTO(Customer customer) {
-        CustomerDTO customerDTO = new CustomerDTO();
         User user = customer.getUser();
-        customerDTO.setName(user.getFirstName() + " " + user.getLastName());
-        customerDTO.setEmail(user.getEmail());
-        customerDTO.setTickets(customer.getTickets().stream()
-                .map(this::mapTicketToTicketDTO)
-                .collect(Collectors.toList()));
-        customerDTO.setVouchers(customer.getVouchers().stream()
-                .map(this::mapVoucherToVoucherDTO)
-                .collect(Collectors.toList()));
-        System.out.println(customerDTO);
-        return customerDTO;
+        return new CustomerDTO(
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail(),
+                customer.getVouchers().stream()
+                        .map(this::mapVoucherToVoucherDTO)
+                        .collect(Collectors.toList()),
+                customer.getTickets().stream()
+                        .map(this::mapTicketToTicketDTO)
+                        .collect(Collectors.toList())
+        );
     }
 
     public EmployeeDTO mapEmployeeToEmployeeDTO(Employee employee) {
-        EmployeeDTO employeeDTO = new EmployeeDTO();
         User user = employee.getUser();
-        employeeDTO.setEmail(user.getEmail());
-        employeeDTO.setRoles(user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet()));
-        employeeDTO.setName(user.getFirstName() + " " + user.getLastName());
-        return employeeDTO;
+        return new EmployeeDTO(
+                user.getRoles().stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toSet()),
+                user.getFirstName() + " " + user.getLastName(),
+                user.getEmail()
+        );
     }
 
     public EventDTO mapEventToEventDTO(Event event) {
-        EventDTO eventDTO = new EventDTO();
-        eventDTO.setId(event.getId());
-        eventDTO.setTitle(event.getTitle());
-        eventDTO.setSoldTickets(event.getTotalSoldTickets());
-        eventDTO.setBasePrice(event.getBasePrice());
-        eventDTO.setThresholdValue(event.getThresholdValue());
-        eventDTO.setAvailableTickets(event.getAvailableTickets());
-        eventDTO.setDateOfEvent(event.getDateOfEvent());
-        eventDTO.setLocation(event.getLocation());
-        return eventDTO;
+        return new EventDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDateOfEvent(),
+                event.getTotalSoldTickets(),
+                event.getThresholdValue(),
+                event.getAvailableTickets(),
+                event.getBasePrice(),
+                event.getLocation()
+        );
     }
 
     public VoucherDTO mapVoucherToVoucherDTO(Voucher voucher) {
-        VoucherDTO voucherDTO = new VoucherDTO();
-        voucherDTO.setCustomerId(voucher.getCustomer().getUser().getId());
-        voucherDTO.setAmount(voucher.getAmount());
-        voucherDTO.setTicketValidUntil(voucher.getExpirationDate());
-        return voucherDTO;
+        return new VoucherDTO(
+                voucher.getCustomer().getUser().getId(),
+                voucher.getAmount(),
+                voucher.getExpirationDate()
+        );
     }
 
     public TicketDTO mapTicketToTicketDTO(Ticket ticket) {
-        TicketDTO ticketDTO = new TicketDTO();
-        ticketDTO.setFinalPrice(ticket.getBasePrice());
-        ticketDTO.setCustomerId(ticket.getCustomer().getUser().getId());
-        ticketDTO.setStatusUsed(ticket.isStatusUsed());
-        ticketDTO.setPurchaseDate(ticket.getPurchaseDate());
-        ticketDTO.setEventId(ticket.getEvent().getId());
-        return ticketDTO;
+        return new TicketDTO(
+                ticket.getBasePrice(),
+                ticket.getPurchaseDate(),
+                ticket.isStatusUsed(),
+                ticket.getEvent().getId(),
+                ticket.getCustomer().getUser().getId()
+        );
     }
 }

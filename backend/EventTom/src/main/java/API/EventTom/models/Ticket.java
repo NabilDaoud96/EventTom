@@ -2,6 +2,8 @@ package API.EventTom.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,15 +23,20 @@ public class Ticket {
     private Long Id;
 
     @Column(name = "purchase_date")
+    @NotNull(message = "Purchase date is required")
     private LocalDateTime purchaseDate;
 
     @Column(name = "status_used", nullable = false)
     private boolean statusUsed = false;
 
     @Column(name = "final_price")
+    @NotNull(message = "Final price is required")
+    @Positive(message = "Final price must be positive")
     private BigDecimal finalPrice;
 
     @Column(name = "base_price")
+    @NotNull(message = "Base price is required")
+    @Positive(message = "Base price must be positive")
     private BigDecimal basePrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
