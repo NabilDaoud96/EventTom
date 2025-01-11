@@ -1,8 +1,8 @@
 package API.EventTom.services.websockets;
 
-import API.EventTom.DTO.EventDTO;
+import API.EventTom.dto.EventDTO;
 import API.EventTom.mappers.StandardDTOMapper;
-import API.EventTom.models.Event;
+import API.EventTom.models.event.Event;
 import API.EventTom.services.websockets.interfaces.IDestinationStrategy;
 import API.EventTom.services.websockets.interfaces.IEventBroadcastService;
 import API.EventTom.services.websockets.interfaces.IWebsocketBroadcastStrategy;

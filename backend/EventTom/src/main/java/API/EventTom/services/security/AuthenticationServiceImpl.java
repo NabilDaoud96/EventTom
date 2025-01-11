@@ -1,12 +1,14 @@
 package API.EventTom.services.security;
-import API.EventTom.DTO.request.LoginRequestDTO;
-import API.EventTom.DTO.response.LoginResponseDTO;
-import API.EventTom.DTO.response.TokenRefreshResponseDTO;
+import API.EventTom.dto.request.LoginRequestDTO;
+import API.EventTom.dto.response.LoginResponseDTO;
+import API.EventTom.dto.response.TokenRefreshResponseDTO;
 import API.EventTom.config.security.SecurityContextManager;
-import API.EventTom.config.jwt.JwtUtils;
+import API.EventTom.config.security.jwt.JwtUtils;
 import API.EventTom.exceptions.tokenException.TokenProcessingException;
 import API.EventTom.exceptions.tokenException.TokenRefreshException;
-import API.EventTom.models.*;
+import API.EventTom.models.user.RefreshToken;
+import API.EventTom.models.user.User;
+import API.EventTom.models.user.UserDetailsImpl;
 import API.EventTom.services.security.interfaces.IAuthenticationService;
 import API.EventTom.services.security.interfaces.ICookieService;
 import API.EventTom.services.security.interfaces.ITokenStorageService;
@@ -39,7 +41,7 @@ public class AuthenticationServiceImpl implements IAuthenticationService {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         String jwt = jwtUtils.generateJwtToken(userDetails);
-
+        System.out.println(jwt);
         RefreshToken refreshToken = tokenStorageService.createRefreshToken(userDetails.getId());
 
         response.addHeader("Set-Cookie", cookieService.createAuthCookie(jwt).toString());

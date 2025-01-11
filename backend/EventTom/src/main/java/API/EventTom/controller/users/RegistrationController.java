@@ -1,8 +1,8 @@
 package API.EventTom.controller.users;
 
-import API.EventTom.DTO.request.CustomerRegisterRequestDTO;
-import API.EventTom.DTO.request.EmployeeRegisterRequestDTO;
-import API.EventTom.DTO.response.RegisterResponseDTO;
+import API.EventTom.dto.request.CustomerRegisterRequestDTO;
+import API.EventTom.dto.request.EmployeeRegisterRequestDTO;
+import API.EventTom.dto.response.RegisterResponseDTO;
 import API.EventTom.services.users.interfaces.IRegistrationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

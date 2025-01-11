@@ -1,8 +1,8 @@
 package API.EventTom.services.tickets;
 
-import API.EventTom.models.Customer;
-import API.EventTom.models.Event;
-import API.EventTom.models.Ticket;
+import API.EventTom.models.user.Customer;
+import API.EventTom.models.event.Event;
+import API.EventTom.models.event.Ticket;
 import API.EventTom.observers.TicketPurchaseEvent;
 import API.EventTom.repositories.TicketRepository;
 import API.EventTom.services.tickets.interfaces.ITicketCreationService;

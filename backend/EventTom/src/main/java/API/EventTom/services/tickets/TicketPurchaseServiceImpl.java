@@ -1,12 +1,12 @@
 package API.EventTom.services.tickets;
 
-import API.EventTom.DTO.request.PurchaseTicketDTO;
-import API.EventTom.DTO.response.TicketPurchaseResponseDTO;
+import API.EventTom.dto.request.PurchaseTicketDTO;
+import API.EventTom.dto.response.TicketPurchaseResponseDTO;
 import API.EventTom.exceptions.notFoundExceptions.CustomerNotFoundException;
 import API.EventTom.exceptions.notFoundExceptions.EventNotFoundException;
-import API.EventTom.models.Customer;
-import API.EventTom.models.Event;
-import API.EventTom.models.Voucher;
+import API.EventTom.models.user.Customer;
+import API.EventTom.models.event.Event;
+import API.EventTom.models.event.Voucher;
 import API.EventTom.repositories.CustomerRepository;
 import API.EventTom.repositories.EventRepository;
 import API.EventTom.services.tickets.interfaces.ITicketCreationService;

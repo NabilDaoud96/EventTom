@@ -1,9 +1,8 @@
 package API.EventTom.controller.tickets;
 
-import API.EventTom.DTO.TicketDTO;
-import API.EventTom.config.AuthenticatedUserId;
+import API.EventTom.dto.TicketDTO;
+import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.services.tickets.interfaces.ITicketQueryService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +22,7 @@ public class TicketQueryController {
 
     @GetMapping("/user")
     public ResponseEntity<List<TicketDTO>> getLoggedInUserTickets(@AuthenticatedUserId Long userId) {
-        List<TicketDTO> tickets = ticketQueryService.getTicketsByUserId(userId);
+        List<TicketDTO> tickets = ticketQueryService.findAllByUserId(userId);
         return ResponseEntity.ok(tickets);
     }
 
@@ -43,7 +42,7 @@ public class TicketQueryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TicketDTO> getTicketById(@PathVariable long id) {
-        TicketDTO ticketDTO = ticketQueryService.getTicketById(id);
+        TicketDTO ticketDTO = ticketQueryService.getById(id);
         return ResponseEntity.ok(ticketDTO);
     }
 }

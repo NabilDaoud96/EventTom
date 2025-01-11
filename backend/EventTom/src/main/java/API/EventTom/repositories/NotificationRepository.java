@@ -1,7 +1,9 @@
 package API.EventTom.repositories;
 
 import API.EventTom.models.Notification;
-import API.EventTom.models.User;
+import API.EventTom.models.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,13 +14,12 @@ import java.util.List;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    // Change from 'Read' to 'IsRead' in the method name
-    List<Notification> findByRecipientAndIsReadOrderByCreatedAtDesc(User recipient, boolean isRead);
+    List<Notification> findByUserAndReadOrderByCreatedAtDesc(User recipient, boolean isRead);
 
-    List<Notification> findByRecipientOrderByCreatedAtDesc(User recipient);
+    List<Notification> findAllByUserId(long userId);
+    Page<Notification> findAllByUserId(long userId, Pageable pageable);
 
-    // Assuming you have a @Query for markAllAsRead, it needs to be updated too
     @Modifying
-    @Query("UPDATE Notification n SET n.isRead = true WHERE n.recipient = :person")
-    void markAllAsRead(@Param("person") User user);
+    @Query("UPDATE Notification n SET n.read = true WHERE n.user = :user")
+    void markAllAsRead(@Param("user") User user);
 }

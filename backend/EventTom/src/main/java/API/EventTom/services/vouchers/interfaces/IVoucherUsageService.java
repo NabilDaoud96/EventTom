@@ -1,6 +1,6 @@
 package API.EventTom.services.vouchers.interfaces;
 
-import API.EventTom.models.Voucher;
+import API.EventTom.models.event.Voucher;
 
 import java.math.BigDecimal;
 import java.util.List;

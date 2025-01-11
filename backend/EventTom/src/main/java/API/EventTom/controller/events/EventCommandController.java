@@ -1,8 +1,8 @@
 package API.EventTom.controller.events;
-import API.EventTom.DTO.EventDTO;
-import API.EventTom.DTO.request.EventCreateDTO;
-import API.EventTom.DTO.request.EventUpdateDTO;
-import API.EventTom.config.AuthenticatedUserId;
+import API.EventTom.dto.EventDTO;
+import API.EventTom.dto.request.EventCreateDTO;
+import API.EventTom.dto.request.EventUpdateDTO;
+import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.services.events.IEventCommandService;
 import jakarta.annotation.Nonnull;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
-import java.util.List;
+
 @RestController
 @AllArgsConstructor
 //sollte api/events/commands sein

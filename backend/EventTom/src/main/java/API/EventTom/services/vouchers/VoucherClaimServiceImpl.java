@@ -1,7 +1,7 @@
 package API.EventTom.services.vouchers;
 
-import API.EventTom.models.Customer;
-import API.EventTom.models.Voucher;
+import API.EventTom.models.user.Customer;
+import API.EventTom.models.event.Voucher;
 import API.EventTom.repositories.CustomerRepository;
 import API.EventTom.repositories.VoucherRepository;
 import API.EventTom.services.vouchers.interfaces.IVoucherClaimService;

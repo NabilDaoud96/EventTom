@@ -1,10 +1,9 @@
 package API.EventTom.controller.tickets;
 
-import API.EventTom.DTO.request.PurchaseTicketDTO;
-import API.EventTom.DTO.response.TicketPurchaseResponseDTO;
-import API.EventTom.config.AuthenticatedUserId;
+import API.EventTom.dto.request.PurchaseTicketDTO;
+import API.EventTom.dto.response.TicketPurchaseResponseDTO;
+import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.services.tickets.interfaces.ITicketPurchaseService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

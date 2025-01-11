@@ -1,8 +1,7 @@
 package API.EventTom.services.tickets.interfaces;
 
-import API.EventTom.DTO.request.PurchaseTicketDTO;
-import API.EventTom.models.Customer;
-import API.EventTom.models.Event;
+import API.EventTom.dto.request.PurchaseTicketDTO;
+import API.EventTom.models.event.Event;
 
 public interface ITicketValidator {
     void validatePurchaseRequest(Event event, PurchaseTicketDTO dto);

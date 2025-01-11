@@ -1,7 +1,7 @@
 package API.EventTom.services.websockets.interfaces;
 
-import API.EventTom.DTO.EventDTO;
-import API.EventTom.models.Event;
+import API.EventTom.dto.EventDTO;
+import API.EventTom.models.event.Event;
 
 public interface IEventBroadcastService {
     void broadcastEventCreation(EventDTO eventDTO);

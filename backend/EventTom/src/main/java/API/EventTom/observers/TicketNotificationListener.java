@@ -1,8 +1,8 @@
 package API.EventTom.observers;
 
-import API.EventTom.DTO.WebSocketMessageDTO;
-import API.EventTom.models.Roles;
-import API.EventTom.models.User;
+import API.EventTom.dto.WebSocketMessageDTO;
+import API.EventTom.models.user.Roles;
+import API.EventTom.models.user.User;
 import API.EventTom.repositories.EmployeeRepository;
 import API.EventTom.services.notifications.IWebsiteNotificationService;
 import API.EventTom.services.websockets.interfaces.IUserBroadcastService;

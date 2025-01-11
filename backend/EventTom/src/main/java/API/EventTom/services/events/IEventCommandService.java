@@ -1,8 +1,8 @@
 package API.EventTom.services.events;
 
-import API.EventTom.DTO.EventDTO;
-import API.EventTom.DTO.request.EventCreateDTO;
-import API.EventTom.DTO.request.EventUpdateDTO;
+import API.EventTom.dto.EventDTO;
+import API.EventTom.dto.request.EventCreateDTO;
+import API.EventTom.dto.request.EventUpdateDTO;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;

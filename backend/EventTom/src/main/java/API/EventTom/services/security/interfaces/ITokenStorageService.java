@@ -1,6 +1,6 @@
 package API.EventTom.services.security.interfaces;
 
-import API.EventTom.models.RefreshToken;
+import API.EventTom.models.user.RefreshToken;
 
 import java.util.Optional;
 

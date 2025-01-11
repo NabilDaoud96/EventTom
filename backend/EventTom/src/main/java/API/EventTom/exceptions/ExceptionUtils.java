@@ -1,6 +1,6 @@
 package API.EventTom.exceptions;
 
-import API.EventTom.DTO.response.ErrorMessageDTO;
+import API.EventTom.dto.response.ErrorMessageDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.slf4j.Logger;

@@ -6,8 +6,8 @@ import java.util.UUID;
 
 import API.EventTom.exceptions.notFoundExceptions.UserNotFoundException;
 import API.EventTom.exceptions.tokenException.TokenRefreshException;
-import API.EventTom.models.RefreshToken;
-import API.EventTom.models.User;
+import API.EventTom.models.user.RefreshToken;
+import API.EventTom.models.user.User;
 import API.EventTom.repositories.RefreshTokenRepository;
 import API.EventTom.repositories.UserRepository;
 import API.EventTom.services.security.interfaces.ITokenStorageService;

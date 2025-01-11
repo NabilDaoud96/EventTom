@@ -1,6 +1,6 @@
 package API.EventTom.services.vouchers;
 
-import API.EventTom.models.Voucher;
+import API.EventTom.models.event.Voucher;
 import API.EventTom.repositories.VoucherRepository;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
 import API.EventTom.services.vouchers.interfaces.IVoucherValidationService;

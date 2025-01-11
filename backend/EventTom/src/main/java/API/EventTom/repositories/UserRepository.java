@@ -1,6 +1,6 @@
 package API.EventTom.repositories;
 
-import API.EventTom.models.User;
+import API.EventTom.models.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

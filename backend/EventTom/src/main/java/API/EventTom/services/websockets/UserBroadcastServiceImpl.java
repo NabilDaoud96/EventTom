@@ -1,6 +1,6 @@
 package API.EventTom.services.websockets;
 
-import API.EventTom.DTO.WebSocketMessageDTO;
+import API.EventTom.dto.WebSocketMessageDTO;
 import API.EventTom.services.websockets.interfaces.IDestinationStrategy;
 import API.EventTom.services.websockets.interfaces.IUserBroadcastService;
 import API.EventTom.services.websockets.interfaces.IWebsocketBroadcastStrategy;

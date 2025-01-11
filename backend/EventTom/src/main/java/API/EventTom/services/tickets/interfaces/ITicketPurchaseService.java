@@ -1,7 +1,7 @@
 package API.EventTom.services.tickets.interfaces;
 
-import API.EventTom.DTO.request.PurchaseTicketDTO;
-import API.EventTom.DTO.response.TicketPurchaseResponseDTO;
+import API.EventTom.dto.request.PurchaseTicketDTO;
+import API.EventTom.dto.response.TicketPurchaseResponseDTO;
 
 import java.math.BigDecimal;
 

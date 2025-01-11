@@ -1,8 +1,8 @@
 package API.EventTom.services.users.interfaces;
 
-import API.EventTom.models.Role;
-import API.EventTom.models.Roles;
-import API.EventTom.models.User;
+import API.EventTom.models.user.Role;
+import API.EventTom.models.user.Roles;
+import API.EventTom.models.user.User;
 
 import java.util.Set;
 

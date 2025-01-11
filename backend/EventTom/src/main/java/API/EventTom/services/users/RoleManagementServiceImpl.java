@@ -2,7 +2,10 @@ package API.EventTom.services.users;
 
 import API.EventTom.exceptions.notFoundExceptions.RoleNotFoundException;
 import API.EventTom.exceptions.notFoundExceptions.UserNotFoundException;
-import API.EventTom.models.*;
+import API.EventTom.models.user.Role;
+import API.EventTom.models.user.Roles;
+import API.EventTom.models.user.User;
+import API.EventTom.models.user.UserType;
 import API.EventTom.repositories.RoleRepository;
 import API.EventTom.repositories.UserRepository;
 import API.EventTom.services.users.interfaces.IRoleManagementService;

@@ -1,7 +1,14 @@
 package API.EventTom.mappers;
 
-import API.EventTom.DTO.*;
-import API.EventTom.models.*;
+import API.EventTom.dto.*;
+import API.EventTom.models.Notification;
+import API.EventTom.models.event.Event;
+import API.EventTom.models.event.Ticket;
+import API.EventTom.models.event.Voucher;
+import API.EventTom.models.user.Customer;
+import API.EventTom.models.user.Employee;
+import API.EventTom.models.user.Role;
+import API.EventTom.models.user.User;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -64,4 +71,8 @@ public class StandardDTOMapper {
                 ticket.getCustomer().getUser().getId()
         );
     }
+    public NotificationDTO mapNotificationToNotificationDTO(Notification notification) {
+        return new NotificationDTO(notification.getId(), notification.getUser().getId(), notification.getCreatedAt(), notification.getMessage());
+    }
+
 }

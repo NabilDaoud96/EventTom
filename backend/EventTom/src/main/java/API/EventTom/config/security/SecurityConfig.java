@@ -1,8 +1,7 @@
 package API.EventTom.config.security;
 
-import API.EventTom.config.AuthenticatedUserIdArgumentResolver;
-import API.EventTom.config.jwt.AuthEntryPointJwt;
-import API.EventTom.config.jwt.AuthTokenFilter;
+import API.EventTom.config.security.jwt.AuthEntryPointJwt;
+import API.EventTom.config.security.jwt.AuthTokenFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

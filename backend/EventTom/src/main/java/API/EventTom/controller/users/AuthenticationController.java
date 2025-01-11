@@ -1,9 +1,9 @@
 package API.EventTom.controller.users;
 
-import API.EventTom.DTO.request.LoginRequestDTO;
-import API.EventTom.DTO.response.LoginResponseDTO;
-import API.EventTom.DTO.response.MessageResponseDTO;
-import API.EventTom.DTO.response.TokenRefreshResponseDTO;
+import API.EventTom.dto.request.LoginRequestDTO;
+import API.EventTom.dto.response.LoginResponseDTO;
+import API.EventTom.dto.response.MessageResponseDTO;
+import API.EventTom.dto.response.TokenRefreshResponseDTO;
 import API.EventTom.services.security.interfaces.IAuthenticationService;
 import API.EventTom.services.security.interfaces.ICookieExtractorService;
 import jakarta.servlet.http.HttpServletRequest;

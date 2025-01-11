@@ -1,7 +1,7 @@
 package API.EventTom.config.security;
 
-import API.EventTom.models.Role;
-import API.EventTom.models.Roles;
+import API.EventTom.models.user.Role;
+import API.EventTom.models.user.Roles;
 import API.EventTom.repositories.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

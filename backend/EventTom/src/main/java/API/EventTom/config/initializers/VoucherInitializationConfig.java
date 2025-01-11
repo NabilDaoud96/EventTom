@@ -1,7 +1,7 @@
 package API.EventTom.config.initializers;
 
-import API.EventTom.models.Voucher;
-import API.EventTom.models.VoucherType;
+import API.EventTom.models.event.Voucher;
+import API.EventTom.models.event.VoucherType;
 import API.EventTom.services.vouchers.interfaces.IVoucherGenerationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

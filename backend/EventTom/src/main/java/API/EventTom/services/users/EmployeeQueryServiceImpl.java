@@ -1,35 +1,47 @@
 package API.EventTom.services.users;
 
-import API.EventTom.DTO.EmployeeDTO;
+import API.EventTom.dto.CustomerDTO;
+import API.EventTom.dto.EmployeeDTO;
 import API.EventTom.mappers.StandardDTOMapper;
-import API.EventTom.models.Employee;
+import API.EventTom.models.user.Customer;
+import API.EventTom.models.user.Employee;
 import API.EventTom.repositories.EmployeeRepository;
+import API.EventTom.services.common.BaseQueryService;
 import API.EventTom.services.users.interfaces.IEmployeeQueryService;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class EmployeeQueryServiceImpl implements IEmployeeQueryService {
+public class EmployeeQueryServiceImpl extends BaseQueryService<Employee, EmployeeDTO, Long> implements IEmployeeQueryService {
 
-    EmployeeRepository employeeRepository;
-    StandardDTOMapper standardDTOMapper;
-    @Override
-    public List<EmployeeDTO> getAllEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
-        return employees.stream()
-                .map(standardDTOMapper::mapEmployeeToEmployeeDTO)
-                .collect(Collectors.toList());
+    public EmployeeQueryServiceImpl(
+            EmployeeRepository employeeRepository,
+            StandardDTOMapper standardDTOMapper) {
+        super(employeeRepository,
+                standardDTOMapper,
+                standardDTOMapper::mapEmployeeToEmployeeDTO,
+                "Employee");
+    }
+
+    public EmployeeDTO getEmployeeByEmployeeNumber(String employeeNumber) {
+        return ((EmployeeRepository) repository).findEmployeeByEmployeeNumber(employeeNumber)
+                .map(mapperFunction)
+                .orElseThrow(() -> new RuntimeException("Employee not found with Employee Number: " + employeeNumber));
     }
 
     @Override
-    public EmployeeDTO getEmployeeById(String id) {
-        Employee employee = employeeRepository.findEmployeeByEmployeeNumber(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found with id: " + id));
-        return standardDTOMapper.mapEmployeeToEmployeeDTO(employee);
+    public List<EmployeeDTO> findAllByUserId(Long userId) {
+        return List.of();
+    }
+
+    @Override
+    public Page<EmployeeDTO> findAllByUserId(Long userId, Pageable pageable) {
+        return Page.empty(pageable);
     }
 }
 

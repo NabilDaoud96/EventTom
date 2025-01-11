@@ -1,6 +1,6 @@
 package API.EventTom.config.initializers;
 
-import API.EventTom.DTO.request.EventCreateDTO;
+import API.EventTom.dto.request.EventCreateDTO;
 import API.EventTom.services.events.EventCommandServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -65,10 +65,8 @@ public class EventInitializationConfig {
         EventCreateDTO eventCreateDTO = new EventCreateDTO(title, location, dateOfEvent, totalTickets, thresholdValue, basePrice, managerIds);
 
         try {
-            // Using ID 1 as the default creator ID - adjust as needed
             eventCommandService.createEvent(eventCreateDTO, 1L);
         } catch (Exception e) {
-            // Log the error but don't prevent application startup
             System.err.println("Failed to create sample event: " + title);
             e.printStackTrace();
         }

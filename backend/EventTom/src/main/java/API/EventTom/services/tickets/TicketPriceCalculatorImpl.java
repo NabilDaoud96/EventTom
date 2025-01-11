@@ -1,8 +1,7 @@
 package API.EventTom.services.tickets;
 
-import API.EventTom.DTO.request.PurchaseTicketDTO;
-import API.EventTom.models.Event;
-import API.EventTom.models.Voucher;
+import API.EventTom.models.event.Event;
+import API.EventTom.models.event.Voucher;
 import API.EventTom.services.tickets.interfaces.ITicketPriceCalculator;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
 import lombok.AllArgsConstructor;

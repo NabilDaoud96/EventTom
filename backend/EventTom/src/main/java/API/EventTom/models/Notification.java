@@ -1,5 +1,6 @@
 package API.EventTom.models;
 
+import API.EventTom.models.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -13,7 +14,7 @@ public class Notification {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipient_id", nullable = false)
-    private User recipient;
+    private User user;
 
     @Column(nullable = false)
     private String message;
@@ -21,9 +22,12 @@ public class Notification {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "is_read", nullable = false)  // Changed field name and added explicit column name
-    private boolean isRead = false;
+    @Column(name = "is_read", nullable = false)
+    private boolean read = false;
 
     @Column(nullable = false)
-    private String notificationType; // e.g., "TICKET_PURCHASE", "EVENT_UPDATE"
+    private String notificationType;
+
+
+
 }

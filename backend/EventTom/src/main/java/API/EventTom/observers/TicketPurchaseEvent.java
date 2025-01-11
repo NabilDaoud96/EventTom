@@ -1,7 +1,7 @@
 package API.EventTom.observers;
 
-import API.EventTom.models.Event;
-import API.EventTom.models.Ticket;
+import API.EventTom.models.event.Event;
+import API.EventTom.models.event.Ticket;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 

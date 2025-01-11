@@ -1,10 +1,11 @@
 package API.EventTom.controller.voucher;
 
-import API.EventTom.DTO.response.VoucherResponseDTO;
-import API.EventTom.DTO.request.BulkVoucherGenerationRequestDTO;
-import API.EventTom.DTO.request.VoucherGenerationRequestDTO;
-import API.EventTom.config.AuthenticatedUserId;
-import API.EventTom.models.Voucher;
+import API.EventTom.dto.VoucherDTO;
+import API.EventTom.dto.response.VoucherResponseDTO;
+import API.EventTom.dto.request.BulkVoucherGenerationRequestDTO;
+import API.EventTom.dto.request.VoucherGenerationRequestDTO;
+import API.EventTom.config.security.AuthenticatedUserId;
+import API.EventTom.models.event.Voucher;
 import API.EventTom.services.vouchers.interfaces.IVoucherClaimService;
 import API.EventTom.services.vouchers.interfaces.IVoucherGenerationService;
 import API.EventTom.services.vouchers.interfaces.IVoucherQueryService;
@@ -73,8 +74,8 @@ public class VoucherController {
     }
 
     @GetMapping("/my-vouchers")
-    public ResponseEntity<List<VoucherResponseDTO>> getMyVouchers(@AuthenticatedUserId Long userId) {
-        List<VoucherResponseDTO> vouchers = voucherQueryService.getVouchersByCustomerId(userId);
+    public ResponseEntity<List<VoucherDTO>> getMyVouchers(@AuthenticatedUserId Long userId) {
+        List<VoucherDTO> vouchers = voucherQueryService.findAllByUserId(userId);
         return ResponseEntity.ok(vouchers);
     }
 }

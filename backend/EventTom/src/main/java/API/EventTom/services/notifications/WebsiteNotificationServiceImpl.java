@@ -1,8 +1,7 @@
 package API.EventTom.services.notifications;
 
-import API.EventTom.models.Event;
 import API.EventTom.models.Notification;
-import API.EventTom.models.User;
+import API.EventTom.models.user.User;
 import API.EventTom.repositories.NotificationRepository;
 import API.EventTom.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,7 @@ public class WebsiteNotificationServiceImpl implements IWebsiteNotificationServi
     @Transactional
     public void sendNotification(User recipient, String message, String notificationType) {
         Notification notification = new Notification();
-        notification.setRecipient(recipient);
+        notification.setUser(recipient);
         notification.setMessage(message);
         notification.setCreatedAt(LocalDateTime.now());
         notification.setNotificationType(notificationType);
@@ -34,15 +33,9 @@ public class WebsiteNotificationServiceImpl implements IWebsiteNotificationServi
     public List<Notification> getUnreadNotifications(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-        return notificationRepository.findByRecipientAndIsReadOrderByCreatedAtDesc(user, false);
+        return notificationRepository.findByUserAndReadOrderByCreatedAtDesc(user, false);
     }
 
-    @Transactional(readOnly = true)
-    public List<Notification> getAllNotifications(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        return notificationRepository.findByRecipientOrderByCreatedAtDesc(user);
-    }
 
     @Transactional
     public void markAsRead(Long notificationId) {

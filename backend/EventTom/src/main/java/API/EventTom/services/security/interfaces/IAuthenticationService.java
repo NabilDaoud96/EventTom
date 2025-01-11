@@ -1,8 +1,8 @@
 package API.EventTom.services.security.interfaces;
 
-import API.EventTom.DTO.request.LoginRequestDTO;
-import API.EventTom.DTO.response.LoginResponseDTO;
-import API.EventTom.DTO.response.TokenRefreshResponseDTO;
+import API.EventTom.dto.request.LoginRequestDTO;
+import API.EventTom.dto.response.LoginResponseDTO;
+import API.EventTom.dto.response.TokenRefreshResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
 
 public interface IAuthenticationService {

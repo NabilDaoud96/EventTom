@@ -1,8 +1,8 @@
 package API.EventTom.repositories;
 
-import API.EventTom.models.Employee;
-import API.EventTom.models.Event;
-import API.EventTom.models.Roles;
+import API.EventTom.models.user.Employee;
+import API.EventTom.models.event.Event;
+import API.EventTom.models.user.Roles;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

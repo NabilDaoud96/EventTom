@@ -1,6 +1,6 @@
 package API.EventTom.controller.users;
 
-import API.EventTom.DTO.CustomerDTO;
+import API.EventTom.dto.CustomerDTO;
 import API.EventTom.services.users.interfaces.ICustomerQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,17 +15,17 @@ import java.util.List;
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
 public class CustomerController {
-    ICustomerQueryService customerService;
+    private final ICustomerQueryService customerService;
 
     @GetMapping
     public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
-        List<CustomerDTO> customerDTOList = customerService.getAllCustomers();
+        List<CustomerDTO> customerDTOList = customerService.getAll();
         return ResponseEntity.ok(customerDTOList);
     }
 
-    @GetMapping("/{id}")  // Path variable for specific customer
-    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable String id) {
-        CustomerDTO customerDTO = customerService.getCustomerById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
+        CustomerDTO customerDTO = customerService.getById(id);
         return ResponseEntity.ok(customerDTO);
     }
 }

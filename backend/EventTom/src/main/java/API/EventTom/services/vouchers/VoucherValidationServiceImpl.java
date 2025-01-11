@@ -4,7 +4,7 @@ import API.EventTom.exceptions.notFoundExceptions.VoucherNotFoundException;
 import API.EventTom.exceptions.userExceptions.UnauthorizedVoucherUseException;
 import API.EventTom.exceptions.validationExceptions.VoucherAlreadyClaimedException;
 import API.EventTom.exceptions.validationExceptions.VoucherAlreadyUsedException;
-import API.EventTom.models.Voucher;
+import API.EventTom.models.event.Voucher;
 import API.EventTom.repositories.VoucherRepository;
 
 import API.EventTom.services.vouchers.interfaces.IVoucherValidationService;

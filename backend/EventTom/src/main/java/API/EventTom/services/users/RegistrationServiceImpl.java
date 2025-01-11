@@ -1,17 +1,19 @@
 package API.EventTom.services.users;
 
-import API.EventTom.DTO.request.EmployeeRegisterRequestDTO;
-import API.EventTom.DTO.request.CustomerRegisterRequestDTO;
-import API.EventTom.DTO.response.RegisterResponseDTO;
+import API.EventTom.dto.request.EmployeeRegisterRequestDTO;
+import API.EventTom.dto.request.CustomerRegisterRequestDTO;
+import API.EventTom.dto.response.RegisterResponseDTO;
 import API.EventTom.exceptions.userExceptions.EmailAlreadyExistsException;
-import API.EventTom.models.*;
+import API.EventTom.models.user.Customer;
+import API.EventTom.models.user.Employee;
+import API.EventTom.models.user.User;
+import API.EventTom.models.user.UserType;
 import API.EventTom.repositories.CustomerRepository;
 import API.EventTom.repositories.EmployeeRepository;
 import API.EventTom.repositories.UserRepository;
 import API.EventTom.services.users.interfaces.IRegistrationService;
 import API.EventTom.services.users.interfaces.IRoleManagementService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

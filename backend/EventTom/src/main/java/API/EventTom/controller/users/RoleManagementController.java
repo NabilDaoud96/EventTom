@@ -1,6 +1,6 @@
 package API.EventTom.controller.users;
 
-import API.EventTom.models.Roles;
+import API.EventTom.models.user.Roles;
 import API.EventTom.services.users.interfaces.IRoleManagementService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

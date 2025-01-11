@@ -1,37 +1,48 @@
 package API.EventTom.services.users;
 
-import API.EventTom.DTO.CustomerDTO;
+import API.EventTom.dto.CustomerDTO;
+import API.EventTom.exceptions.notFoundExceptions.CustomerNotFoundException;
+import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
 import API.EventTom.mappers.StandardDTOMapper;
-import API.EventTom.models.Customer;
+import API.EventTom.models.event.Ticket;
+import API.EventTom.models.user.Customer;
 import API.EventTom.repositories.CustomerRepository;
+import API.EventTom.services.common.BaseQueryService;
 import API.EventTom.services.users.interfaces.ICustomerQueryService;
-import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
-public class CustomerQueryServiceImpl implements ICustomerQueryService {
+public class CustomerQueryServiceImpl extends BaseQueryService<Customer, CustomerDTO, Long>
+        implements ICustomerQueryService {
 
-    CustomerRepository customerRepository;
-    StandardDTOMapper standardDTOMapper;
 
-    @Override
-    public List<CustomerDTO> getAllCustomers() {
-        List<Customer> customers = customerRepository.findAll();
-        System.out.println(Arrays.toString(customers.toArray()));
-        return customers.stream()
-                .map(standardDTOMapper::mapCustomerToCustomerDTO)
-                .collect(Collectors.toList());
+    public CustomerQueryServiceImpl(
+            CustomerRepository customerRepository,
+            StandardDTOMapper standardDTOMapper, CustomerRepository customerRepository1) {
+        super(customerRepository,
+                standardDTOMapper,
+                standardDTOMapper::mapCustomerToCustomerDTO,
+                "Customer");
+    }
+
+    public CustomerDTO getCustomerByCustomerNumber(String customerNumber) {
+        return ((CustomerRepository) repository).findCustomerByCustomerNumber(customerNumber)
+                .map(mapperFunction)
+                .orElseThrow(() -> new RuntimeException("Customer not found with Customer Number: " + customerNumber));
     }
 
     @Override
-    public CustomerDTO getCustomerById(String id) {
-        Customer customer = customerRepository.findCustomerByCustomerNumber(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found with id: " + id));
-        return standardDTOMapper.mapCustomerToCustomerDTO(customer);
+    public List<CustomerDTO> findAllByUserId(Long userId) {
+        return List.of();
+    }
+
+    @Override
+    public Page<CustomerDTO> findAllByUserId(Long userId, Pageable pageable) {
+        return Page.empty(pageable);
     }
 }

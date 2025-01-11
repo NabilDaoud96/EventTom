@@ -1,6 +1,6 @@
 package API.EventTom.exceptions;
 
-import API.EventTom.DTO.response.ErrorMessageDTO;
+import API.EventTom.dto.response.ErrorMessageDTO;
 
 import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
 import io.jsonwebtoken.JwtException;

@@ -1,6 +1,6 @@
 package API.EventTom.services.tickets;
 
-import API.EventTom.models.Event;
+import API.EventTom.models.event.Event;
 
 import java.math.BigDecimal;
 

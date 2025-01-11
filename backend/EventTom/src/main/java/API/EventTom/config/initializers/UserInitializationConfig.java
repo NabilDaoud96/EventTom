@@ -1,8 +1,8 @@
 package API.EventTom.config.initializers;
 
-import API.EventTom.DTO.request.CustomerRegisterRequestDTO;
-import API.EventTom.DTO.request.EmployeeRegisterRequestDTO;
-import API.EventTom.models.Roles;
+import API.EventTom.dto.request.CustomerRegisterRequestDTO;
+import API.EventTom.dto.request.EmployeeRegisterRequestDTO;
+import API.EventTom.models.user.Roles;
 import API.EventTom.services.users.RegistrationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

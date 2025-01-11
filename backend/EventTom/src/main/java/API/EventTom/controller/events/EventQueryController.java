@@ -1,7 +1,7 @@
 package API.EventTom.controller.events;
 
-import API.EventTom.DTO.EventDTO;
-import API.EventTom.config.AuthenticatedUserId;
+import API.EventTom.dto.EventDTO;
+import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.services.events.IEventQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,11 +27,11 @@ public class EventQueryController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable long id) {
-        return ResponseEntity.ok(eventQueryService.getEventById(id));
+        return ResponseEntity.ok(eventQueryService.getById(id));
     }
 
     @GetMapping("/manager")
     public ResponseEntity<List<EventDTO>> getEventsByManager(@AuthenticatedUserId Long userId) {
-        return ResponseEntity.ok(eventQueryService.getEventsByManagerId(userId));
+        return ResponseEntity.ok(eventQueryService.findAllByUserId(userId));
     }
 }

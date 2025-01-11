@@ -1,9 +1,9 @@
 package API.EventTom.services.tickets;
-import API.EventTom.DTO.request.PurchaseTicketDTO;
+import API.EventTom.dto.request.PurchaseTicketDTO;
 import API.EventTom.exceptions.validationExceptions.EventDatePassedException;
 import API.EventTom.exceptions.validationExceptions.InvalidPurchaseAmountException;
 import API.EventTom.exceptions.validationExceptions.InsufficientTicketsException;
-import API.EventTom.models.Event;
+import API.EventTom.models.event.Event;
 import API.EventTom.services.tickets.interfaces.ITicketValidator;
 
 import lombok.AllArgsConstructor;

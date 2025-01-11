@@ -1,11 +1,11 @@
 package API.EventTom.services.events;
-import API.EventTom.DTO.EventDTO;
-import API.EventTom.DTO.request.EventCreateDTO;
-import API.EventTom.DTO.request.EventUpdateDTO;
+import API.EventTom.dto.EventDTO;
+import API.EventTom.dto.request.EventCreateDTO;
+import API.EventTom.dto.request.EventUpdateDTO;
 import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
 import API.EventTom.mappers.StandardDTOMapper;
-import API.EventTom.models.Employee;
-import API.EventTom.models.Event;
+import API.EventTom.models.user.Employee;
+import API.EventTom.models.event.Event;
 import API.EventTom.repositories.EmployeeRepository;
 import API.EventTom.repositories.EventRepository;
 import API.EventTom.services.websockets.interfaces.IEventBroadcastService;

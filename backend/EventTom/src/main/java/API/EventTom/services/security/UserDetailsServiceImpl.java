@@ -1,7 +1,7 @@
 package API.EventTom.services.security;
 
-import API.EventTom.models.User;
-import API.EventTom.models.UserDetailsImpl;
+import API.EventTom.models.user.User;
+import API.EventTom.models.user.UserDetailsImpl;
 import API.EventTom.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 

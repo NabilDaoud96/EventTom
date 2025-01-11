@@ -1,10 +1,10 @@
 package API.EventTom.controller;
 
-import API.EventTom.config.AuthenticatedUserId;
+import API.EventTom.config.security.AuthenticatedUserId;
+import API.EventTom.dto.NotificationDTO;
 import API.EventTom.models.Notification;
-import API.EventTom.services.notifications.INotificationService;
+import API.EventTom.services.notifications.INotificationQueryService;
 import API.EventTom.services.notifications.IWebsiteNotificationService;
-import API.EventTom.services.notifications.WebsiteNotificationServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +16,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationController {
     private final IWebsiteNotificationService notificationService;
+    private final INotificationQueryService notificationQueryService;
 
     @GetMapping()
-    public ResponseEntity<List<Notification>> getAllNotifications(@AuthenticatedUserId Long userId) {
-        return ResponseEntity.ok(notificationService.getAllNotifications(userId));
+    public ResponseEntity<List<NotificationDTO>> getAllNotifications(@AuthenticatedUserId Long userId) {
+        return ResponseEntity.ok(notificationQueryService.findAllByUserId(userId));
     }
+
     @GetMapping("/unread")
     public ResponseEntity<List<Notification>> getUnreadNotifications(@AuthenticatedUserId Long userId) {
         return ResponseEntity.ok(notificationService.getUnreadNotifications(userId));
