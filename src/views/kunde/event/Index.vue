@@ -91,6 +91,7 @@ export default {
     fetchEvents() {
       axios
         .get("http://localhost:8080/api/events", {
+          withCredentials: true,
           params: {
             page: this.currentPage - 1, // API-Parameter: Seite (0-basiert)
             size: this.rowsPerPage, // API-Parameter: Anzahl der Einträge pro Seite
