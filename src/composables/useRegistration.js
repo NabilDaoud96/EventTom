@@ -1,6 +1,6 @@
 import { ref } from 'vue';
-import {baseApi} from "@/router/base-api";
 import router from "@/router";
+import api from "@/utils/axios-auth";
 
 export function useRegistration() {
     const loading = ref(false);
@@ -11,8 +11,8 @@ export function useRegistration() {
             loading.value = true;
             error.value = '';
 
-            const response = await baseApi.post('registration/customer', formData);
-            router.push('/auth/login');
+            const response = await api.post('registration/customer', formData);
+            await router.push('/auth/login');
 
             return response.data;
 
@@ -30,7 +30,7 @@ export function useRegistration() {
             loading.value = true;
             error.value = '';
 
-            const response = await baseApi.get(`auth/${provider}`);
+            const response = await api.get(`auth/${provider}`);
             return response.data;
 
         } catch (err) {

@@ -1,84 +1,94 @@
 <template>
   <div>
     <a
-      class="text-blueGray-500 block"
-      href="#pablo"
-      ref="btnDropdownRef"
-      v-on:click="toggleDropdown($event)"
+        class="text-blueGray-500 block"
+        href="#pablo"
+        ref="btnDropdownRef"
+        @click="toggleDropdown($event)"
     >
       <div class="items-center flex">
         <span
-          class="w-12 h-12 text-sm text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full"
+            class="w-12 h-12 text-sm text-white bg-blueGray-200 inline-flex items-center justify-center rounded-full"
         >
           <img
-            alt="..."
-            class="w-full rounded-full align-middle border-none shadow-lg"
-            :src="image"
+              alt="..."
+              class="w-full rounded-full align-middle border-none shadow-lg"
+              :src="image"
           />
         </span>
       </div>
     </a>
     <div
-      ref="popoverDropdownRef"
-      class="bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
-      v-bind:class="{
+        ref="popoverDropdownRef"
+        class="bg-white text-base z-50 float-left py-2 list-none text-left rounded shadow-lg min-w-48"
+        :class="{
         hidden: !dropdownPopoverShow,
         block: dropdownPopoverShow,
       }"
     >
-    <router-link
-        class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-        to="/kunde/profile"
-        >
+      <router-link
+          class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+          to="/kunde/profile"
+      >
         Profile
-    </router-link>
+      </router-link>
       <router-link
-        class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-        to="/kunde/events"
-        >
+          class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+          to="/kunde/events"
+      >
         Buy Ticket
-    </router-link>
+      </router-link>
       <router-link
-        class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-        to="/kunde/tickets"
-        >
+          class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+          to="/kunde/tickets"
+      >
         Purchased Tickets
-    </router-link>
+      </router-link>
       <div class="h-0 my-2 border border-solid border-blueGray-100" />
-      <router-link
-        class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-        to="/auth/login"
-        >
+      <a
+          href="#"
+          @click.prevent="handleLogout"
+          class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
+      >
         Logout
-    </router-link>
+      </a>
     </div>
   </div>
 </template>
 
-<script>
-import { createPopper } from "@popperjs/core";
+<script setup>
+import { ref } from 'vue'
+import { createPopper } from "@popperjs/core"
+import { useAuth } from '@/composables/useAuth'
+import { useRouter } from 'vue-router'
 
-import image from "@/assets/img/team-1-800x800.jpg";
+const router = useRouter()
+const { logout } = useAuth()
 
-export default {
-  data() {
-    return {
-      dropdownPopoverShow: false,
-      image: image,
-    };
-  },
-  methods: {
-    toggleDropdown: function (event) {
-      event.preventDefault();
-      if (this.dropdownPopoverShow) {
-        this.dropdownPopoverShow = false;
-      } else {
-        this.dropdownPopoverShow = true;
-        createPopper(this.$refs.btnDropdownRef, this.$refs.popoverDropdownRef, {
-          placement: "bottom-start",
-        });
-      }
-    },
-  },
-};
+const dropdownPopoverShow = ref(false)
+const btnDropdownRef = ref(null)
+const popoverDropdownRef = ref(null)
+
+// eslint-disable-next-line no-unused-vars
+const toggleDropdown = (event) => {
+  event.preventDefault()
+  dropdownPopoverShow.value = !dropdownPopoverShow.value
+
+  if (dropdownPopoverShow.value) {
+    createPopper(btnDropdownRef.value, popoverDropdownRef.value, {
+      placement: "bottom-start",
+    })
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+const handleLogout = async () => {
+  try {
+    await logout()
+    dropdownPopoverShow.value = false
+    await router.push('/auth/login')
+  } catch (error) {
+    console.error('Logout failed:', error)
+  }
+}
 </script>

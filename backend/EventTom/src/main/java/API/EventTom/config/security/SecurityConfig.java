@@ -93,6 +93,7 @@ public class SecurityConfig implements WebMvcConfigurer  {
                         .requestMatchers("swagger-ui/**").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/refreshtoken").permitAll()
+                        .requestMatchers("/api/auth/signout").permitAll()
                         .requestMatchers("/api/registration/**").permitAll()
                         .requestMatchers("/api/customers").permitAll()
                         .anyRequest().authenticated()

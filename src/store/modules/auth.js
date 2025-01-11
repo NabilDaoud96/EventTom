@@ -1,6 +1,6 @@
 // store/modules/auth.js
 import axios from 'axios'
-import {baseApi} from "@/router/base-api";
+import api from "@/utils/axios-auth";
 
 const state = {
     token: localStorage.getItem('token') || null,
@@ -15,8 +15,7 @@ const getters = {
 const actions = {
     async login({ commit }, credentials) {
         try {
-            const response = await baseApi.post('/auth/login', credentials)
-            console.log(response)
+            const response = await api.post('/auth/login', credentials)
             const user = response.data
             localStorage.setItem('user', JSON.stringify(user))
 
@@ -33,7 +32,7 @@ const actions = {
 
     async logout({ commit }) {
         try {
-            await baseApi.post('/auth/signout')
+            await api.post('/auth/signout')
 
             // Clear local storage
             localStorage.removeItem('user')
@@ -49,17 +48,27 @@ const actions = {
     },
     async checkAuthentication({ commit }) {
         try {
-            const response = await baseApi.get('/auth/authenticated')
+            const response = await api.get('/auth/authenticated')
             return response.data
         } catch (error) {
             commit('SET_AUTH_ERROR')
             return false
         }
     },
+    async refreshToken({ commit }, credentials) {
+        try {
+            return await api.post('/auth/refreshtoken', credentials)
+        } catch (error) {
+            commit('SET_AUTH_ERROR')
+            localStorage.removeItem('token')
+            localStorage.removeItem('user')
+            throw error
+        }
+    },
     async fetchUser({ commit }) {
         try {
             // Replace with your API endpoint
-            const response = await baseApi.get('/auth/user')
+            const response = await api.get('/auth/user')
             const user = response.data
 
             localStorage.setItem('user', JSON.stringify(user))

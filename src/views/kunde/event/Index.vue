@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "@/utils/axios-auth";
 
 export default {
   data() {
@@ -89,22 +89,21 @@ export default {
   methods: {
     // API-Aufruf zum Laden der Events für die aktuelle Seite
     fetchEvents() {
-      axios
-        .get("http://localhost:8080/api/events", {
-          withCredentials: true,
-          params: {
-            page: this.currentPage - 1, // API-Parameter: Seite (0-basiert)
-            size: this.rowsPerPage, // API-Parameter: Anzahl der Einträge pro Seite
-          },
-        })
-        .then((response) => {
-          this.events = response.data.content; // Events für die aktuelle Seite
-          this.totalElements = response.data.totalElements; // Gesamtanzahl der Events
-          this.totalPages = response.data.totalPages; // Gesamtseitenanzahl
-        })
-        .catch((error) => {
-          console.error("Fehler beim Laden der Daten:", error);
-        });
+      api
+          .get("/events", {  // Note: Remove the full URL since baseURL is set in api instance
+            params: {
+              page: this.currentPage - 1,
+              size: this.rowsPerPage,
+            },
+          })
+          .then((response) => {
+            this.events = response.data.content;
+            this.totalElements = response.data.totalElements;
+            this.totalPages = response.data.totalPages;
+          })
+          .catch((error) => {
+            console.error("Fehler beim Laden der Daten:", error.response?.data?.error);
+          });
     },
     // Zur vorherigen Seite wechseln
     prevPage() {
