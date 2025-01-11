@@ -2,42 +2,39 @@
   <div class="p-6">
     <!-- Navbar mit Titel -->
     <div class="bg-blue-500 text-white text-center py-4 mb-6">
-      <h2 class="text-3xl font-semibold">{{ currentEvent ? currentEvent.name : 'All Events' }}</h2>
+      <h2 class="text-3xl font-semibold">All Events</h2>
     </div>
 
     <!-- Karten-Gruppe -->
     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-6">
       <!-- Jede Event-Karte -->
-      <div v-for="event in paginatedEvents" :key="event.id" class="bg-white shadow-lg rounded-lg overflow-hidden">
+      <div v-for="event in events" :key="event.id" class="bg-white shadow-lg rounded-lg overflow-hidden">
         <div class="p-6">
           <!-- Event-Titel -->
-          <h3 class="text-2xl font-semibold text-center">{{ event.name }}</h3>
+          <h3 class="text-2xl font-semibold text-center">{{ event.title }}</h3>
           <!-- Event Details: Datum, Ort und Preis -->
-          <p class="mt-2 text-center text-gray-600">Date: {{ event.date }}</p>
+          <p class="mt-2 text-center text-gray-600">Date: {{ formatDate(event.dateOfEvent) }}</p>
           <p class="mt-2 text-center text-gray-600">Location: {{ event.location }}</p>
-          <p class="mt-4 text-center text-xl font-bold">Price: €{{ event.price }}</p>
+          <p class="mt-4 text-center text-xl font-bold">Price: €{{ event.basePrice }}</p>
 
           <!-- Buttons für Ticketkauf und Gutscheinverwendung -->
           <div class="flex justify-between mt-6">
-            <!-- Button für "Buy Ticket" mit Einkaufswagen-Icon -->
-            <button 
-                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none flex items-center"
-                @click="buyTicket(event)"
-                >
-                <i class="fa fa-shopping-cart mr-2 text-sm"></i> <!-- Einkaufswagen-Icon -->
-                Buy Ticket
-            </button>
-
-            <!-- Button für "Use Voucher" mit Geschenk-Icon -->
+            <!-- Button für "Buy Ticket" -->
             <button
-                v-if="event.hasVoucher"  
-                class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none flex items-center"
-                @click="useVoucher(event)"
-                >
-                <i class="fa fa-gift mr-2 text-sm"></i> <!-- Geschenk-Icon für Voucher -->
-                Use Voucher
+              class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none flex items-center"
+              @click="buyTicket(event.id)"
+            >
+              <i class="fa fa-shopping-cart mr-2 text-sm"></i>
+              Buy Ticket
             </button>
-
+            <!-- Button für "Use Voucher" -->
+            <button
+              class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none flex items-center"
+              @click="useVoucher(event.id)"
+            >
+              <i class="fa fa-gift mr-2 text-sm"></i>
+              Use Voucher
+            </button>
           </div>
         </div>
       </div>
@@ -78,63 +75,99 @@
 </template>
 
 <script>
+import api from "@/utils/axios-auth";
+
 export default {
   data() {
     return {
-      // 20 Events, alle haben Voucher
-      events: Array.from({ length: 20 }, (_, index) => ({
-        id: index + 1,
-        name: `Event ${index + 1}`,
-        date: `0${(index % 12) + 1}/01/2025`,
-        location: `City ${index + 1}`,
-        price: (Math.random() * 100 + 10).toFixed(2),
-        hasVoucher: true,
-      })),
-      currentPage: 1,
-      rowsPerPage: 4, // 4 Events pro Seite
-      currentEvent: null, // Das aktuell ausgewählte Event
+      events: [], // Events von der API
+      currentPage: 1, // Aktuelle Seite
+      rowsPerPage: 8, // Anzahl der Karten pro Seite
+      totalElements: 0, // Gesamtanzahl der Events
+      totalPages: 0, // Gesamtanzahl der Seiten
     };
   },
-  computed: {
-    // Paginated Events for the Current Page
-    paginatedEvents() {
-      const start = (this.currentPage - 1) * this.rowsPerPage;
-      const end = start + this.rowsPerPage;
-      return this.events.slice(start, end);
-    },
-    // Total Pages Calculation
-    totalPages() {
-      return Math.ceil(this.events.length / this.rowsPerPage);
-    },
-  },
   methods: {
-    // Move to the Previous Page
+    // Events von der API laden
+    fetchEvents() {
+      api
+        .get("/events", {
+          params: {
+            page: this.currentPage - 1, // Backend beginnt mit 0
+            size: this.rowsPerPage,
+          },
+        })
+        .then((response) => {
+          this.events = response.data.content; // Events für die aktuelle Seite
+          this.totalElements = response.data.totalElements; // Gesamtanzahl
+          this.totalPages = response.data.totalPages; // Gesamtanzahl der Seiten
+        })
+        .catch((error) => {
+          console.error("Error fetching events:", error.response?.data?.error);
+          alert("Failed to load events. Please try again.");
+        });
+    },
+    // Zur vorherigen Seite wechseln
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
+        this.fetchEvents();
       }
     },
-    // Move to the Next Page
+    // Zur nächsten Seite wechseln
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
+        this.fetchEvents();
       }
     },
-    // Go to Specific Page
+    // Zu einer bestimmten Seite wechseln
     goToPage(page) {
-      this.currentPage = page;
+      if (page >= 1 && page <= this.totalPages) {
+        this.currentPage = page;
+        this.fetchEvents();
+      }
     },
-    // Ticket kaufen
-    buyTicket(event) {
-      this.currentEvent = event; // Setze das aktuell gewählte Event
-      alert(`Buying ticket for event: ${event.name}`);
+    // Ticketkauf über API
+    buyTicket(eventId) {
+      api
+        .post("/tickets/command/purchase", {
+          eventId: eventId,
+        })
+        .then(() => {
+          alert(`Ticket successfully purchased for Event ID: ${eventId}`);
+        })
+        .catch((error) => {
+          console.error("Error purchasing ticket:", error.response?.data?.error);
+          alert(`Failed to purchase ticket for Event ID: ${eventId}`);
+        });
     },
-    // Gutschein verwenden (direkt Preis subtrahieren)
-    useVoucher(event) {
-      const discount = 20; // Beispielwert für Gutschein
-      event.price = (parseFloat(event.price) - discount).toFixed(2);
-      event.hasVoucher = false; // Gutschein nur einmal verwendbar
+    // Gutschein verwenden
+    useVoucher(eventId) {
+      api
+        .post("/vouchers", {
+          eventId: eventId,
+        })
+        .then(() => {
+          alert(`Voucher successfully applied for Event ID: ${eventId}`);
+        })
+        .catch((error) => {
+          console.error("Error using voucher:", error.response?.data?.error);
+          alert(`Failed to apply voucher for Event ID: ${eventId}`);
+        });
     },
+    // Datum formatieren
+    formatDate(date) {
+      const eventDate = new Date(date);
+      const day = String(eventDate.getDate()).padStart(2, "0");
+      const month = String(eventDate.getMonth() + 1).padStart(2, "0");
+      const year = eventDate.getFullYear();
+      return `${day}.${month}.${year}`;
+    },
+  },
+  created() {
+    // Daten beim Laden der Komponente abrufen
+    this.fetchEvents();
   },
 };
 </script>
@@ -143,7 +176,7 @@ export default {
 .pagination-container {
   background-color: #f0f0f0; /* Hellgraue Hintergrundfarbe */
   padding: 10px; /* Etwas Innenabstand */
-  border-radius: 8px; /* Optionale runde Ecken */
+  border-radius: 8px; /* Runde Ecken */
 }
 button {
   cursor: pointer;

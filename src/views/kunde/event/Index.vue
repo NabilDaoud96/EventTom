@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="event in events" :key="event.title">
+        <tr v-for="event in events" :key="event.id">
           <td class="px-4 py-2 border">{{ event.title }}</td>
           <td class="px-4 py-2 border">{{ formatDate(event.dateOfEvent) }}</td>
           <td class="px-4 py-2 border">{{ event.location }}</td>
