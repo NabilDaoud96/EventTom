@@ -1,4 +1,4 @@
-package API.EventTom.config;
+package API.EventTom.config.initializers;
 
 import API.EventTom.DTO.request.PurchaseTicketDTO;
 import API.EventTom.models.Customer;
@@ -50,10 +50,11 @@ public class TicketPurchaseInitializationConfig {
             for (Customer customer : customers) {
                 Event randomEvent = events.get(random.nextInt(events.size()));
 
-                PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO();
-                purchaseDTO.setEventId(randomEvent.getId());
-                purchaseDTO.setAmount(1 + random.nextInt(3));
-                purchaseDTO.setVoucherCodes(new ArrayList<>());
+                PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO(
+                        randomEvent.getId(),
+                        1 + random.nextInt(3),
+                        new ArrayList<>()
+                );
 
                 ticketPurchaseService.purchaseTicket(purchaseDTO, customer.getUser().getId());
             }
@@ -71,10 +72,11 @@ public class TicketPurchaseInitializationConfig {
                     Event randomEvent = events.get(random.nextInt(events.size()));
                     String randomVoucherCode = vouchers.get(random.nextInt(vouchers.size())).getCode();
 
-                    PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO();
-                    purchaseDTO.setEventId(randomEvent.getId());
-                    purchaseDTO.setAmount(2);
-                    purchaseDTO.setVoucherCodes(List.of(randomVoucherCode));
+                    PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO(
+                            randomEvent.getId(),
+                            2,
+                            List.of(randomVoucherCode)
+                    );
 
                     ticketPurchaseService.purchaseTicket(purchaseDTO, randomCustomer.getUser().getId());
                 }
@@ -89,10 +91,11 @@ public class TicketPurchaseInitializationConfig {
             for (Event event : events) {
                 Customer randomCustomer = customers.get(random.nextInt(customers.size()));
 
-                PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO();
-                purchaseDTO.setEventId(event.getId());
-                purchaseDTO.setAmount(5 + random.nextInt(6));
-                purchaseDTO.setVoucherCodes(new ArrayList<>());
+                PurchaseTicketDTO purchaseDTO = new PurchaseTicketDTO(
+                        event.getId(),
+                        5 + random.nextInt(6),
+                        new ArrayList<>()
+                );
 
                 ticketPurchaseService.purchaseTicket(purchaseDTO, randomCustomer.getUser().getId());
             }

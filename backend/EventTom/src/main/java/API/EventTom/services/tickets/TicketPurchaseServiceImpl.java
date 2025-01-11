@@ -38,31 +38,31 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
 
     @Override
     public BigDecimal calculateTotalPrice(PurchaseTicketDTO purchaseTicketDTO, Long userId) {
-        Event event = findEvent(purchaseTicketDTO.getEventId());
+        Event event = findEvent(purchaseTicketDTO.eventId());
         ticketValidator.validatePurchaseRequest(event, purchaseTicketDTO);
 
         return priceCalculator.calculateTotalPrice(
                 event,
-                purchaseTicketDTO.getAmount(),
-                purchaseTicketDTO.getVoucherCodes()
+                purchaseTicketDTO.amount(),
+                purchaseTicketDTO.voucherCodes()
         );
     }
 
     @Override
     @Transactional
     public TicketPurchaseResponseDTO purchaseTicket(PurchaseTicketDTO purchaseTicketDTO, Long userId) {
-        Event event = findEvent(purchaseTicketDTO.getEventId());
+        Event event = findEvent(purchaseTicketDTO.eventId());
         Customer customer = findCustomer(userId);
 
         ticketValidator.validatePurchaseRequest(event, purchaseTicketDTO);
 
         BigDecimal baseTicketPrice = priceCalculator.calculateBasePrice(event);
-        List<Voucher> validatedVouchers = voucherUsageService.validateVouchers(purchaseTicketDTO.getVoucherCodes());
+        List<Voucher> validatedVouchers = voucherUsageService.validateVouchers(purchaseTicketDTO.voucherCodes());
         BigDecimal totalVoucherDiscount = voucherUsageService.calculateTotalDiscount(validatedVouchers);
         voucherUsageService.markVouchersAsUsed(validatedVouchers, customer.getId());
 
         PurchaseResult purchaseResult = ticketCreationService.processTicketPurchase(
-                event, customer, purchaseTicketDTO.getAmount(),
+                event, customer, purchaseTicketDTO.amount(),
                 baseTicketPrice, totalVoucherDiscount
         );
 

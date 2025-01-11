@@ -1,6 +1,7 @@
 package API.EventTom.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,20 +26,25 @@ public class Event {
     private String title;
 
     @Column(name = "date", nullable = false)
+    @NotNull(message = "Event date is required")
+    @Future(message = "Event date must be in the future")
     private LocalDateTime dateOfEvent;
 
     @Column(name = "location", nullable = false)
+    @NotBlank(message = "Location is required")
     private String location;
 
-    // absolut maximum of allowed tickets
     @Column(name = "max_total_tickets")
+    @Positive(message = "Maximum total tickets must be positive")
     private int maxTotalTickets;
 
-    // value for price increase
     @Column(name = "threshold_value")
+    @PositiveOrZero(message = "Threshold value must be zero or positive")
     private int thresholdValue;
 
     @Column(name = "base_price")
+    @NotNull(message = "Base price is required")
+    @Positive(message = "Base price must be positive")
     private BigDecimal basePrice;
 
     @ToString.Exclude

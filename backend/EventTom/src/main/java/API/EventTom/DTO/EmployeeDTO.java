@@ -7,13 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class EmployeeDTO {
-
-    public Set<Roles> roles;
-    public String name;
-    public String email;
-
-}
+public record EmployeeDTO(
+        Set<Roles> roles,
+        String name,
+        String email
+) {}

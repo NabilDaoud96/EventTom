@@ -4,7 +4,7 @@ import API.EventTom.DTO.EmployeeDTO;
 
 import java.util.List;
 
-public interface IEmployeeService {
+public interface IEmployeeQueryService {
 
     List<EmployeeDTO> getAllEmployees();
     EmployeeDTO getEmployeeById(String id);

@@ -3,6 +3,7 @@ package API.EventTom.services.websockets;
 import API.EventTom.DTO.EventDTO;
 import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.Event;
+import API.EventTom.services.websockets.interfaces.IDestinationStrategy;
 import API.EventTom.services.websockets.interfaces.IEventBroadcastService;
 import API.EventTom.services.websockets.interfaces.IWebsocketBroadcastStrategy;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class EventBroadcastServiceImpl implements IEventBroadcastService {
     private final StandardDTOMapper standardDTOMapper;
-    private final DestinationBuilder destinationBuilder;
+    private final IDestinationStrategy destinationStrategy;
     private final IWebsocketBroadcastStrategy broadcaster;
 
     public void broadcastEventCreation(EventDTO event) {
-        String destination = destinationBuilder.buildNewEventDestination();
+        String destination = destinationStrategy.buildDestination("NEW_EVENT");
         broadcaster.broadcast(destination, event);
     }
 
@@ -26,11 +27,13 @@ public class EventBroadcastServiceImpl implements IEventBroadcastService {
         EventDTO eventDTO = standardDTOMapper.mapEventToEventDTO(event);
 
         if (notifyAllUsers) {
-            broadcaster.broadcast(destinationBuilder.buildTicketSaleDestination(event.getId()), eventDTO);
+            String destination = destinationStrategy.buildDestination("TICKET_SALE", event.getId());
+            broadcaster.broadcast(destination, eventDTO);
         }
 
-        event.getManagers().forEach(manager ->
-                broadcaster.broadcast(destinationBuilder.buildManagerEventDestination(manager.getId(), event.getId()), eventDTO)
-        );
+        event.getManagers().forEach(manager -> {
+                String destination = destinationStrategy.buildDestination("MANAGER_EVENT", manager.getId(), event.getId());
+                broadcaster.broadcast(destination, eventDTO);
+        });
     }
 }

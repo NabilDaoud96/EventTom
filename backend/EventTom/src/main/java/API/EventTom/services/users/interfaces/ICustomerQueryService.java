@@ -4,7 +4,7 @@ import API.EventTom.DTO.CustomerDTO;
 
 import java.util.List;
 
-public interface ICustomerService {
+public interface ICustomerQueryService {
 
     List<CustomerDTO> getAllCustomers();
     CustomerDTO getCustomerById(String id);

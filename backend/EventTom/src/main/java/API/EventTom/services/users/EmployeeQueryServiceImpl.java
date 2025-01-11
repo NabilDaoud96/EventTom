@@ -4,7 +4,7 @@ import API.EventTom.DTO.EmployeeDTO;
 import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.Employee;
 import API.EventTom.repositories.EmployeeRepository;
-import API.EventTom.services.users.interfaces.IEmployeeService;
+import API.EventTom.services.users.interfaces.IEmployeeQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class EmployeeServiceImpl implements IEmployeeService {
+public class EmployeeQueryServiceImpl implements IEmployeeQueryService {
 
     EmployeeRepository employeeRepository;
     StandardDTOMapper standardDTOMapper;

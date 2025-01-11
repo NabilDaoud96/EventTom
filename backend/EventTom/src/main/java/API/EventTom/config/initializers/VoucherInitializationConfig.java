@@ -1,4 +1,4 @@
-package API.EventTom.config;
+package API.EventTom.config.initializers;
 
 import API.EventTom.models.Voucher;
 import API.EventTom.models.VoucherType;

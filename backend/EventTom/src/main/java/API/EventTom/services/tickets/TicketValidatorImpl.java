@@ -19,9 +19,9 @@ public class TicketValidatorImpl implements ITicketValidator {
 
     @Override
     public void validatePurchaseRequest(Event event, PurchaseTicketDTO dto) {
-        validateTicketAvailability(event, dto.getAmount());
+        validateTicketAvailability(event, dto.amount());
         validateEventDate(event);
-        validatePurchaseAmount(dto.getAmount());
+        validatePurchaseAmount(dto.amount());
     }
 
     @Override

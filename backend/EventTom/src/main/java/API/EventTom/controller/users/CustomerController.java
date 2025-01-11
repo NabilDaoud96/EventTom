@@ -1,8 +1,7 @@
 package API.EventTom.controller.users;
 
 import API.EventTom.DTO.CustomerDTO;
-import API.EventTom.services.users.interfaces.ICustomerService;
-import lombok.AllArgsConstructor;
+import API.EventTom.services.users.interfaces.ICustomerQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +15,7 @@ import java.util.List;
 @RequestMapping("/api/customers")
 @RequiredArgsConstructor
 public class CustomerController {
-    ICustomerService customerService;
+    ICustomerQueryService customerService;
 
     @GetMapping
     public ResponseEntity<List<CustomerDTO>> getAllCustomers() {

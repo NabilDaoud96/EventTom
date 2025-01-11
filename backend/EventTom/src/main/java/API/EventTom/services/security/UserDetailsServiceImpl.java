@@ -1,4 +1,4 @@
-package API.EventTom.services.users;
+package API.EventTom.services.security;
 
 import API.EventTom.models.User;
 import API.EventTom.models.UserDetailsImpl;

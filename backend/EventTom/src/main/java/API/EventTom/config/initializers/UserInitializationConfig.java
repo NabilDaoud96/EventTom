@@ -1,7 +1,7 @@
-package API.EventTom.config;
+package API.EventTom.config.initializers;
 
-import API.EventTom.DTO.request.CustomerRegisterRequest;
-import API.EventTom.DTO.request.EmployeeRegisterRequest;
+import API.EventTom.DTO.request.CustomerRegisterRequestDTO;
+import API.EventTom.DTO.request.EmployeeRegisterRequestDTO;
 import API.EventTom.models.Roles;
 import API.EventTom.services.users.RegistrationServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class UserInitializationConfig {
                 Roles.EVENT_MANAGER
         );
 
-        EmployeeRegisterRequest adminRequest = new EmployeeRegisterRequest(
+        EmployeeRegisterRequestDTO adminRequest = new EmployeeRegisterRequestDTO(
                 "admin@eventtom.com",
                 "Admin123!",
                 "Admin",
@@ -59,7 +59,7 @@ public class UserInitializationConfig {
                 Roles.EVENT_CREATOR
         );
 
-        EmployeeRegisterRequest managerRequest = new EmployeeRegisterRequest(
+        EmployeeRegisterRequestDTO managerRequest = new EmployeeRegisterRequestDTO(
                 "manager@eventtom.com",
                 "Manager123!",
                 "Event",
@@ -79,7 +79,7 @@ public class UserInitializationConfig {
                 Roles.SALES_REP
         );
 
-        EmployeeRegisterRequest salesRequest = new EmployeeRegisterRequest(
+        EmployeeRegisterRequestDTO salesRequest = new EmployeeRegisterRequestDTO(
                 "sales@eventtom.com",
                 "Sales123!",
                 "Sales",
@@ -95,7 +95,7 @@ public class UserInitializationConfig {
     }
 
     private void createSampleCustomers() {
-        CustomerRegisterRequest[] customerRequests = {
+        CustomerRegisterRequestDTO[] customerRequests = {
                 createCustomerRequest(
                         "john.doe@example.com",
                         "Customer123!",
@@ -116,26 +116,21 @@ public class UserInitializationConfig {
                 )
         };
 
-        for (CustomerRegisterRequest request : customerRequests) {
+        for (CustomerRegisterRequestDTO request : customerRequests) {
             try {
                 registrationService.registerCustomer(request);
             } catch (Exception e) {
-                System.err.println("Failed to create customer: " + request.getEmail());
+                System.err.println("Failed to create customer: " + request.email());
             }
         }
     }
 
-    private CustomerRegisterRequest createCustomerRequest(
+    private CustomerRegisterRequestDTO createCustomerRequest(
             String email,
             String password,
             String firstName,
             String lastName
     ) {
-        CustomerRegisterRequest request = new CustomerRegisterRequest();
-        request.setEmail(email);
-        request.setPassword(password);
-        request.setFirstName(firstName);
-        request.setLastName(lastName);
-        return request;
+        return new CustomerRegisterRequestDTO(email, password, firstName, lastName);
     }
 }

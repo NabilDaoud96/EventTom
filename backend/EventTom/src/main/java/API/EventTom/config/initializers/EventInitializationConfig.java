@@ -1,4 +1,4 @@
-package API.EventTom.config;
+package API.EventTom.config.initializers;
 
 import API.EventTom.DTO.request.EventCreateDTO;
 import API.EventTom.services.events.EventCommandServiceImpl;
@@ -62,14 +62,7 @@ public class EventInitializationConfig {
             BigDecimal basePrice,
             List<Long> managerIds
     ) {
-        EventCreateDTO eventCreateDTO = new EventCreateDTO();
-        eventCreateDTO.setTitle(title);
-        eventCreateDTO.setLocation(location);
-        eventCreateDTO.setDateOfEvent(dateOfEvent);
-        eventCreateDTO.setTotalTickets(totalTickets);
-        eventCreateDTO.setThresholdValue(thresholdValue);
-        eventCreateDTO.setBasePrice(basePrice);
-        eventCreateDTO.setManagerIds(managerIds);
+        EventCreateDTO eventCreateDTO = new EventCreateDTO(title, location, dateOfEvent, totalTickets, thresholdValue, basePrice, managerIds);
 
         try {
             // Using ID 1 as the default creator ID - adjust as needed

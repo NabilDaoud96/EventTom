@@ -4,7 +4,7 @@ import API.EventTom.DTO.CustomerDTO;
 import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.Customer;
 import API.EventTom.repositories.CustomerRepository;
-import API.EventTom.services.users.interfaces.ICustomerService;
+import API.EventTom.services.users.interfaces.ICustomerQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class CustomerServiceImpl implements ICustomerService {
+public class CustomerQueryServiceImpl implements ICustomerQueryService {
 
     CustomerRepository customerRepository;
     StandardDTOMapper standardDTOMapper;

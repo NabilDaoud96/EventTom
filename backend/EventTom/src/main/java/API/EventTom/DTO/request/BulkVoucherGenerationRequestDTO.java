@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BulkVoucherGenerationRequest extends VoucherGenerationRequest {
+public class BulkVoucherGenerationRequestDTO extends VoucherGenerationRequestDTO {
     @NotNull(message = "Count is required")
     @Positive(message = "Count must be positive")
     @Max(value = 1000, message = "Cannot generate more than 1000 vouchers at once")
