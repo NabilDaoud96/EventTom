@@ -69,7 +69,10 @@ public class StandardDTOMapper {
                 ticket.getPurchaseDate(),
                 ticket.isStatusUsed(),
                 ticket.getEvent().getId(),
-                ticket.getCustomer().getUser().getId()
+                ticket.getCustomer().getUser().getId(),
+                ticket.getEvent().getTitle(),
+                ticket.getEvent().getDateOfEvent(),
+                ticket.getEvent().getLocation()
         );
     }
     public NotificationDTO mapNotificationToNotificationDTO(Notification notification) {

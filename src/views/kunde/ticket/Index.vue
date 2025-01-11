@@ -9,18 +9,17 @@
           <th class="px-4 py-2 border">Event Name</th>
           <th class="px-4 py-2 border">Datum</th>
           <th class="px-4 py-2 border">Ort</th>
-          <th class="px-4 py-2 border">Preis</th>
+          <th class="px-4 py-2 border">Final Preis</th>
           <th class="px-4 py-2 border">Days Left</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="ticket in paginatedTickets" :key="ticket.id">
-          <td class="px-4 py-2 border">{{ ticket.id }}</td>
-          <td class="px-4 py-2 border">{{ ticket.id }}</td>
-          <td class="px-4 py-2 border">{{ ticket.purchaseDate }}</td>
-          <td class="px-4 py-2 border">{{ ticket.statusUsed }}</td>
+          <td class="px-4 py-2 border">{{ ticket.eventTitle }}</td>
+          <td class="px-4 py-2 border">{{ ticket.date}}</td>
+          <td class="px-4 py-2 border">{{ ticket.location }}</td>
           <td class="px-4 py-2 border">{{ ticket.finalPrice }}</td>
-
+          <td class="px-4 py-2 border">{{ ticket.statusUsed }}</td>  <!-- noch berechnen -->
         </tr>
       </tbody>
     </table>

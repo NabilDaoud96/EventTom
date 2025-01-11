@@ -1,6 +1,7 @@
 package API.EventTom.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record TicketDTO(
@@ -8,5 +9,8 @@ public record TicketDTO(
         LocalDateTime purchaseDate,
         boolean statusUsed,
         long eventId,
-        long customerId
+        long customerId,
+        String eventTitle,
+        LocalDateTime date,
+        String location
 ) {}
