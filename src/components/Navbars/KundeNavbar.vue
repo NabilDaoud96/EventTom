@@ -40,8 +40,9 @@ export default {
         return 'Profile';
       } else if (this.$route.path === '/kunde/events') {
         return 'Events';
-      }
-      else if (this.$route.path === '/kunde/buy_ticket') {
+      } else if (this.$route.name === 'EventShow') {
+        return 'Event Details';
+      } else if (this.$route.path === '/kunde/buy_ticket') {
         return 'Buy Ticket';
       }
       else {

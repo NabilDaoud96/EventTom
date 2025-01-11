@@ -11,7 +11,7 @@ import IndexTickets from "../views/kunde/ticket/Index.vue";
 import BuyTicket from "../views/kunde/ticket/BuyTicket.vue";
 import Profile from "../views/kunde/profile/Edit.vue";
 import IndexEvents from "../views/kunde/event/Index.vue";
-import Show from "../views/kunde/event/Show.vue";
+import EventShow from "../views/kunde/event/Show.vue";
 
 
 
@@ -49,8 +49,9 @@ const routes = [
             component: BuyTicket,
         }, 
         {
-            path: "/kunde/event_show",
-            component: Show,
+            path: "/kunde/event_show/:id",
+            name: 'EventShow',
+            component: EventShow,
         }, 
         ],
     },

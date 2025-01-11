@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="event in paginatedEvents" :key="event.title">
+        <tr v-for="event in events" :key="event.title">
           <td class="px-4 py-2 border">{{ event.title }}</td>
           <td class="px-4 py-2 border">{{ formatDate(event.dateOfEvent) }}</td>
           <td class="px-4 py-2 border">{{ event.location }}</td>
@@ -26,7 +26,7 @@
           <td class="px-6 py-2 border text-center">
             <!-- Show Event Link -->
             <router-link
-              to="/Kunde/event_show"
+              :to="{ name: 'EventShow', params: { id: event.id } }"
               class="px-1 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 focus:outline-none flex justify-center items-center"
             >
               <i class="fa fa-eye"></i>
@@ -79,39 +79,52 @@ import axios from "axios";
 export default {
   data() {
     return {
-      events: [], // All events
-      currentPage: 1, // Current page
-      rowsPerPage: 10, // Rows per page
-      totalElements: 0, // Total number of events
-      totalPages: 0, // Total pages for pagination
+      events: [], // Events für die aktuelle Seite
+      currentPage: 1, // Aktuelle Seite
+      rowsPerPage: 10, // Anzahl der Events pro Seite
+      totalElements: 0, // Gesamtanzahl der Events
+      totalPages: 0, // Gesamtanzahl der Seiten
     };
   },
-  computed: {
-    // Paginated Events for the Current Page
-    paginatedEvents() {
-      const start = (this.currentPage - 1) * this.rowsPerPage;
-      const end = start + this.rowsPerPage;
-      return this.events.slice(start, end);
-    },
-  },
   methods: {
-    // Move to the Previous Page
+    // API-Aufruf zum Laden der Events für die aktuelle Seite
+    fetchEvents() {
+      axios
+        .get("http://localhost:8080/api/events", {
+          params: {
+            page: this.currentPage - 1, // API-Parameter: Seite (0-basiert)
+            size: this.rowsPerPage, // API-Parameter: Anzahl der Einträge pro Seite
+          },
+        })
+        .then((response) => {
+          this.events = response.data.content; // Events für die aktuelle Seite
+          this.totalElements = response.data.totalElements; // Gesamtanzahl der Events
+          this.totalPages = response.data.totalPages; // Gesamtseitenanzahl
+        })
+        .catch((error) => {
+          console.error("Fehler beim Laden der Daten:", error);
+        });
+    },
+    // Zur vorherigen Seite wechseln
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
+        this.fetchEvents(); // Neue Events laden
       }
     },
-    // Move to the Next Page
+    // Zur nächsten Seite wechseln
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
+        this.fetchEvents(); // Neue Events laden
       }
     },
-    // Go to Specific Page
+    // Zu einer bestimmten Seite wechseln
     goToPage(page) {
       this.currentPage = page;
+      this.fetchEvents(); // Neue Events laden
     },
-    // Format date to DD.MM.YYYY
+    // Datum formatieren (DD.MM.YYYY)
     formatDate(date) {
       const eventDate = new Date(date);
       const day = String(eventDate.getDate()).padStart(2, '0');
@@ -121,17 +134,8 @@ export default {
     },
   },
   created() {
-    // Fetch Events from the API
-    axios
-      .get("http://localhost:8080/api/events")
-      .then((response) => {
-        this.events = response.data.content; // Store events in the events array
-        this.totalElements = response.data.totalElements; // Store total number of events
-        this.totalPages = response.data.totalPages; // Store total number of pages for pagination
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    // Events für die erste Seite laden
+    this.fetchEvents();
   },
 };
 </script>
@@ -150,9 +154,9 @@ th {
   background-color: #f0f0f0;
 }
 .pagination-container {
-  background-color: #f0f0f0; /* Hellgraue Hintergrundfarbe */
-  padding: 10px; /* Etwas Innenabstand */
-  border-radius: 8px; /* Optional: Runde Ecken */
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 8px;
 }
 
 button {
