@@ -10,7 +10,6 @@ export function useVoucher() {
             loading.value = true;
             error.value = '';
             const response = await api.get('vouchers/my-vouchers');
-            console.log(response.data)
             return response.data;
 
         } catch (err) {
@@ -21,4 +20,9 @@ export function useVoucher() {
             loading.value = false;
         }
     };
+    return {
+        loading,
+        error,
+        getUserVoucher
+    }
 }

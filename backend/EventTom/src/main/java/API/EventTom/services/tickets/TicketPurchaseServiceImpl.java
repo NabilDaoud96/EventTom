@@ -59,7 +59,7 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
         BigDecimal baseTicketPrice = priceCalculator.calculateBasePrice(event);
         List<Voucher> validatedVouchers = voucherUsageService.validateVouchers(purchaseTicketDTO.voucherCodes());
         BigDecimal totalVoucherDiscount = voucherUsageService.calculateTotalDiscount(validatedVouchers);
-        voucherUsageService.markVouchersAsUsed(validatedVouchers, customer.getId());
+        voucherUsageService.markVouchersAsUsed(validatedVouchers, customer);
 
         PurchaseResult purchaseResult = ticketCreationService.processTicketPurchase(
                 event, customer, purchaseTicketDTO.amount(),

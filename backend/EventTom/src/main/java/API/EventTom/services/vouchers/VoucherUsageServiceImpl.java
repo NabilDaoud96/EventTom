@@ -1,6 +1,7 @@
 package API.EventTom.services.vouchers;
 
 import API.EventTom.models.event.Voucher;
+import API.EventTom.models.user.Customer;
 import API.EventTom.repositories.VoucherRepository;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
 import API.EventTom.services.vouchers.interfaces.IVoucherValidationService;
@@ -21,26 +22,28 @@ class VoucherUsageServiceImpl implements IVoucherUsageService {
 
     @Override
     @Transactional
-    public void useVoucherForPurchase(String code, Long customerId) {
+    public void useVoucherForPurchase(String code, Customer customer) {
         Voucher voucher = validationService.validateVoucherExists(code);
         validationService.validateVoucherNotExpired(voucher);
         validationService.validateVoucherNotUsed(voucher);
-        validationService.validateVoucherOwnership(voucher, customerId);
+        validationService.validateVoucherOwnership(voucher, customer.getId());
 
         voucher.setUsed(true);
+        voucher.setCustomer(customer);
         voucherRepository.save(voucher);
     }
 
     @Override
     @Transactional
-    public void markVouchersAsUsed(List<Voucher> vouchers, Long customerId) {
+    public void markVouchersAsUsed(List<Voucher> vouchers, Customer customer) {
         if (vouchers == null || vouchers.isEmpty()) {
             return;
         }
 
         for (Voucher voucher : vouchers) {
-            useVoucherForPurchase(voucher.getCode(), customerId);
+            useVoucherForPurchase(voucher.getCode(), customer);
         }
+
     }
 
     @Override

@@ -12,6 +12,10 @@ import API.EventTom.services.vouchers.interfaces.IVoucherQueryService;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -74,8 +78,16 @@ public class VoucherController {
     }
 
     @GetMapping("/my-vouchers")
-    public ResponseEntity<List<VoucherDTO>> getMyVouchers(@AuthenticatedUserId Long userId) {
-        List<VoucherDTO> vouchers = voucherQueryService.findAllByUserId(userId);
+    public ResponseEntity<Page<VoucherDTO>> getMyVouchers(
+            @AuthenticatedUserId Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        Page<VoucherDTO> vouchers = voucherQueryService.findAllByUserId(userId, pageable);
         return ResponseEntity.ok(vouchers);
     }
 }

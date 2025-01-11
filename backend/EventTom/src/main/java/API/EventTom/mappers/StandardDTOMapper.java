@@ -59,7 +59,8 @@ public class StandardDTOMapper {
         return new VoucherDTO(
                 voucher.getCustomer().getUser().getId(),
                 voucher.getAmount(),
-                voucher.getExpirationDate()
+                voucher.getExpirationDate(),
+                voucher.isUsed()
         );
     }
 

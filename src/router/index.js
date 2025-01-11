@@ -25,6 +25,9 @@ import EventCreatorCreateEvent from "../views/event_creator/create_event/Create.
 import Login from "../views/auth/Login.vue";
 import Register from "../views/auth/Register.vue";
 
+// Voucher Views
+import IndexVoucher from "@/views/kunde/voucher/Index.vue";
+
 // // routes
 
 const routes = [
@@ -41,6 +44,10 @@ const routes = [
         {
             path: "/kunde/tickets",
             component: IndexTickets,
+        },
+        {
+            path: "/kunde/vouchers",
+            component: IndexVoucher,
         },
         {
             path: "/kunde/events",

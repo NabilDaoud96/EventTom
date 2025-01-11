@@ -6,5 +6,6 @@ import java.time.LocalDateTime;
 public record VoucherDTO(
         long customerId,
         BigDecimal amount,
-        LocalDateTime ticketValidUntil
+        LocalDateTime voucherValidUntil,
+        boolean used
 ) {}
