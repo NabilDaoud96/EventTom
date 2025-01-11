@@ -27,6 +27,13 @@ public class TicketQueryController {
         return ResponseEntity.ok(tickets);
     }
 
+    @GetMapping("/event/{eventId}/user")
+    public ResponseEntity<List<TicketDTO>> getLoggedInUserTicketsByEvent(
+            @AuthenticatedUserId Long userId,
+            @PathVariable Long eventId) {
+        List<TicketDTO> tickets = ticketQueryService.getTicketsByUserIdAndEventId(userId, eventId);
+        return ResponseEntity.ok(tickets);
+    }
     @GetMapping("/customer/{customerNumber}")
     public ResponseEntity<List<TicketDTO>> getCustomerTickets(@PathVariable String customerNumber) {
         List<TicketDTO> tickets = ticketQueryService.getTicketsByCustomerNumber(customerNumber);

@@ -16,8 +16,7 @@ public class TransactionalRefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
-    @PersistenceContext
-    private final EntityManager entityManager;
+
 
     @Transactional
     public void deleteByUserId(Long userId) {

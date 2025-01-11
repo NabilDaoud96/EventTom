@@ -48,6 +48,14 @@ public class TicketQueryServiceImpl implements ITicketQueryService {
     }
 
     @Override
+    public List<TicketDTO> getTicketsByUserIdAndEventId(Long userId, Long eventId) {
+        List<Ticket> tickets = ticketRepository.findAllByUserIdAndEventId(userId, eventId);
+        return tickets.stream()
+                .map(standardDTOMapper::mapTicketToTicketDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public TicketDTO getTicketById(long ticketId) {
         Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(
                 () -> new RuntimeException("Ticket for ID could not be found"));
