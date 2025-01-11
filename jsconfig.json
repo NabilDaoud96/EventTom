@@ -5,6 +5,10 @@
     "jsx": "Preserve",
     "target": "ESNext",
     "module": "ESNext",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
     "moduleResolution": "Bundler",
     "allowImportingTsExtensions": true
   },

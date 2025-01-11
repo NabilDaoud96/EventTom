@@ -60,29 +60,39 @@
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      events: [
-        { id: 1, name: "Concert", location: "Berlin", date: "2024-01-15" },
-        { id: 2, name: "Play", location: "Munich", date: "2024-02-20" },
-        { id: 3, name: "Theater", location: "Hamburg", date: "2024-03-10" },
-      ], // Example list of events
-      vouchers: [{ value: 10 }, { value: 10 }], // Example vouchers
-    };
-  },
-  computed: {
-    nextEvent() {
-      return this.events[0]; // Just the first event for now; you can implement logic to get the next one dynamically
-    },
-    totalVoucherValue() {
-      return this.vouchers.reduce((sum, voucher) => sum + voucher.value, 0);
-    },
-  },
-};
-</script>
+<script setup>
+/* eslint-disable no-unused-vars */
 
-<style scoped>
-/* Additional Custom Styles for Cards */
-</style>
+import {computed, onMounted, ref} from 'vue'
+  import { useStore } from 'vuex'
+  import {useAuth} from "@/composables/useAuth";
+
+  const { checkAuth } = useAuth()
+  const store = useStore()
+
+  const events = ref([
+  { id: 1, name: "Concert", location: "Berlin", date: "2024-01-15" },
+  { id: 2, name: "Play", location: "Munich", date: "2024-02-20" },
+  { id: 3, name: "Theater", location: "Hamburg", date: "2024-03-10" },
+  ])
+  const vouchers = ref([{ value: 10 }, { value: 10 }])
+
+  const nextEvent = computed(() => events.value[0])
+  const totalVoucherValue = computed(() =>
+  vouchers.value.reduce((sum, voucher) => sum + voucher.value, 0)
+  )
+
+  // Vuex store access
+  const isAuthenticated = computed(() => store.getters['auth/isAuthenticated'])
+  const userProfile = computed(() => store.getters['auth/userProfile'])
+
+  const logUserInfo = () => {
+  console.log('User authenticated:', store.getters['auth/isAuthenticated'])
+  console.log('User profile:', store.getters['auth/userProfile'])
+}
+
+onMounted(async () => {
+  const isAuth = await checkAuth()
+
+})
+</script>
