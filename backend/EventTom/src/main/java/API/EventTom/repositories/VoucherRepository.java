@@ -19,7 +19,9 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     @Query("SELECT v FROM Voucher v WHERE v.customer.user.id = :userId")
     List<Voucher> findByUserId(@Param("userId") Long userId);
 
-    @Query("SELECT v FROM Voucher v WHERE v.customer.user.id = :userId")
+    @Query("SELECT v FROM Voucher v " +
+            "JOIN v.customer c " +
+            "WHERE c.user.id = :userId")
     Page<Voucher> findByUserId(@Param("userId") Long userId, Pageable pageable);
 
     boolean existsByCode(String code);

@@ -82,7 +82,7 @@ public class VoucherController {
             @AuthenticatedUserId Long userId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "used") String sortBy,
             @RequestParam(defaultValue = "asc") String direction
     ) {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);

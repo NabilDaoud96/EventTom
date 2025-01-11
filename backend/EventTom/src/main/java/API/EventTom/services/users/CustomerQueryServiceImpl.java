@@ -1,11 +1,11 @@
 package API.EventTom.services.users;
 
 import API.EventTom.dto.CustomerDTO;
+import API.EventTom.dto.response.DashboardInformation;
+import API.EventTom.dto.response.EventDashboardDTO;
+import API.EventTom.dto.response.NextEventDTO;
 import API.EventTom.dto.response.VoucherDashboardDTO;
-import API.EventTom.exceptions.notFoundExceptions.CustomerNotFoundException;
-import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
 import API.EventTom.mappers.StandardDTOMapper;
-import API.EventTom.models.event.Ticket;
 import API.EventTom.models.user.Customer;
 import API.EventTom.repositories.CustomerRepository;
 import API.EventTom.services.common.BaseQueryService;
@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -41,13 +40,22 @@ public class CustomerQueryServiceImpl extends BaseQueryService<Customer, Custome
                 .orElseThrow(() -> new RuntimeException("Customer not found with Customer Number: " + customerNumber));
     }
 
-    public VoucherDashboardDTO getCustomerVoucherDashboardByUserId(Long userId)
-    {
-       Long voucherCount = customerRepository.countAllVoucherByUserId(userId);
-       return new VoucherDashboardDTO(voucherCount, new BigDecimal("0.1"));
+    public DashboardInformation getCustomerDashboardInformationByUserId(Long userId) {
+        Long voucherCount = customerRepository.countAllVoucherByUserIdAndUnused(userId);
+        BigDecimal voucherValue = customerRepository.sumAllVoucherValuesByUserIdAndUnused(userId);
+        if (voucherValue == null) {
+            voucherValue = BigDecimal.ZERO;
+        }
+
+        Long eventCount = customerRepository.countAllEventsByUserId(userId);
+        NextEventDTO nextEvent = customerRepository.findNextEventByUserId(userId).orElse(null);
+
+        return new DashboardInformation(
+                new VoucherDashboardDTO(voucherCount, voucherValue),
+                new EventDashboardDTO(eventCount),
+                nextEvent
+        );
     }
-
-
 
     @Override
     public List<CustomerDTO> findAllByUserId(Long userId) {

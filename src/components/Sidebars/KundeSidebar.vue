@@ -16,7 +16,7 @@
       <!-- Brand -->
       <router-link
         class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-xl font-bold p-4 px-0"
-        to="/kunde/dashboard"
+        to="/dashboard"
       >
         EventTom
       </router-link>
@@ -42,7 +42,7 @@
             <div class="w-6/12">
               <router-link
                 class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-xl font-bold p-4 px-0"
-                to="/kunde/Dashboard"
+                to="/Dashboard"
               >
                 EventTom
               </router-link>
@@ -74,7 +74,7 @@
           <!-- Dashboard -->
           <li class="items-center">
             <router-link
-              to="/kunde/dashboard"
+              to="/dashboard"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -99,7 +99,7 @@
           <!-- Buy Ticket -->
            <li class="items-center">
             <router-link
-              to="/kunde/buy_ticket"
+              to="/buy_ticket"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -124,7 +124,7 @@
           <!-- Events -->
            <li class="items-center">
             <router-link
-              to="/kunde/events"
+              to="/events"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -149,7 +149,7 @@
           <!-- My Tickets -->
           <li class="items-center">
             <router-link
-              to="/kunde/tickets"
+              to="/tickets"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -174,7 +174,7 @@
           <!-- Profile -->
            <li class="items-center">
             <router-link
-              to="/kunde/profile"
+              to="/profile"
               v-slot="{ href, navigate, isActive }"
             >
               <a

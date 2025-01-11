@@ -107,14 +107,24 @@ export default {
     async fetchTickets() {
       try {
         const response = await getUserTickets();
-        this.tickets = response.content
-        this.totalElements = response.data.totalElements;
-        this.totalPages = response.data.totalPages;
-
+        if (response && response.content) {
+          this.tickets = response.content;
+          this.totalElements = response.totalElements;
+          this.totalPages = response.totalPages;
+        } else if (response && response.data) {
+          this.tickets = response.data.content;
+          this.totalElements = response.data.totalElements;
+          this.totalPages = response.data.totalPages;
+        } else {
+          this.tickets = response;
+          this.totalElements = response.length;
+          this.totalPages = Math.ceil(response.length / this.rowsPerPage);
+        }
       } catch (err) {
-        console.log(err);
+        console.error('Error fetching tickets:', err);
       }
     }
+
   },
   created() {
     this.fetchTickets();
