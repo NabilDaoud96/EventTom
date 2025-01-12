@@ -1,5 +1,6 @@
 import api from "@/utils/axios-auth";
 import {ref} from "vue";
+import router from "@/router";
 export function useEvent() {
 
     const loading = ref(false);
@@ -35,6 +36,21 @@ export function useEvent() {
             loading.value = false;
         }
     };
+    const getEventManaged = async (id) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.get(`events/managed/${id}`);
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error;
+                router.push('/event-manager/events');
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
     const getEventsByManager = async ({
                                           page = 0,
                                           size = 10,
@@ -54,11 +70,14 @@ export function useEvent() {
                     }
                 }
             );
+            console.log("test123")
             return response.data;
         } catch (err) {
             if (err.response) {
                 error.value = err.response.data.error;
+
             }
+
         } finally {
             loading.value = false;
         }
@@ -83,6 +102,7 @@ export function useEvent() {
         getEvent,
         getEvents,
         getEventsByManager,
-        updateEvent
+        updateEvent,
+        getEventManaged
     }
 }

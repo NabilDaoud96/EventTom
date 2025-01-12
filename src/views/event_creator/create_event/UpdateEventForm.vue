@@ -187,7 +187,7 @@ export default {
     const eventManagers = ref([]);
     const dateError = ref('');
     const { error: managerError, loading: managerLoading, getEventManagers } = useManager();
-    const { error: eventError, loading: eventLoading, getEvent, updateEvent } = useEvent();
+    const { error: eventError, loading: eventLoading, getEventManaged, updateEvent } = useEvent();
 
     const formData = ref({
       id: '',
@@ -226,7 +226,7 @@ export default {
 
     const fetchEvent = async () => {
       try {
-        const eventData = await getEvent(route.params.id);
+        const eventData = await getEventManaged(route.params.id);
         if (eventData) {
           // Format the date to work with datetime-local input
           const dateObj = new Date(eventData.dateOfEvent);

@@ -42,6 +42,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
              "GROUP BY c.id")
      BigDecimal sumAllVoucherValuesByUserIdAndUnused(@Param("userId") Long userId);;
 
-     @Query("SELECT COUNT(t) FROM Customer c JOIN c.tickets t WHERE c.user.id = :userId")
+     @Query("SELECT COUNT(DISTINCT t.event) FROM Customer c JOIN c.tickets t WHERE c.user.id = :userId")
      Long countAllEventsByUserId(@Param("userId") Long userId);
 }

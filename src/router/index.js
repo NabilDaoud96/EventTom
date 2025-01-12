@@ -99,6 +99,7 @@ const routes = [
             },
             {
                 path: "/event-creator/update/:id",
+                name: 'UpdateEventForm',
                 meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR'] },
                 component: UpdateEventForm,
             },

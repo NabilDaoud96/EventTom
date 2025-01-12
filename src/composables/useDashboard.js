@@ -10,7 +10,7 @@ export function useDashboard() {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.get('customers/voucher-information');
+            const response = await api.get('customers/dashboard-information');
             return response.data;
 
         } catch (err) {

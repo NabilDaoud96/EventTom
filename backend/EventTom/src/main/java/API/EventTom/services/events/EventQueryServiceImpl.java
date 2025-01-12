@@ -5,10 +5,12 @@ import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.event.Event;
 import API.EventTom.repositories.EventRepository;
 import API.EventTom.services.common.BaseQueryService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -36,6 +38,22 @@ public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Lon
         Pageable pageable = PageRequest.of(page, size, sort);
         return getAll(pageable);
     }
+
+    @Override
+    public EventDTO getByIdWithManagerCheck(Long id, Long userId) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
+
+        boolean isManager = event.getManagers().stream()
+                .anyMatch(manager -> manager.getId().equals(userId));
+
+        if (!isManager) {
+            throw new AccessDeniedException("User does not have permission to access this event");
+        }
+
+        return mapperFunction.apply(event);
+    }
+
 
 
     @Override

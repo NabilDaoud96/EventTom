@@ -10,4 +10,5 @@ import java.util.List;
 
 public interface IEventQueryService extends IBaseQueryService<EventDTO, Long> {
     Page<EventDTO> getAllEvents(int page, int size, String sortBy, String direction);
+    EventDTO getByIdWithManagerCheck(Long id, Long userId);
 }

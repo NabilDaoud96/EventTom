@@ -55,11 +55,11 @@
             </td>
             <td class="px-6 py-4 text-center">
               <router-link
-                  to="/Kunde/event_show"
+                  :to="{ name: 'UpdateEventForm', params: { id: event.id } }"
                   class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center justify-center"
               >
                 <i class="fas fa-eye mr-2"></i>
-                Details
+                Update
               </router-link>
             </td>
           </tr>
@@ -110,7 +110,7 @@ export default {
       totalElements: 0,
       totalPages: 0,
       sortConfig: {
-        sortBy: 'dateOfEvent',
+        sortBy: 'id',
         direction: 'asc'
       }
     };
