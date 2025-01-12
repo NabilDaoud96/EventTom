@@ -40,6 +40,7 @@ import { mapGetters } from 'vuex';
 import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vue";
 
+
 export default {
   components: {
     UserDropdown,

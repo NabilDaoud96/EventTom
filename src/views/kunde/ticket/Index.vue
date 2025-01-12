@@ -82,6 +82,8 @@ export default {
     BasePagination
   },
   setup() {
+
+
     const { error, loading, getUserTickets } = useTickets();
     return {
       error,
@@ -150,6 +152,10 @@ export default {
   },
   mounted() {
     this.loadPage(0);
+  },
+  created() {
+
+
   }
 };
 </script>

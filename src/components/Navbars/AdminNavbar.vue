@@ -13,7 +13,6 @@
     </div>
     <hr class="mb-4 border-b-1 border-blueGray-200" />
   </nav>
-  <!-- End Navbar -->
 </template>
 
 <script>

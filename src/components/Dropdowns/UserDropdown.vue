@@ -28,22 +28,11 @@
     >
       <router-link
           class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          to="/kunde/profile"
+          to="/profile"
       >
         Profile
       </router-link>
-      <router-link
-          class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          to="/kunde/events"
-      >
-        Buy Ticket
-      </router-link>
-      <router-link
-          class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          to="/kunde/tickets"
-      >
-        Purchased Tickets
-      </router-link>
+
       <div class="h-0 my-2 border border-solid border-blueGray-100" />
       <a
           href="#"
@@ -63,7 +52,6 @@ import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const { logout } = useAuth()
 
 const dropdownPopoverShow = ref(false)
 const btnDropdownRef = ref(null)
@@ -80,6 +68,7 @@ const toggleDropdown = (event) => {
     })
   }
 }
+const { logout } = useAuth()
 
 // eslint-disable-next-line no-unused-vars
 const handleLogout = async () => {

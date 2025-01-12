@@ -15,6 +15,8 @@ import API.EventTom.services.tickets.interfaces.ITicketPurchaseService;
 import API.EventTom.services.tickets.interfaces.ITicketValidator;
 import API.EventTom.services.vouchers.interfaces.IVoucherUsageService;
 import API.EventTom.services.websockets.interfaces.IEventBroadcastService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,9 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
     private final ITicketValidator ticketValidator;
     private final ITicketCreationService ticketCreationService;
     private final IEventBroadcastService eventBroadcastService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Override
     public BigDecimal calculateTotalPrice(PurchaseTicketDTO purchaseTicketDTO, Long userId) {
@@ -67,7 +72,11 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
         );
 
         eventRepository.save(event);
-        eventBroadcastService.broadcastTicketSale(event, true);
+        entityManager.flush();
+        entityManager.clear();
+        event = eventRepository.findById(event.getId()).orElseThrow();
+        eventBroadcastService.broadcastEventUpdate(event, true);
+
 
         return createPurchaseResponse(event, purchaseResult, baseTicketPrice);
     }

@@ -5,5 +5,5 @@ import API.EventTom.models.event.Event;
 
 public interface IEventBroadcastService {
     void broadcastEventCreation(EventDTO eventDTO);
-    void broadcastTicketSale(Event event, boolean notifyAllUsers);
+    void broadcastEventUpdate(Event event, boolean notifyAllUsers);
 }

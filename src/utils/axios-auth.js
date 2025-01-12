@@ -7,9 +7,7 @@ const api = axios.create({
     withCredentials: true
 });
 
-// Flag to prevent multiple refresh token requests
 let isRefreshing = false;
-// Store pending requests
 let failedQueue = [];
 
 const processQueue = (error) => {

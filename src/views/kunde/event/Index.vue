@@ -93,59 +93,102 @@
 </template>
 
 <script>
+import { ref, onMounted, onUnmounted } from 'vue';
 import api from "@/utils/axios-auth";
 import BasePagination from '@/components/BasePagination.vue';
+import websocketService from '@/utils/websocket';
 
 export default {
   components: {
     BasePagination
   },
-  data() {
-    return {
-      events: [],
-      currentPage: 1,
-      rowsPerPage: 10,
-      totalElements: 0,
-      totalPages: 0,
-      sortConfig: {
-        sortBy: 'dateOfEvent',
-        direction: 'asc'
+
+  setup() {
+    const events = ref([]);
+    const currentPage = ref(1);
+    const rowsPerPage = ref(10);
+    const totalElements = ref(0);
+    const totalPages = ref(0);
+    let unsubscribeNewEvent = null;
+    let unsubscribeEventUpdate = null;
+
+    const handleNewEvent = (newEvent) => {
+      // Add new event to the first page if we're on it
+      if (currentPage.value === 1) {
+        events.value = [newEvent, ...events.value].slice(0, rowsPerPage.value);
+        totalElements.value++;
+        totalPages.value = Math.ceil(totalElements.value / rowsPerPage.value);
       }
     };
-  },
-  methods: {
-    async fetchEvents() {
+
+    const handleTicketUpdate = (updatedEvent) => {
+      const index = events.value.findIndex(event => event.id === updatedEvent.id);
+      if (index !== -1) {
+        events.value[index] = {
+          ...events.value[index],
+          availableTickets: updatedEvent.availableTickets
+        };
+      }
+    };
+
+    const fetchEvents = async () => {
       try {
         const response = await api.get("/events", {
           params: {
-            page: this.currentPage - 1,
-            size: this.rowsPerPage,
-            sortBy: this.sortConfig.sortBy
+            page: currentPage.value - 1,
+            size: rowsPerPage.value,
+            sortBy: 'dateOfEvent'
           },
         });
-        this.events = response.data.content;
-        this.totalElements = response.data.totalElements;
-        this.totalPages = response.data.totalPages;
+        events.value = response.data.content;
+        totalElements.value = response.data.totalElements;
+        totalPages.value = response.data.totalPages;
       } catch (error) {
-        console.error("Fehler beim Laden der Daten:", error.response?.data?.error);
+        console.error("Error loading data:", error.response?.data?.error);
       }
-    },
+    };
 
-    handlePageChange(page) {
-      this.currentPage = page + 1;
-      this.fetchEvents();
-    },
+    const handlePageChange = (page) => {
+      currentPage.value = page + 1;
+      fetchEvents();
+    };
 
-    formatDate(date) {
+    const formatDate = (date) => {
       const eventDate = new Date(date);
       const day = String(eventDate.getDate()).padStart(2, '0');
       const month = String(eventDate.getMonth() + 1).padStart(2, '0');
       const year = eventDate.getFullYear();
       return `${day}.${month}.${year}`;
-    },
-  },
-  created() {
-    this.fetchEvents();
-  },
+    };
+
+    onMounted(async () => {
+      try {
+        await websocketService.connect();
+
+        unsubscribeNewEvent = websocketService.on('newEvent', handleNewEvent);
+        unsubscribeEventUpdate = websocketService.on('eventUpdate', handleTicketUpdate);
+        websocketService.on('userNotification', (notification) => {
+          console.log('Received notification:', notification);
+        });
+
+        await fetchEvents();
+      } catch (error) {
+        console.error('Failed to setup WebSocket connection:', error);
+      }
+    });
+
+    onUnmounted(() => {
+      if (unsubscribeNewEvent) unsubscribeNewEvent();
+      if (unsubscribeEventUpdate) unsubscribeEventUpdate();
+    });
+
+    return {
+      events,
+      currentPage,
+      totalPages,
+      handlePageChange,
+      formatDate
+    };
+  }
 };
 </script>

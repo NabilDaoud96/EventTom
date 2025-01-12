@@ -8,9 +8,9 @@ import java.util.Map;
 @Component
 public class WebSocketIDestinationStrategyImpl implements IDestinationStrategy {
     private static final Map<String, String> DESTINATION_FORMATS = Map.of(
-            "USER_NOTIFICATION", "/topic/users/%d/notifications",
+            "USER_NOTIFICATION", "/queue/notifications",
             "NEW_EVENT", "/topic/events/new",
-            "TICKET_SALE", "/topic/events/tickets/%d",
+            "EVENT_UPDATE", "/topic/events/update/%d",
             "MANAGER_EVENT", "/topic/managers/%d/events/%d"
     );
 

@@ -23,11 +23,11 @@ public class EventBroadcastServiceImpl implements IEventBroadcastService {
     }
 
     @Override
-    public void broadcastTicketSale(Event event, boolean notifyAllUsers) {
+    public void broadcastEventUpdate(Event event, boolean notifyAllUsers) {
         EventDTO eventDTO = standardDTOMapper.mapEventToEventDTO(event);
 
         if (notifyAllUsers) {
-            String destination = destinationStrategy.buildDestination("TICKET_SALE", event.getId());
+            String destination = destinationStrategy.buildDestination("EVENT_UPDATE", event.getId());
             broadcaster.broadcast(destination, eventDTO);
         }
 

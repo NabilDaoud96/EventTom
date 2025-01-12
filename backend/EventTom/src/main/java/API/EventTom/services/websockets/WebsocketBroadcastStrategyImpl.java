@@ -15,4 +15,9 @@ public class WebsocketBroadcastStrategyImpl implements IWebsocketBroadcastStrate
     public void broadcast(String destination, Object payload) {
         messagingTemplate.convertAndSend(destination, payload);
     }
+
+    @Override
+    public void broadcastToUser(String userId, String destination, Object payload) {
+        messagingTemplate.convertAndSendToUser(userId, destination, payload);
+    }
 }

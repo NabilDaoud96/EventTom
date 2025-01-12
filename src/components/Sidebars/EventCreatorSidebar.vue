@@ -177,12 +177,11 @@
         <!-- Logout -->
         <ul class="md:flex-col md:min-w-full flex flex-col list-none">
           <li class="items-center">
-            <router-link to="/auth/login">
-              <a class="text-xs uppercase py-3 font-bold block text-red-500 hover:text-red-600">
-                <i class="fas fa-sign-out-alt mr-2 text-sm"></i>
-                Logout
-              </a>
-            </router-link>
+            <a href="#"
+               @click.prevent="handleLogout" class="text-xs uppercase py-3 font-bold block text-red-500 hover:text-red-600">
+              <i class="fas fa-sign-out-alt mr-2 text-sm"></i>
+              Logout
+            </a>
           </li>
         </ul>
       </div>
@@ -194,8 +193,26 @@
 <script>
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vue";
 import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
+import {useAuth} from "@/composables/useAuth";
+import router from "@/router";
 
 export default {
+
+  setup() {
+    const {logout} = useAuth()
+
+    const handleLogout = async () => {
+      try {
+        await logout()
+        await router.push('/auth/login')
+      } catch (error) {
+        console.error('Logout failed:', error)
+      }
+    }
+    return {
+      handleLogout
+    }
+  },
   data() {
     return {
       collapseShow: "hidden",
