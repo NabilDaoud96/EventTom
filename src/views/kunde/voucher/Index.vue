@@ -44,10 +44,11 @@
       </div>
     </div>
 
+    <!-- Pagination with matching style -->
     <BasePagination
-        :current-page="currentPage - 1"
+        :current-page="currentPage"
         :total-pages="totalPages"
-        @page-change="handlePageChange"
+        @page-change="loadPage"
     />
 
     <!-- Loading State -->
@@ -67,44 +68,47 @@ import { useVoucher } from '@/composables/useVoucher'
 import BasePagination from '@/components/BasePagination.vue';
 
 export default {
+  name: 'VouchersTable',
   components: {
     BasePagination
   },
   setup() {
-    const { error, loading, getUserVoucher } = useVoucher()
+    const {error, loading, getUserVouchers} = useVoucher()
     return {
       error,
       loading,
-      getUserVoucher
+      getUserVouchers
     }
   },
   data() {
     return {
       vouchers: [],
-      currentPage: 1,
-      rowsPerPage: 10,
-      totalElements: 0,
       totalPages: 0,
-    }
-  },
-  methods: {
-    handlePageChange(page) {
-      this.currentPage = page + 1;
-      this.fetchVouchers();
-    },
-    async fetchVouchers() {
-      try {
-        const response = await this.getUserVoucher()
-        this.vouchers = response.content
-        this.totalElements = response.totalElements
-        this.totalPages = response.totalPages
-      } catch (err) {
-        console.error('Error fetching vouchers:', err)
+      currentPage: 0,
+      sortConfig: {
+        sortBy: 'used',
+        direction: 'asc'
       }
     }
   },
-  created() {
-    this.fetchVouchers()
+  methods: {
+    async loadPage(page) {
+      const response = await this.getUserVouchers({
+        page,
+        size: 10,
+        sortBy: this.sortConfig.sortBy,
+        direction: this.sortConfig.direction
+      });
+
+      if (response) {
+        this.vouchers = response.content;
+        this.totalPages = response.totalPages;
+        this.currentPage = response.number;
+      }
+    }
+  },
+  mounted() {
+    this.loadPage(0);
   }
-}
+};
 </script>
