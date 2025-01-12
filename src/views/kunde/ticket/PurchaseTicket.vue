@@ -28,11 +28,11 @@
                     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">Event Name</label>
-                            <p class="text-lg text-gray-900">{{ event?.name || 'Loading...' }}</p>
+                            <p class="text-lg text-gray-900">{{ event?.title }}</p>
                         </div>
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-gray-700">Date</label>
-                            <p class="text-lg text-gray-900">{{ event?.date || 'TBD' }}</p>
+                            <p class="text-lg text-gray-900">{{ event?.dateOfEvent || 'TBD' }}</p>
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
 
 
 <script>
-import {ref, onMounted} from 'vue'
+import {onMounted, ref} from 'vue'
 import {useEvent} from '@/composables/useEvent'
 import {useUser} from '@/composables/useUser'
 import {useVoucher} from '@/composables/useVoucher'
@@ -97,8 +97,10 @@ import {useRoute} from 'vue-router'
 
 export default {
     name: 'PurchaseTicket',
+
     setup() {
         const route = useRoute()
+        const event = ref(null)
         const {error, loading, getEvent} = useEvent()
         const {customerError, customerLoading, getCurrentCustomer} = useUser()
         const {voucherError, voucherLoading, getUserVoucher} = useVoucher()
@@ -106,8 +108,9 @@ export default {
         onMounted(async () => {
             if (route.params.id) {
                 try {
-                    const response = await getEvent(route.params.id)
-                    console.log(response)
+                    const eventData = await getEvent(route.params.id)
+                    event.value = eventData
+                    console.log()
                 } catch (err) {
                     console.error('Error fetching event:', err)
                 }
@@ -133,42 +136,9 @@ export default {
             customerError,
             customerLoading,
             voucherError,
-            voucherLoading
+            voucherLoading,
+            event
         }
     }
 }
 </script>
-
-<style scoped>
-.purchase-ticket {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.voucher-input {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.error-message {
-    color: red;
-    margin: 5px 0;
-}
-
-.form-actions {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-}
-</style>
