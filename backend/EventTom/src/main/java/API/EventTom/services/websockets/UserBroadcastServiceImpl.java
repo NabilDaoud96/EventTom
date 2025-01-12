@@ -2,6 +2,8 @@ package API.EventTom.services.websockets;
 
 import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.dto.WebSocketMessageDTO;
+import API.EventTom.mappers.StandardDTOMapper;
+import API.EventTom.models.Notification;
 import API.EventTom.models.user.UserDetailsImpl;
 import API.EventTom.services.websockets.interfaces.IDestinationStrategy;
 import API.EventTom.services.websockets.interfaces.IUserBroadcastService;
@@ -17,11 +19,10 @@ import org.springframework.stereotype.Service;
 public class UserBroadcastServiceImpl implements IUserBroadcastService {
     private final IDestinationStrategy destinationStrategy;
     private final IWebsocketBroadcastStrategy broadcaster;
-
+    private final StandardDTOMapper standardDTOMapper;
     @Override
-    public void broadcastToUser(Long userId, WebSocketMessageDTO message) {
+    public void broadcastToUser(Long userId, Notification notification) {
         String destination = destinationStrategy.buildDestination("USER_NOTIFICATION", userId);
-        System.out.println("Sending to: " + destination);
-        broadcaster.broadcastToUser(userId.toString(), destination, message);
+        broadcaster.broadcastToUser(userId.toString(), destination, standardDTOMapper.mapNotificationToNotificationDTO(notification));
     }
 }

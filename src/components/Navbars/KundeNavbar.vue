@@ -48,26 +48,59 @@ export default {
   },
 
   computed: {
-    ...mapGetters('auth', ['isAuthenticated']),
-
     currentPage() {
-      console.log(this.isAuthenticated)
-      if (this.$route.path === '/kunde/dashboard') {
-        return 'Dashboard';
-      } else if (this.$route.path === '/kunde/tables') {
-        return 'Tables';
-      } else if (this.$route.path === '/kunde/tickets') {
-        return 'Tickets';
-      } else if (this.$route.path === '/kunde/profile') {
-        return 'Profile';
-      } else if (this.$route.path === '/kunde/events') {
-        return 'Events';
-      } else if (this.$route.name === 'EventShow') {
-        return 'Event Details';
-      } else if (this.$route.path === '/kunde/buy_ticket') {
-        return 'Buy Ticket';
-      } else {
-        return 'Unknown Page';
+      switch (this.$route.path) {
+          // Dashboard routes
+        case '/dashboard':
+          return 'Dashboard';
+
+          // Kunde routes
+        case '/tickets':
+          return 'My Tickets';
+        case '/vouchers':
+          return 'My Vouchers';
+        case '/events':
+          return 'Events';
+        case '/profile':
+          return 'Profile';
+        case '/notifications':
+          return 'Notifications';
+        case '/purchase-ticket':
+          return 'Purchase Ticket';
+
+          // Event Creator routes
+        case '/event-creator/dashboard':
+          return 'Event Creator Dashboard';
+        case '/event-creator/profile':
+          return 'Event Creator Profile';
+        case '/event-creator/events':
+          return 'Manage Events';
+        case '/event-creator/create':
+          return 'Create New Event';
+
+          // Admin routes
+        case '/admin/employee-register':
+          return 'Register Employee';
+
+          // Auth routes
+        case '/auth/login':
+          return 'Login';
+        case '/auth/register':
+          return 'Register';
+
+          // Dynamic routes with parameters
+        default:
+          // Handle routes with parameters
+          if (this.$route.name === 'EventShow') {
+            return 'Event Details';
+          }
+          if (this.$route.name === 'PurchaseTicket') {
+            return 'Purchase Ticket';
+          }
+          if (this.$route.name === 'UpdateEventForm') {
+            return 'Update Event';
+          }
+          return 'Unknown Page';
       }
     }
   }

@@ -25,22 +25,18 @@ public class TicketQueryServiceImpl extends BaseQueryService<Ticket, TicketDTO, 
 
     private final TicketRepository ticketRepository;
     private final StandardDTOMapper standardDTOMapper;
-    private final EventRepository eventRepository;
-    private final CustomerRepository customerRepository;
+
 
     public TicketQueryServiceImpl(
             TicketRepository ticketRepository,
-            StandardDTOMapper standardDTOMapper, StandardDTOMapper standardDTOMapper1,
-            EventRepository eventRepository,
-            CustomerRepository customerRepository) {
+            StandardDTOMapper standardDTOMapper) {
         super(ticketRepository,
                 standardDTOMapper,
                 standardDTOMapper::mapTicketToTicketDTO,
                 "Ticket");
         this.ticketRepository = ticketRepository;
-        this.standardDTOMapper = standardDTOMapper1;
-        this.eventRepository = eventRepository;
-        this.customerRepository = customerRepository;
+        this.standardDTOMapper = standardDTOMapper;
+
     }
 
     @Override
@@ -70,7 +66,6 @@ public class TicketQueryServiceImpl extends BaseQueryService<Ticket, TicketDTO, 
     @Override
     public List<TicketDTO> findAllByUserId(Long userId) {
         List<Ticket> tickets = ticketRepository.findAllByUserId(userId);
-        System.out.println(tickets.size());
         return tickets.stream()
                 .map(standardDTOMapper::mapTicketToTicketDTO)
                 .collect(Collectors.toList());

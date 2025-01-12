@@ -1,11 +1,11 @@
 package API.EventTom.observers;
 
 import API.EventTom.dto.WebSocketMessageDTO;
+import API.EventTom.models.Notification;
 import API.EventTom.models.user.Roles;
 import API.EventTom.models.user.User;
 import API.EventTom.repositories.EmployeeRepository;
 import API.EventTom.services.notifications.IWebsiteNotificationService;
-import API.EventTom.services.websockets.interfaces.IUserBroadcastService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class TicketNotificationListener {
     private final EmployeeRepository employeeRepository;
     private final IWebsiteNotificationService websiteNotificationService;
-    private final IUserBroadcastService userBroadcastService;
 
     @Async
     @EventListener
@@ -28,7 +27,6 @@ public class TicketNotificationListener {
         sendCustomerNotification(event, "TICKET_PURCHASE");
 
         if (shouldNotifyEventManager(event)) {
-            System.out.println(event.getEvent().getId());
             sendManagerNotification(event, "EVENT_MANAGER_TICKET_PURCHASE");
         }
     }
@@ -37,7 +35,6 @@ public class TicketNotificationListener {
         String message = createCustomerMessage(event);
         User recipient = event.getTicket().getCustomer().getUser();
         websiteNotificationService.sendNotification(recipient, message, notificationType);
-        userBroadcastService.broadcastToUser(recipient.getId(), new WebSocketMessageDTO(message, notificationType));
 
     }
 
@@ -48,7 +45,6 @@ public class TicketNotificationListener {
                 .forEach(manager -> {
                     User userManager = manager.getUser();
                     websiteNotificationService.sendNotification(userManager, message, notificationType);
-                    userBroadcastService.broadcastToUser(userManager.getId(), new WebSocketMessageDTO(message, notificationType));
                 });
     }
 

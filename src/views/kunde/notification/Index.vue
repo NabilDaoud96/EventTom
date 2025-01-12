@@ -44,7 +44,6 @@
         @page-change="loadPage"
     />
 
-
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center items-center mt-4">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -60,6 +59,7 @@
 <script>
 import { useNotifications } from "@/composables/useNotifications";
 import BasePagination from '@/components/BasePagination.vue';
+import websocketService from '@/utils/websocket';
 
 export default {
   name: 'NotificationsTable',
@@ -83,7 +83,8 @@ export default {
       sortConfig: {
         sortBy: 'notificationType',
         direction: 'asc'
-      }
+      },
+      unsubscribeWebSocket: null
     };
   },
   methods: {
@@ -91,7 +92,6 @@ export default {
       return new Date(date).toLocaleDateString();
     },
     async loadPage(page) {
-
       const response = await this.getUserNotifications({
         page,
         size: 10,
@@ -108,16 +108,46 @@ export default {
       for (const notification of this.notifications) {
         if (!notification.isRead) {
           await this.markAsRead(notification.id);
-
         }
       }
     },
     async handleSort() {
       await this.loadPage(0);
+    },
+    handleNewNotification(notification) {
+      // Add the new notification to the top of the list
+      this.notifications.unshift({
+        ...notification,
+        isRead: false
+      });
+
+      // If we're at the page size limit, remove the last notification
+      if (this.notifications.length > 10) {
+        this.notifications.pop();
+      }
     }
   },
-  mounted() {
-    this.loadPage(0);
+  async mounted() {
+    // First load the initial page of notifications
+    await this.loadPage(0);
+
+    // Then connect to WebSocket if not already connected
+    try {
+      if (!websocketService.isConnected) {
+        await websocketService.connect();
+      }
+
+      // Subscribe to user notifications
+      this.unsubscribeWebSocket = websocketService.on('userNotification', this.handleNewNotification);
+    } catch (error) {
+      console.error('Failed to connect to WebSocket:', error);
+    }
+  },
+  beforeUnmount() {
+    // Clean up WebSocket subscription when component is destroyed
+    if (this.unsubscribeWebSocket) {
+      this.unsubscribeWebSocket();
+    }
   }
 };
 </script>
