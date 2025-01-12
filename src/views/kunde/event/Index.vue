@@ -1,6 +1,16 @@
 <template>
-  <!-- Removed the max-w-7xl to allow full width -->
   <div class="p-6 w-full">
+    <!-- Search Component -->
+    <div class="mb-6 bg-white p-4 rounded-lg shadow">
+      <div class="max-w-md">
+        <SearchInput
+            v-model="searchQuery"
+            placeholder="Search by title or location"
+            @search="handleSearch"
+        />
+      </div>
+    </div>
+
     <div class="mb-6">
       <h2 class="text-2xl font-bold text-gray-800">All Events</h2>
     </div>
@@ -53,7 +63,7 @@
                   {{ event.availableTickets }}
                 </span>
               <span v-else
-                    class="px-2 inline-flex text-l leading-5  font-semibold rounded-full bg-red-100 text-red-500">
+                    class="px-2 inline-flex text-l leading-5 font-semibold rounded-full bg-red-100 text-red-500">
                   Ausverkauft
                 </span>
             </td>
@@ -83,12 +93,11 @@
       </div>
     </div>
 
-      <BasePagination
-          :current-page="currentPage - 1"
-          :total-pages="totalPages"
-          @page-change="handlePageChange"
-      />
-
+    <BasePagination
+        :current-page="currentPage - 1"
+        :total-pages="totalPages"
+        @page-change="handlePageChange"
+    />
   </div>
 </template>
 
@@ -96,13 +105,14 @@
 import { ref, onMounted, onUnmounted } from 'vue';
 import api from "@/utils/axios-auth";
 import BasePagination from '@/components/BasePagination.vue';
+import SearchInput from '@/components/SearchComponent.vue';
 import websocketService from '@/utils/websocket';
-import {formatDate, formatPrice} from "@/utils/formatter";
+import { formatDate, formatPrice } from "@/utils/formatter";
 
 export default {
-  methods: {formatPrice},
   components: {
-    BasePagination
+    BasePagination,
+    SearchInput
   },
 
   setup() {
@@ -111,11 +121,17 @@ export default {
     const rowsPerPage = ref(10);
     const totalElements = ref(0);
     const totalPages = ref(0);
+    const searchQuery = ref('');
     let unsubscribeNewEvent = null;
     let unsubscribeEventUpdate = null;
 
     const handleNewEvent = (newEvent) => {
-      events.value.unshift(newEvent);
+      // Only add the new event if it matches the current search query
+      if (!searchQuery.value ||
+          newEvent.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+          newEvent.location.toLowerCase().includes(searchQuery.value.toLowerCase())) {
+        events.value.unshift(newEvent);
+      }
     };
 
     const handleEventUpdate = (updatedEvent) => {
@@ -131,7 +147,8 @@ export default {
           params: {
             page: currentPage.value - 1,
             size: rowsPerPage.value,
-            sortBy: 'dateOfEvent'
+            sortBy: 'dateOfEvent',
+            search: searchQuery.value
           },
         });
         events.value = response.data.content;
@@ -147,16 +164,19 @@ export default {
       fetchEvents();
     };
 
+    const handleSearch = (value) => {
+      searchQuery.value = value;
+      currentPage.value = 1; // Reset to first page when searching
+      fetchEvents();
+    };
+
 
 
     onMounted(async () => {
       try {
         await websocketService.connect();
-
         unsubscribeNewEvent = websocketService.on('newEvent', handleNewEvent);
         unsubscribeEventUpdate = websocketService.on('eventUpdate', handleEventUpdate);
-
-
         await fetchEvents();
       } catch (error) {
         console.error('Failed to setup WebSocket connection:', error);
@@ -172,8 +192,11 @@ export default {
       events,
       currentPage,
       totalPages,
+      searchQuery,
       handlePageChange,
-      formatDate
+      handleSearch,
+      formatDate,
+      formatPrice
     };
   }
 };

@@ -1,16 +1,12 @@
 <template>
   <div class="p-6 w-full">
     <div class="mb-6 bg-white p-4 rounded-lg shadow">
-      <div class="max-w-md">
         <label class="block text-sm font-medium text-gray-700 mb-1">Search Events</label>
-        <input
+        <SearchInput
             v-model="searchQuery"
-            type="text"
-            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             placeholder="Search by title or location"
-            @input="handleSearch"
+            @search="handleSearch"
         />
-      </div>
     </div>
     <div class="mb-6">
       <h2 class="text-2xl font-bold text-gray-800">All Events</h2>
@@ -56,12 +52,10 @@
               <div class="text-sm font-medium text-gray-900">{{ formatPrice(event.basePrice) }}</div>
             </td>
             <td class="px-6 py-4">
-                <span v-if="event.availableTickets > 0"
-                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
+                <span v-if="event.availableTickets > 0" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                   {{ event.availableTickets }} available
                 </span>
-              <span v-else
-                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-500">
+              <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-500">
                   Ausverkauft
                 </span>
             </td>
@@ -110,14 +104,16 @@
 <script>
 import BasePagination from '@/components/BasePagination.vue';
 import { useEvent } from "@/composables/useEvent";
-import {formatDate, formatPrice} from "../../../utils/formatter";
+import { formatDate, formatPrice } from "../../../utils/formatter";
+import SearchInput from "@/components/SearchComponent.vue";
 
 export default {
   components: {
+    SearchInput,
     BasePagination
   },
   setup() {
-    const {error, loading, getEventsByManager, deleteEvent} = useEvent();
+    const { error, loading, getEventsByManager, deleteEvent } = useEvent();
     return {
       error,
       loading,
@@ -137,7 +133,6 @@ export default {
         direction: 'asc'
       },
       searchQuery: '',
-      searchTimeout: null
     };
   },
   methods: {
@@ -147,20 +142,16 @@ export default {
       this.currentPage = page + 1;
       this.fetchEvents();
     },
-    handleSearch() {
-      if (this.searchTimeout) {
-        clearTimeout(this.searchTimeout);
-      }
-      this.searchTimeout = setTimeout(() => {
-        this.currentPage = 1;
-        this.fetchEvents();
-      }, 300);
+    // Updated search handler
+    handleSearch(value) {
+      this.searchQuery = value;
+      this.currentPage = 1; // Reset to first page when searching
+      this.fetchEvents();
     },
+
     async handleDelete(id) {
       try {
-        const confirmed = await confirm(
-            'Are you sure you want to delete this item?',
-        );
+        const confirmed = await confirm('Are you sure you want to delete this item?');
 
         if (confirmed) {
           await this.deleteEvent(id);
