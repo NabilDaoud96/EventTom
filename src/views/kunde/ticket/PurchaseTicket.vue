@@ -39,7 +39,7 @@
               </div>
               <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-500">Price</label>
-                <p class="text-lg font-medium text-indigo-600">{{ event?.basePrice }} $</p>
+                <p class="text-lg font-medium text-indigo-600">{{ event?.price }} $</p>
               </div>
             </div>
           </div>
@@ -208,13 +208,14 @@
 </template>
 
 <script>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onBeforeUnmount } from 'vue'
 import { useEvent } from '@/composables/useEvent'
 import { useUser } from '@/composables/useUser'
 import { useVoucher } from '@/composables/useVoucher'
-import {createRouter as $router, useRoute} from 'vue-router'
-import {useTickets} from "@/composables/useTickets";
-import router from "@/router";
+import { createRouter as $router, useRoute } from 'vue-router'
+import { useTickets } from "@/composables/useTickets"
+import router from "@/router"
+import websocketService from '@/utils/websocket'
 
 export default {
   name: 'PurchaseTicket',
@@ -228,20 +229,76 @@ export default {
     const purchaseLoading = ref(false)
     const purchaseError = ref('')
 
-    const {error, loading, getEvent} = useEvent()
-    const {customerError, customerLoading, getCurrentCustomer} = useUser()
-    const {voucherError, voucherLoading, getUserVoucherAll, validateVoucher} = useVoucher()
-    const {  purchaseTicket } = useTickets()
+    const { error, loading, getEvent } = useEvent()
+    const { customerError, customerLoading, getCurrentCustomer } = useUser()
+    const { voucherError, voucherLoading, getUserVoucherAll, validateVoucher } = useVoucher()
+    const { purchaseTicket } = useTickets()
 
-    const eventId = route.params.id;
+    const eventId = route.params.id
+
+    let unsubscribeFromEventUpdates = null
+
+    const handleEventUpdate = (updatedEvent) => {
+      console.log(updatedEvent)
+      console.log(eventId)
+      console.log(updatedEvent.id)
+      console.log(eventId)
+      if (updatedEvent.id.toString() === eventId) {
+        console.log(event)
+        event.value = updatedEvent
+      }
+    }
+
+    const setupWebSocket = async () => {
+      try {
+        if (!websocketService.isConnected) {
+          await websocketService.connect()
+        }
+
+        unsubscribeFromEventUpdates = websocketService.on('eventUpdate', handleEventUpdate)
+
+      } catch (error) {
+        console.error('Failed to setup WebSocket connection:', error)
+      }
+    }
+
+    onMounted(async () => {
+      if (route.params.id) {
+        try {
+          event.value = await getEvent(eventId)
+          await setupWebSocket()
+        } catch (err) {
+          console.error('Error fetching event:', err)
+        }
+        try {
+          vouchers.value = await getUserVoucherAll()
+        } catch (err) {
+          console.error('Error fetching vouchers:', err)
+        }
+        try {
+          customer.value = await getCurrentCustomer()
+        } catch (err) {
+          console.error('Error fetching Customer:', err)
+        }
+      }
+    })
+
+    // Cleanup WebSocket subscription when component is destroyed
+    onBeforeUnmount(() => {
+      if (unsubscribeFromEventUpdates) {
+        unsubscribeFromEventUpdates()
+      }
+    })
+
+    // Rest of the component code remains the same...
     const formData = ref({
       amount: 0,
       voucherCodes: [],
     })
 
     const calculateSubtotal = computed(() => {
-      if (!event.value?.basePrice || !formData.value.amount) return 0
-      return event.value.basePrice * formData.value.amount
+      if (!event.value?.price || !formData.value.amount) return 0
+      return event.value.price * formData.value.amount
     })
 
     const totalVoucherAmount = computed(() => {
@@ -279,8 +336,8 @@ export default {
               used: false
             });
           }
-          newVoucherCode.value = ''; // Clear the input
-          voucherError.value = ''; // Clear any previous errors
+          newVoucherCode.value = '';
+          voucherError.value = '';
         }
       } catch (err) {
         voucherError.value = err.response?.data?.error || 'Invalid voucher code';
@@ -295,6 +352,7 @@ export default {
       const voucher = vouchers.value.find(v => v.voucherCode === code);
       return voucher?.amount || 0;
     }
+
     const handlePurchase = async () => {
       purchaseLoading.value = true;
       purchaseError.value = '';
@@ -307,9 +365,9 @@ export default {
         const purchaseData = {
           eventId: eventId,
           amount: formData.value.amount,
-          voucherCodes: [...formData.value.voucherCodes] // Convert Proxy to plain array
-                };
-        console.log(purchaseData)
+          voucherCodes: [...formData.value.voucherCodes]
+        };
+
         const response = await purchaseTicket(purchaseData);
 
         router.push({
@@ -324,26 +382,7 @@ export default {
       } finally {
         purchaseLoading.value = false;
       }
-    };
-    onMounted(async () => {
-      if (route.params.id) {
-        try {
-          event.value = await getEvent(eventId)
-        } catch (err) {
-          console.error('Error fetching event:', err)
-        }
-        try {
-          vouchers.value = await getUserVoucherAll()
-        } catch (err) {
-          console.error('Error fetching vouchers:', err)
-        }
-        try {
-          customer.value = await getCurrentCustomer()
-        } catch (err) {
-          console.error('Error fetching Customer:', err)
-        }
-      }
-    })
+    }
 
     return {
       error,

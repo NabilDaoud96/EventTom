@@ -66,8 +66,7 @@ public class EventCommandServiceImpl implements IEventCommandService {
         if (!isAuthorized) {
             throw new AccessDeniedException("User is not authorized to update this event");
         }
-
-        // Update basic fields
+        System.out.println(eventUpdateDTO.basePrice());
         event.setTitle(eventUpdateDTO.title());
         event.setLocation(eventUpdateDTO.location());
         event.setDateOfEvent(eventUpdateDTO.dateOfEvent());

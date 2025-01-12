@@ -10,6 +10,7 @@ public record EventDTO(
         long soldTickets,
         long thresholdValue,
         int availableTickets,
+        BigDecimal price,
         BigDecimal basePrice,
         String location,
         int totalTickets

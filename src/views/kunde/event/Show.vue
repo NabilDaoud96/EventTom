@@ -14,7 +14,7 @@
         <p class="mt-2 text-center text-gray-600">Date: {{ formatDate(event.dateOfEvent) }}</p>
         <p class="mt-2 text-center text-gray-600">Location: {{ event.location }}</p>
         <p class="mt-2 text-center text-gray-600">Available Tickets: {{ event.availableTickets }}</p>
-        <p class="mt-4 text-center text-xl font-bold">Price: €{{ event.basePrice }}</p>
+        <p class="mt-4 text-center text-xl font-bold">Price: €{{ event.price }}</p>
         <div class="flex justify-between mt-6">
           <button 
             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"

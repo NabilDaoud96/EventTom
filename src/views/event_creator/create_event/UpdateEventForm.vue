@@ -125,6 +125,7 @@
                       required
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
+                  <p class="text-xs text-blueGray-400 mt-1">Final price: {{ formatPrice(formData.price) }}</p>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-4">
@@ -178,9 +179,11 @@ import { useManager } from "@/composables/useManager";
 import { useEvent } from "@/composables/useEvent";
 import { onMounted, ref, computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import {formatPrice} from "../../../utils/formatter";
 
 export default {
   name: 'UpdateEventForm',
+  methods: {formatPrice},
   setup() {
     const route = useRoute();
     const router = useRouter();
@@ -197,6 +200,7 @@ export default {
       totalTickets: null,
       thresholdValue: 0,
       basePrice: null,
+      price: 0,
       managerIds: []
     });
 
@@ -228,19 +232,16 @@ export default {
       try {
         const eventData = await getEventManaged(route.params.id);
         if (eventData) {
-          // Format the date to work with datetime-local input
           const dateObj = new Date(eventData.dateOfEvent);
           dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
           const formattedDate = dateObj.toISOString().slice(0, 16);
 
-          // Round the base price to 2 decimal places
           const roundedBasePrice = eventData.basePrice ? Number(eventData.basePrice.toFixed(2)) : null;
-
           formData.value = {
             ...eventData,
             dateOfEvent: formattedDate,
             basePrice: roundedBasePrice,
-            managerIds: eventData.managerIds || [] // Ensure managerIds is populated from the DTO
+            managerIds: eventData.managerIds || []
           };
         }
       } catch (err) {

@@ -57,10 +57,12 @@ public class StandardDTOMapper {
                 event.getThresholdValue(),
                 event.getAvailableTickets(),
                 priceCalculator.calculateBasePrice(event),
+                event.getBasePrice(),
                 event.getLocation(),
                 event.getMaxTotalTickets()
         );
     }
+
     public EventUpdateResponseDTO mapEventToEventUpdateDTO(Event event) {
         return new EventUpdateResponseDTO(
                 event.getId(),
@@ -70,6 +72,7 @@ public class StandardDTOMapper {
                 event.getThresholdValue(),
                 event.getAvailableTickets(),
                 priceCalculator.calculateBasePrice(event),
+                event.getBasePrice(),
                 event.getLocation(),
                 event.getMaxTotalTickets(),
                 event.getManagers().stream()

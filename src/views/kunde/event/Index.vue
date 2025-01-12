@@ -55,7 +55,7 @@
               <div class="text-l text-gray-500">{{ event.location }}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="text-l font-medium text-gray-900">{{ formatPrice(event.basePrice) }}</div>
+              <div class="text-l font-medium text-gray-900">{{ formatPrice(event.price) }}</div>
             </td>
             <td class="px-6 py-4">
                 <span v-if="event.availableTickets > 0"
