@@ -7,7 +7,16 @@
             <h6 class="text-blueGray-700 text-xl font-bold">Update Event</h6>
           </div>
         </div>
-
+        <div class="rounded-t bg-white mb-0 px-6 py-6">
+          <div class="text-center">
+            <h6 class="text-blueGray-700 text-xl font-bold">Update Event</h6>
+          </div>
+          <!-- Added error alert -->
+          <div v-if="eventError" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <p class="font-medium">Error</p>
+            <p>{{ eventError }}</p>
+          </div>
+        </div>
         <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
           <form @submit.prevent="handleSubmit">
             <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -178,7 +187,7 @@
 import { useManager } from "@/composables/useManager";
 import { useEvent } from "@/composables/useEvent";
 import { onMounted, ref, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import {formatPrice} from "../../../utils/formatter";
 
 export default {
@@ -186,7 +195,6 @@ export default {
   methods: {formatPrice},
   setup() {
     const route = useRoute();
-    const router = useRouter();
     const eventManagers = ref([]);
     const dateError = ref('');
     const { error: managerError, loading: managerLoading, getEventManagers } = useManager();

@@ -20,7 +20,16 @@
           </div>
         </div>
       </div>
-
+      <div v-if="purchaseError" class="mt-6">
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-md">
+          <div class="flex">
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">Purchase failed</h3>
+              <div class="mt-2 text-sm text-red-700">{{ purchaseError }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Main Content -->
       <div v-else class="bg-white shadow-xl rounded-md overflow-hidden">
 
@@ -190,17 +199,7 @@
             </button>
           </div>
 
-          <!-- Purchase Error -->
-          <div v-if="purchaseError" class="mt-6">
-            <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-md">
-              <div class="flex">
-                <div class="ml-3">
-                  <h3 class="text-sm font-medium text-red-800">Purchase failed</h3>
-                  <div class="mt-2 text-sm text-red-700">{{ purchaseError }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>

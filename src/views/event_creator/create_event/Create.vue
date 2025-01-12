@@ -8,7 +8,10 @@
                         <h6 class="text-blueGray-700 text-xl font-bold">Create Event</h6>
                     </div>
                 </div>
-
+              <div v-if="error" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                <p class="font-medium">Error</p>
+                <p>{{ error }}</p>
+              </div>
                 <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
                     <form @submit.prevent="handleSubmit">
                         <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
