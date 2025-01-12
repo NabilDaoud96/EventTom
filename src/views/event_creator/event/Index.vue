@@ -1,6 +1,5 @@
 <template>
   <div class="p-6 w-full">
-
     <div class="mb-6 bg-white p-4 rounded-lg shadow">
       <div class="max-w-md">
         <label class="block text-sm font-medium text-gray-700 mb-1">Search Events</label>
@@ -48,13 +47,13 @@
               <div class="text-sm font-medium text-gray-900">{{ event.title }}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="text-sm text-gray-500">{{ event.dateOfEvent }}</div>
+              <div class="text-sm text-gray-500">{{ formatDate(event.dateOfEvent) }}</div>
             </td>
             <td class="px-6 py-4">
               <div class="text-sm text-gray-500">{{ event.location }}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="text-sm font-medium text-gray-900">{{ event.basePrice }}€</div>
+              <div class="text-sm font-medium text-gray-900">{{ formatPrice(event.basePrice) }}</div>
             </td>
             <td class="px-6 py-4">
                 <span v-if="event.availableTickets > 0"
@@ -76,12 +75,13 @@
               </router-link>
             </td>
             <td class="px-6 py-4 text-center">
-              <div
-                  class="text-white cursor-pointer bg-red-400 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center justify-center"
+              <button
+                  @click="handleDelete(event.id)"
+                  class="text-white cursor-pointer bg-red-400 hover:bg-red-600 px-4 py-2 rounded text-sm inline-flex items-center justify-center"
               >
-                <i class="fas fa-eye mr-2"></i>
+                <i class="fas fa-trash mr-2"></i>
                 Delete
-              </div>
+              </button>
             </td>
           </tr>
           </tbody>
@@ -110,17 +110,19 @@
 <script>
 import BasePagination from '@/components/BasePagination.vue';
 import { useEvent } from "@/composables/useEvent";
+import {formatDate, formatPrice} from "../../../utils/formatter";
 
 export default {
   components: {
     BasePagination
   },
   setup() {
-    const {error, loading, getEventsByManager} = useEvent();
+    const {error, loading, getEventsByManager, deleteEvent} = useEvent();
     return {
       error,
       loading,
-      getEventsByManager
+      getEventsByManager,
+      deleteEvent
     };
   },
   data() {
@@ -139,6 +141,8 @@ export default {
     };
   },
   methods: {
+    formatPrice,
+    formatDate,
     handlePageChange(page) {
       this.currentPage = page + 1;
       this.fetchEvents();
@@ -152,6 +156,30 @@ export default {
         this.fetchEvents();
       }, 300);
     },
+    async handleDelete(id) {
+      try {
+        const confirmed = await confirm(
+            'Are you sure you want to delete this item?',
+        );
+
+        if (confirmed) {
+          await this.deleteEvent(id);
+          // Remove the deleted event from the local events array
+          this.events = this.events.filter(event => event.id !== id);
+
+          // If the current page becomes empty, go to the previous page
+          if (this.events.length === 0 && this.currentPage > 1) {
+            this.currentPage--;
+            await this.fetchEvents();
+          }
+          // Update total elements and pages
+          this.totalElements--;
+          this.totalPages = Math.ceil(this.totalElements / this.rowsPerPage);
+        }
+      } catch (error) {
+        console.error("Error deleting event:", error);
+      }
+    },
     async fetchEvents() {
       try {
         const response = await this.getEventsByManager({
@@ -159,7 +187,7 @@ export default {
           size: this.rowsPerPage,
           sortBy: this.sortConfig.sortBy,
           direction: this.sortConfig.direction,
-          search: this.searchQuery // Single search parameter
+          search: this.searchQuery
         });
 
         this.events = response.content;

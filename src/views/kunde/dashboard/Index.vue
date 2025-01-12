@@ -71,7 +71,7 @@
                 Available Vouchers
               </h5>
               <span class="font-semibold text-xl text-blueGray-700">
-                {{ formatCurrency(dashboardInfo?.voucherDashboard?.value || 0) }}€
+                {{ formatPrice(dashboardInfo?.voucherDashboard?.value || 0) }}
               </span>
             </div>
             <router-link to="/vouchers" class="relative w-auto pl-4 flex-initial">
@@ -96,27 +96,12 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useDashboard } from "@/composables/useDashboard"
+import {formatDate, formatPrice} from "../../../utils/formatter";
 
 const { error, loading, getDashboardInformation } = useDashboard()
 const dashboardInfo = ref(null)
 
-// Format currency function
-const formatCurrency = (value) => {
-  return Number(value).toFixed(2)
-}
 
-// Format date function
-const formatDate = (dateString) => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date)
-}
 
 onMounted(async () => {
   try {

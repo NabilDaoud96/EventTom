@@ -45,7 +45,7 @@
               <div class="text-l text-gray-500">{{ event.location }}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="text-l font-medium text-gray-900">{{ event.basePrice }}€</div>
+              <div class="text-l font-medium text-gray-900">{{ formatPrice(event.basePrice) }}</div>
             </td>
             <td class="px-6 py-4">
                 <span v-if="event.availableTickets > 0"
@@ -97,8 +97,10 @@ import { ref, onMounted, onUnmounted } from 'vue';
 import api from "@/utils/axios-auth";
 import BasePagination from '@/components/BasePagination.vue';
 import websocketService from '@/utils/websocket';
+import {formatDate, formatPrice} from "@/utils/formatter";
 
 export default {
+  methods: {formatPrice},
   components: {
     BasePagination
   },
@@ -145,13 +147,7 @@ export default {
       fetchEvents();
     };
 
-    const formatDate = (date) => {
-      const eventDate = new Date(date);
-      const day = String(eventDate.getDate()).padStart(2, '0');
-      const month = String(eventDate.getMonth() + 1).padStart(2, '0');
-      const year = eventDate.getFullYear();
-      return `${day}.${month}.${year}`;
-    };
+
 
     onMounted(async () => {
       try {

@@ -23,10 +23,10 @@
           <tbody class="bg-white divide-y divide-gray-200">
           <tr v-for="voucher in vouchers" :key="voucher.id" class="hover:bg-gray-50">
             <td class="px-6 py-4">
-              <div class="text-sm font-medium text-gray-900">{{ voucher.amount }}€</div>
+              <div class="text-sm font-medium text-gray-900">{{ formatPrice(voucher.amount) }}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="text-sm text-gray-500">{{ voucher.voucherValidUntil }}</div>
+              <div class="text-sm text-gray-500">{{ formatDate(voucher.voucherValidUntil) }}</div>
             </td>
             <td class="px-6 py-4">
                 <span :class="[
@@ -64,8 +64,9 @@
 </template>
 
 <script>
-import { useVoucher } from '@/composables/useVoucher'
+import { useVoucher } from '@/composables/useVoucher';
 import BasePagination from '@/components/BasePagination.vue';
+import { formatDate, formatPrice } from '@/utils/formatter';
 
 export default {
   name: 'VouchersTable',
@@ -73,12 +74,12 @@ export default {
     BasePagination
   },
   setup() {
-    const {error, loading, getUserVouchers} = useVoucher()
+    const { error, loading, getUserVouchers } = useVoucher();
     return {
       error,
       loading,
       getUserVouchers
-    }
+    };
   },
   data() {
     return {
@@ -89,9 +90,11 @@ export default {
         sortBy: 'used',
         direction: 'asc'
       }
-    }
+    };
   },
   methods: {
+    formatDate,
+    formatPrice,
     async loadPage(page) {
       const response = await this.getUserVouchers({
         page,

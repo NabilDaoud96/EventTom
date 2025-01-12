@@ -32,13 +32,13 @@
               <div class="text-l font-medium text-gray-900">{{ ticket.eventTitle }}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="text-l text-gray-500">{{ ticket.date }}</div>
+              <div class="text-l text-gray-500">{{ formatDate(ticket.date) }}</div>
             </td>
             <td class="px-6 py-4">
               <div class="text-l text-gray-500">{{ ticket.location }}</div>
             </td>
             <td class="px-6 py-4">
-              <div class="text-l font-medium text-gray-900">{{ ticket.finalPrice }}€</div>
+              <div class="text-l font-medium text-gray-900">{{ formatPrice(ticket.finalPrice) }}</div>
             </td>
             <td class="px-6 py-4">
                 <span :class="getDaysLeftClass(calculateDaysLeft(ticket.date))"
@@ -75,6 +75,7 @@
 <script>
 import { useTickets } from '@/composables/useTickets';
 import BasePagination from '@/components/BasePagination.vue';
+import { formatDate, formatPrice } from '@/utils/formatter';
 
 export default {
   name: 'TicketsTable',
@@ -103,6 +104,8 @@ export default {
     };
   },
   methods: {
+    formatPrice,
+    formatDate,
     async loadPage(page) {
       const response = await this.getUserTickets({
         page,

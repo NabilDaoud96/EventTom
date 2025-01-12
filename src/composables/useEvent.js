@@ -93,6 +93,20 @@ export function useEvent() {
             loading.value = false;
         }
     };
+    const deleteEvent = async (id) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.delete(`events/delete/${id}`);
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.message
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
     return {
         loading,
         error,
@@ -100,6 +114,7 @@ export function useEvent() {
         getEvents,
         getEventsByManager,
         updateEvent,
-        getEventManaged
+        getEventManaged,
+        deleteEvent
     }
 }
