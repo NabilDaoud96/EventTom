@@ -55,29 +55,26 @@ export function useEvent() {
                                           page = 0,
                                           size = 10,
                                           sortBy = 'read',
-                                          direction = 'asc'
+                                          direction = 'asc',
+                                            search = ''  // Single search parameter
                                       }) => {
-
         try {
             loading.value = true;
             error.value = '';
             const response = await api.get(`events/manager`, {
-                    params: {
-                        page,
-                        size,
-                        sortBy,
-                        direction
-                    }
+                params: {
+                    page,
+                    size,
+                    sortBy,
+                    direction,
+                    search
                 }
-            );
-            console.log("test123")
+            });
             return response.data;
         } catch (err) {
             if (err.response) {
                 error.value = err.response.data.error;
-
             }
-
         } finally {
             loading.value = false;
         }

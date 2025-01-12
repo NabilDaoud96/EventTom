@@ -113,21 +113,13 @@ export default {
     let unsubscribeEventUpdate = null;
 
     const handleNewEvent = (newEvent) => {
-      // Add new event to the first page if we're on it
-      if (currentPage.value === 1) {
-        events.value = [newEvent, ...events.value].slice(0, rowsPerPage.value);
-        totalElements.value++;
-        totalPages.value = Math.ceil(totalElements.value / rowsPerPage.value);
-      }
+      events.value.unshift(newEvent);
     };
 
-    const handleTicketUpdate = (updatedEvent) => {
+    const handleEventUpdate = (updatedEvent) => {
       const index = events.value.findIndex(event => event.id === updatedEvent.id);
       if (index !== -1) {
-        events.value[index] = {
-          ...events.value[index],
-          availableTickets: updatedEvent.availableTickets
-        };
+        events.value[index] = updatedEvent;
       }
     };
 
@@ -166,10 +158,8 @@ export default {
         await websocketService.connect();
 
         unsubscribeNewEvent = websocketService.on('newEvent', handleNewEvent);
-        unsubscribeEventUpdate = websocketService.on('eventUpdate', handleTicketUpdate);
-        websocketService.on('userNotification', (notification) => {
-          console.log('Received notification:', notification);
-        });
+        unsubscribeEventUpdate = websocketService.on('eventUpdate', handleEventUpdate);
+
 
         await fetchEvents();
       } catch (error) {

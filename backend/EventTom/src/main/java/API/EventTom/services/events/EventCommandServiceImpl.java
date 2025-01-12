@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,13 +67,28 @@ public class EventCommandServiceImpl implements IEventCommandService {
             throw new AccessDeniedException("User is not authorized to update this event");
         }
 
+        // Update basic fields
         event.setTitle(eventUpdateDTO.title());
+        event.setLocation(eventUpdateDTO.location());
         event.setDateOfEvent(eventUpdateDTO.dateOfEvent());
         event.setMaxTotalTickets(eventUpdateDTO.totalTickets());
         event.setThresholdValue(eventUpdateDTO.thresholdValue());
         event.setBasePrice(eventUpdateDTO.basePrice());
 
+        // Update managers if provided
+        if (eventUpdateDTO.managerIds() != null && !eventUpdateDTO.managerIds().isEmpty()) {
+            List<Employee> newManagers = new ArrayList<>();
+            for (Long managerId : eventUpdateDTO.managerIds()) {
+                Employee manager = employeeRepository.findById(managerId)
+                        .orElseThrow(() -> new ResourceNotFoundException("Manager not found with ID: " + managerId));
+                newManagers.add(manager);
+            }
+            event.getManagers().clear();
+            event.getManagers().addAll(newManagers);
+        }
+
         Event updatedEvent = eventRepository.save(event);
+        eventBroadcastService.broadcastEventUpdate(updatedEvent, true);
         return standardDTOMapper.mapEventToEventDTO(updatedEvent);
     }
 

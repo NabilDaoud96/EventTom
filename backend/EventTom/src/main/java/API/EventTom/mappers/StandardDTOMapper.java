@@ -1,6 +1,7 @@
 package API.EventTom.mappers;
 
 import API.EventTom.dto.*;
+import API.EventTom.dto.response.EventUpdateResponseDTO;
 import API.EventTom.dto.response.UserDTO;
 import API.EventTom.models.Notification;
 import API.EventTom.models.event.Event;
@@ -60,7 +61,22 @@ public class StandardDTOMapper {
                 event.getMaxTotalTickets()
         );
     }
-
+    public EventUpdateResponseDTO mapEventToEventUpdateDTO(Event event) {
+        return new EventUpdateResponseDTO(
+                event.getId(),
+                event.getTitle(),
+                event.getDateOfEvent(),
+                event.getTotalSoldTickets(),
+                event.getThresholdValue(),
+                event.getAvailableTickets(),
+                priceCalculator.calculateBasePrice(event),
+                event.getLocation(),
+                event.getMaxTotalTickets(),
+                event.getManagers().stream()
+                        .map(Employee::getId)
+                        .collect(Collectors.toList())
+        );
+    }
     public VoucherDTO mapVoucherToVoucherDTO(Voucher voucher) {
         return new VoucherDTO(
                 voucher.getCustomer().getUser().getId(),

@@ -1,5 +1,18 @@
 <template>
   <div class="p-6 w-full">
+
+    <div class="mb-6 bg-white p-4 rounded-lg shadow">
+      <div class="max-w-md">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Search Events</label>
+        <input
+            v-model="searchQuery"
+            type="text"
+            class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            placeholder="Search by title or location"
+            @input="handleSearch"
+        />
+      </div>
+    </div>
     <div class="mb-6">
       <h2 class="text-2xl font-bold text-gray-800">All Events</h2>
     </div>
@@ -120,7 +133,9 @@ export default {
       sortConfig: {
         sortBy: 'id',
         direction: 'asc'
-      }
+      },
+      searchQuery: '',
+      searchTimeout: null
     };
   },
   methods: {
@@ -128,13 +143,23 @@ export default {
       this.currentPage = page + 1;
       this.fetchEvents();
     },
+    handleSearch() {
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+      this.searchTimeout = setTimeout(() => {
+        this.currentPage = 1;
+        this.fetchEvents();
+      }, 300);
+    },
     async fetchEvents() {
       try {
         const response = await this.getEventsByManager({
           page: this.currentPage - 1,
           size: this.rowsPerPage,
           sortBy: this.sortConfig.sortBy,
-          direction:this.sortConfig.direction
+          direction: this.sortConfig.direction,
+          search: this.searchQuery // Single search parameter
         });
 
         this.events = response.content;

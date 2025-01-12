@@ -239,7 +239,8 @@ export default {
           formData.value = {
             ...eventData,
             dateOfEvent: formattedDate,
-            basePrice: roundedBasePrice
+            basePrice: roundedBasePrice,
+            managerIds: eventData.managerIds || [] // Ensure managerIds is populated from the DTO
           };
         }
       } catch (err) {
@@ -259,7 +260,7 @@ export default {
         const eventData = {
           ...formData.value,
           dateOfEvent: isoDateTime,
-          basePrice: Number(formData.value.basePrice.toFixed(2))
+          basePrice: Number(formData.value.basePrice.toFixed(2)),
         };
 
         await updateEvent(formData.value.id, eventData);
