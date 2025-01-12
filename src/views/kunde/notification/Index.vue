@@ -8,7 +8,7 @@
       <tr class="bg-gray-100">
         <th class="px-4 py-2 border">Message</th>
         <th class="px-4 py-2 border">Date</th>
-        <th class="px-4 py-2 border">Status</th>
+        <th class="px-4 py-2 border">Typ</th>
         <th class="px-4 py-2 border">
           <select
               v-model="sortConfig.direction"
@@ -80,7 +80,7 @@ export default {
       totalPages: 0,
       currentPage: 0,
       sortConfig: {
-        sortBy: 'read',
+        sortBy: 'notificationType',
         direction: 'asc'
       }
     };

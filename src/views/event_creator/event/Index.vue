@@ -62,6 +62,14 @@
                 Update
               </router-link>
             </td>
+            <td class="px-6 py-4 text-center">
+              <div
+                  class="text-white cursor-pointer bg-red-400 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center justify-center"
+              >
+                <i class="fas fa-eye mr-2"></i>
+                Delete
+              </div>
+            </td>
           </tr>
           </tbody>
         </table>

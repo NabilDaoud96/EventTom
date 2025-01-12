@@ -25,12 +25,14 @@ export function useRegistration() {
         }
     };
 
-    const registerWithProvider = async (provider) => {
+    const registerEmployee = async (formData) => {
         try {
             loading.value = true;
             error.value = '';
 
-            const response = await api.get(`auth/${provider}`);
+            const response = await api.post('registration/employee', formData);
+            await router.push('/auth/login');
+
             return response.data;
 
         } catch (err) {
@@ -42,10 +44,11 @@ export function useRegistration() {
         }
     };
 
+
     return {
         loading,
         error,
         registerCustomer,
-        registerWithProvider
+        registerEmployee
     };
 }

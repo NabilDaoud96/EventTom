@@ -99,15 +99,12 @@
 </template>
 
 <script setup>
-/* eslint-disable no-unused-vars */
 
 import {ref} from 'vue';
-import {useRouter} from 'vue-router';
 import {useRegistration} from '@/composables/useRegistration';
 
 
-const router = useRouter();
-const { loading, error, registerCustomer, registerWithProvider } = useRegistration();
+const { loading, error, registerCustomer } = useRegistration();
 
 const formData = ref({
   email: '',
@@ -120,16 +117,9 @@ const handleSubmit = async () => {
   try {
     await registerCustomer(formData.value);
   } catch (err) {
-    // Error is already handled in the composable
     console.error(err);
   }
 };
 
-const handleProviderAuth = async (provider) => {
-  try {
-    window.location.href = await registerWithProvider(provider);
-  } catch (err) {
-    console.error(err);
-  }
-};
+
 </script>

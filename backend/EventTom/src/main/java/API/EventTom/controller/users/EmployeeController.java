@@ -20,12 +20,14 @@ public class EmployeeController{
 
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
         List<EmployeeDTO> employees = employeeService.getAll();
         return ResponseEntity.ok(employees);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     public ResponseEntity<EmployeeDTO> getEmployeeById(@PathVariable Long id) {
         EmployeeDTO employeeDTO = employeeService.getById(id);
         return ResponseEntity.ok(employeeDTO);
@@ -33,7 +35,7 @@ public class EmployeeController{
 
 
     @GetMapping("/event-managers")
-    // @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_MANAGER', 'EVENT_CREATOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_MANAGER', 'EVENT_CREATOR')")
     public ResponseEntity<List<EmployeeDTO>> getAllEventManagers() {
         List<EmployeeDTO> eventManagers = employeeService.getAllEventManagers();
         return ResponseEntity.ok(eventManagers);

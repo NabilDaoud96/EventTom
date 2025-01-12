@@ -15,6 +15,8 @@ import java.util.Set;
 public class RoleManagementController {
     private final IRoleManagementService roleManagementService;
 
+
+
     @PostMapping("/assign/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMINISTRATOR')")
     public ResponseEntity<?> assignRole(

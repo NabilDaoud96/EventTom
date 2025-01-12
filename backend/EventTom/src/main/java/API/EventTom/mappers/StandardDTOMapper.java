@@ -43,6 +43,10 @@ public class StandardDTOMapper {
         );
     }
 
+    public RoleDTO mapRoleToRoleDTO(Role role) {
+        return new RoleDTO(role.getId(), role.getName());
+    }
+
     public EventDTO mapEventToEventDTO(Event event) {
         return new EventDTO(
                 event.getId(),
@@ -81,7 +85,7 @@ public class StandardDTOMapper {
         );
     }
     public NotificationDTO mapNotificationToNotificationDTO(Notification notification) {
-        return new NotificationDTO(notification.getId(), notification.getUser().getId(), notification.getCreatedAt(), notification.getMessage());
+        return new NotificationDTO(notification.getId(), notification.getUser().getId(), notification.getCreatedAt(), notification.getMessage(), notification.getNotificationType());
     }
 
     public UserDTO mapUserToUserDTO(User user) {

@@ -35,7 +35,7 @@ public class VoucherController {
     private final IVoucherQueryService voucherQueryService;
 
     @PostMapping
-    @PreAuthorize("hasRole('EVENT_MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR', 'EVENT_MANAGER')")
     public ResponseEntity<VoucherResponseDTO> generateVoucher(
             @Valid @RequestBody VoucherGenerationRequestDTO request) {
         Voucher voucher = voucherGenerationService.generateVoucher(
@@ -47,7 +47,7 @@ public class VoucherController {
     }
 
     @PostMapping("/bulk")
-    @PreAuthorize("hasRole('EVENT_MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR', 'EVENT_MANAGER')")
     public ResponseEntity<List<VoucherResponseDTO>> generateBulkVouchers(
             @Valid @RequestBody BulkVoucherGenerationRequestDTO request) {
         List<Voucher> vouchers = voucherGenerationService.generateBulkVouchers(

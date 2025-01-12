@@ -28,6 +28,7 @@ public class TicketNotificationListener {
         sendCustomerNotification(event, "TICKET_PURCHASE");
 
         if (shouldNotifyEventManager(event)) {
+            System.out.println(event.getEvent().getId());
             sendManagerNotification(event, "EVENT_MANAGER_TICKET_PURCHASE");
         }
     }
@@ -43,7 +44,7 @@ public class TicketNotificationListener {
     private void sendManagerNotification(TicketPurchaseEvent event, String notificationType) {
         String message = createManagerMessage(event);
 
-        employeeRepository.findByRoleAndEvent(Roles.EVENT_MANAGER, event.getEvent())
+        employeeRepository.findAllByEvent(event.getEvent())
                 .forEach(manager -> {
                     User userManager = manager.getUser();
                     websiteNotificationService.sendNotification(userManager, message, notificationType);

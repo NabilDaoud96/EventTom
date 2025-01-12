@@ -1,4 +1,3 @@
-// DynamicLayout.vue
 <template>
   <div>
     <component :is="currentSidebar" />
@@ -24,6 +23,10 @@ import EventCreatorNavbar from "@/components/Navbars/EventCreatorNavbar.vue"
 import EventCreatorSidebar from "@/components/Sidebars/EventCreatorSidebar.vue"
 import FooterEventCreator from "@/components/Footers/FooterEventCreator.vue"
 
+import AdminNavbar from "@/components/Navbars/AdminNavbar.vue"
+import AdminSidebar from "@/components/Sidebars/AdminSidebar.vue"
+import FooterAdmin from "@/components/Footers/FooterAdmin.vue"
+
 export default defineComponent({
   name: "DynamicLayout",
   components: {
@@ -33,23 +36,35 @@ export default defineComponent({
     EventCreatorNavbar,
     EventCreatorSidebar,
     FooterEventCreator,
+    AdminNavbar,
+    AdminSidebar,
+    FooterAdmin,
   },
   setup() {
     const store = useStore()
 
     const userRoles = computed(() => store.getters['auth/userRoles'])
 
-    const currentSidebar = computed(() =>
-        userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'EventCreatorSidebar' : 'KundeSidebar'
-    )
+    const currentSidebar = computed(() => {
+      if (userRoles.value.includes('ROLE_ADMINISTRATOR')) {
+        return 'AdminSidebar'
+      }
+      return userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'EventCreatorSidebar' : 'KundeSidebar'
+    })
 
-    const currentNavbar = computed(() =>
-        userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'EventCreatorNavbar' : 'KundeNavbar'
-    )
+    const currentNavbar = computed(() => {
+      if (userRoles.value.includes('ROLE_ADMINISTRATOR')) {
+        return 'AdminNavbar'
+      }
+      return userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'EventCreatorNavbar' : 'KundeNavbar'
+    })
 
-    const currentFooter = computed(() =>
-        userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'FooterEventCreator' : 'FooterKunde'
-    )
+    const currentFooter = computed(() => {
+      if (userRoles.value.includes('ROLE_ADMINISTRATOR')) {
+        return 'FooterAdmin'
+      }
+      return userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'FooterEventCreator' : 'FooterKunde'
+    })
 
     return {
       currentSidebar,

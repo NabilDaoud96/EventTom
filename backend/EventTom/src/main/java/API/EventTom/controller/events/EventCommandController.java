@@ -21,19 +21,19 @@ public class EventCommandController {
     private final IEventCommandService eventCommandService;
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('EVENT_CREATOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR')")
     public ResponseEntity<EventDTO> createEvent(@RequestBody EventCreateDTO eventCreateDTO, @Nonnull @AuthenticatedUserId Long userId) {
         return new ResponseEntity<>(eventCommandService.createEvent(eventCreateDTO, userId), HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasRole('EVENT_MANAGER') or hasRole('EVENT_CREATOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR', 'EVENT_MANAGER')")
     public ResponseEntity<EventDTO> updateEvent(@PathVariable long id, @RequestBody EventUpdateDTO eventUpdateDTO, @AuthenticatedUserId Long userId) throws AccessDeniedException {
         return ResponseEntity.ok(eventCommandService.updateEvent(id, eventUpdateDTO, userId));
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('EVENT_MANAGER') or hasRole('EVENT_CREATOR')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR', 'EVENT_MANAGER')")
     public ResponseEntity<Void> deleteEvent(@PathVariable long id, @AuthenticatedUserId Long userId) throws AccessDeniedException {
         eventCommandService.deleteEvent(id, userId);
         return ResponseEntity.noContent().build();

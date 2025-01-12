@@ -8,7 +8,6 @@ import EventCreator from "../layouts/EventCreator.vue";
 // Kunde Views
 import Dashboard from "../views/kunde/dashboard/Index.vue";
 import IndexTickets from "../views/kunde/ticket/Index.vue";
-import BuyTicket from "../views/kunde/ticket/BuyTicket.vue";
 import Profile from "../views/kunde/profile/Edit.vue";
 import IndexEvents from "../views/kunde/event/Index.vue";
 import EventShow from "../views/kunde/event/Show.vue";
@@ -19,6 +18,10 @@ import EventCreatorProfile from "../views/event_creator/profile/Edit.vue";
 import EventCreatorEvents from "../views/event_creator/event/Index.vue";
 import EventCreatorCreateEvent from "../views/event_creator/create_event/Create.vue"
 import EventCreatorDashboard from "@/views/event_creator/dashboard/Index.vue";
+
+// Admin Views
+import RegisterEmployee from "@/views/admin/employee/Create.vue"
+
 // Auth Views
 import Login from "../views/auth/Login.vue";
 import Register from "../views/auth/Register.vue";
@@ -61,7 +64,6 @@ const routes = [
             },
             {
                 path: "/notifications",
-                meta: { requiresAuth: true, roles: ['ROLE_NONE'] },
 
                 component: Notifications,
             },
@@ -102,6 +104,12 @@ const routes = [
                 name: 'UpdateEventForm',
                 meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR'] },
                 component: UpdateEventForm,
+            },
+            {
+                path: "/admin/employee-register",
+                name: 'RegisterEmployee',
+                meta: { requiresAuth: true, roles: ['ROLE_ADMINISTRATOR'] },
+                component: RegisterEmployee,
             },
         ],
     },

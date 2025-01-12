@@ -7,6 +7,7 @@ import API.EventTom.services.users.interfaces.IRegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/employee")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     public ResponseEntity<RegisterResponseDTO> registerEmployee(@Valid @RequestBody EmployeeRegisterRequestDTO request) {
         return ResponseEntity.ok(registrationService.registerEmployee(request));
     }
