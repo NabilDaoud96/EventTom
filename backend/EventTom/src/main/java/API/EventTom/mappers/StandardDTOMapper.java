@@ -34,10 +34,13 @@ public class StandardDTOMapper {
     public EmployeeDTO mapEmployeeToEmployeeDTO(Employee employee) {
         User user = employee.getUser();
         return new EmployeeDTO(
+                employee.getId(),
                 user.getRoles().stream()
                         .map(Role::getName)
                         .collect(Collectors.toSet()),
-                user.getFirstName() + " " + user.getLastName(),
+                user.getFirstName(),
+                user.getLastName(),
+                employee.getEmployeeNumber(),
                 user.getEmail()
         );
     }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IEmployeeQueryService extends IBaseQueryService<EmployeeDTO, Long> {
     EmployeeDTO getEmployeeByEmployeeNumber(String employeeNumber);
+    List<EmployeeDTO> getAllEventManagers();
+
 }

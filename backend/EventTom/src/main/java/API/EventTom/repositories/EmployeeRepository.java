@@ -12,7 +12,11 @@ import java.util.Optional;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Optional<Employee> findEmployeeByEmployeeNumber(String number);
-
+    @Query("SELECT DISTINCT e FROM Employee e " +
+            "JOIN e.user u " +
+            "JOIN u.roles r " +
+            "WHERE r.name = API.EventTom.models.user.Roles.EVENT_MANAGER")
+    List<Employee> findAllEventManagers();
     @Query("SELECT e FROM Employee e JOIN e.user.roles r WHERE r.name = :role AND :event MEMBER OF e.managedEvents")
     List<Employee> findByRoleAndEvent(@Param("role") Roles role, @Param("event") Event event);
 }

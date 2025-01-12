@@ -3,6 +3,7 @@ package API.EventTom.exceptions;
 import API.EventTom.dto.response.ErrorMessageDTO;
 
 import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
+import API.EventTom.exceptions.tokenException.UserNotAuthenticatedException;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -59,6 +60,10 @@ public class GlobalExceptionHandler {
         return buildResponseEntity("Access denied", HttpStatus.FORBIDDEN, e);
     }
 
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public ResponseEntity<ErrorMessageDTO> handleUserNotAuthenticatedException(UserNotAuthenticatedException e) {
+        return buildResponseEntity("User not authenticated", HttpStatus.UNAUTHORIZED, e);
+    }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ErrorMessageDTO> handleMethodNotAllowedException(Exception e) {

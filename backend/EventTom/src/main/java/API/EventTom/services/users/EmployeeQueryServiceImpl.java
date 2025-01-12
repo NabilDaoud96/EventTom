@@ -40,6 +40,14 @@ public class EmployeeQueryServiceImpl extends BaseQueryService<Employee, Employe
     }
 
     @Override
+    public List<EmployeeDTO> getAllEventManagers() {
+        return ((EmployeeRepository) repository).findAllEventManagers()
+                .stream()
+                .map(mapperFunction)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Page<EmployeeDTO> findAllByUserId(Long userId, Pageable pageable) {
         return Page.empty(pageable);
     }
