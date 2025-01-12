@@ -23,7 +23,9 @@
             <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
               User Information
             </h6>
+
             <div class="flex flex-wrap">
+
               <!-- Last Name -->
               <div class="w-full lg:w-6/12 px-4">
                 <div class="relative w-full mb-3">
@@ -76,9 +78,15 @@
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
                 </div>
+                <div v-if="error" class="w-full px-4 mb-4">
+
+                </div>
               </div>
-
-
+              <div v-if="error" class="w-full px-4 mb-4">
+                <div class="bg-red-100 border border-red-400 text-sm px-4 py-3 rounded relative" role="alert">
+                  <span class="block sm:inline text-red-500">{{ error }}</span>
+                </div>
+              </div>
             </div>
 
             <!-- Save Button -->

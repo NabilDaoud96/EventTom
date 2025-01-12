@@ -16,7 +16,7 @@
       <!-- Brand -->
       <router-link
         class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-xl font-bold p-4 px-0"
-        to="/event_creator/dashboard"
+        to="event-creator/dashboard"
       >
         EventTom
       </router-link>
@@ -65,7 +65,7 @@
         <h6
           class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline"
         >
-          event_creator Layout Pages
+          Employee Layout Pages
         </h6>
         <!-- Navigation -->
 
@@ -74,7 +74,7 @@
           <!-- Dashboard -->
           <li class="items-center">
             <router-link
-              to="event-creator/dashboard"
+              to="/event-creator/dashboard"
               v-slot="{ href, navigate, isActive }"
             >
               <a
@@ -116,7 +116,7 @@
                   class="fas fa-calendar-alt mr-2 text-sm"
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                All Events
+                My Events
               </a>
             </router-link>
           </li>
@@ -124,7 +124,7 @@
           <!-- Create Event -->
             <li class="items-center">
               <router-link
-                to="/event-creator/create_event"
+                to="/event-creator/create"
                 v-slot="{ href, navigate, isActive }"
               >
                 <a
@@ -149,7 +149,7 @@
           <!-- Profile -->
            <li class="items-center">
             <router-link
-              to="/event_creator/profile"
+              to="/profile"
               v-slot="{ href, navigate, isActive }"
             >
               <a

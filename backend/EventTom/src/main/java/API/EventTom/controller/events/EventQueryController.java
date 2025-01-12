@@ -5,6 +5,9 @@ import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.services.events.IEventQueryService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +35,15 @@ public class EventQueryController {
     }
 
     @GetMapping("/manager")
-    public ResponseEntity<List<EventDTO>> getEventsByManager(@AuthenticatedUserId Long userId) {
-        return ResponseEntity.ok(eventQueryService.findAllByUserId(userId));
+    public ResponseEntity<Page<EventDTO>> getEventsByManager(
+            @AuthenticatedUserId Long userId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(eventQueryService.findAllByUserId(userId, pageable));
     }
 }

@@ -34,6 +34,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
     public RegisterResponseDTO registerCustomer(CustomerRegisterRequestDTO request) {
         validateEmailUniqueness(request.email());
 
+        if (userRepository.existsByEmail(request.email())) {
+            throw new EmailAlreadyExistsException("Email " + request.email() + " is already in use");
+        }
+
         User user = createBaseUser(request.email(), request.password(), request.firstName(), request.lastName(), UserType.CUSTOMER);
         user.setRoles(roleManagementService.getDefaultRoles());
 
@@ -52,6 +56,10 @@ public class RegistrationServiceImpl implements IRegistrationService {
     @Transactional
     public RegisterResponseDTO registerEmployee(EmployeeRegisterRequestDTO request) {
         validateEmailUniqueness(request.email());
+
+        if (userRepository.existsByEmail(request.email())) {
+            throw new EmailAlreadyExistsException("Email " + request.email() + " is already in use");
+        }
 
         User user = createBaseUser(request.email(), request.password(), request.firstName(), request.lastName(), UserType.EMPLOYEE);
         user.setRoles(roleManagementService.getRolesByNames(request.roles()));

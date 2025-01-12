@@ -42,10 +42,9 @@ export function useUser() {
             error.value = '';
             const response = await api.put('user/command/edit', profile);
             return response.data;
-
         } catch (err) {
             if (err.response) {
-                error.value = err.response.data.error
+                error.value = err.response.data.message
             }
         } finally {
             loading.value = false;

@@ -1,70 +1,83 @@
 <template>
-  <div class="p-6">
-    <h2 class="text-2xl font-semibold mb-4">Purchased Tickets</h2>
+  <div class="p-6 w-full">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">My Vouchers</h2>
+    </div>
 
-    <!-- Table -->
-    <table class="min-w-full table-auto border-collapse border border-gray-200">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="px-4 py-2 border">Wert</th>
-          <th class="px-4 py-2 border">Ablaufdatum</th>
-          <th class="px-4 py-2 border">Status</th>
+    <div class="bg-white shadow-lg overflow-hidden w-full">
+      <div class="overflow-x-auto w-full">
+        <table class="w-full divide-y divide-gray-200">
+          <thead>
+          <tr>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Wert
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Ablaufdatum
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Status
+            </th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          <tr v-for="voucher in vouchers" :key="voucher.id" class="hover:bg-gray-50">
+            <td class="px-6 py-4">
+              <div class="text-sm font-medium text-gray-900">{{ voucher.amount }}€</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-500">{{ voucher.voucherValidUntil }}</div>
+            </td>
+            <td class="px-6 py-4">
+                <span :class="[
+                  voucher.used
+                    ? 'bg-gray-100 text-gray-800'
+                    : 'bg-green-100 text-green-800',
+                  'px-2 inline-flex text-xs leading-5 font-semibold rounded-full'
+                ]">
+                  {{ voucher.used ? 'Benutzt' : 'Verfügbar' }}
+                </span>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="voucher in paginatedVoucher" :key="voucher.id">
-          <td class="px-4 py-2 border">{{ voucher.amount }} $</td>
-          <td class="px-4 py-2 border">{{ voucher.voucherValidUntil}}</td>
-          <td class="px-4 py-2 border">{{ voucher.used}}</td>
+    <BasePagination
+        :current-page="currentPage - 1"
+        :total-pages="totalPages"
+        @page-change="handlePageChange"
+    />
 
-        </tr>
-      </tbody>
-    </table>
+    <!-- Loading State -->
+    <div v-if="loading" class="flex justify-center items-center mt-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+    </div>
 
-    <!-- Pagination Controls -->
-    <div class="pagination-container flex justify-center items-center mt-4 space-x-2">
-      <!-- Previous Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="prevPage"
-        :disabled="currentPage === 1"
-      >
-        &larr;
-      </button>
-
-      <!-- Page Numbers -->
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        @click="goToPage(page)"
-        class="px-3 py-1 rounded border"
-        :class="{
-          'bg-blue-500 text-white': currentPage === page,
-          'bg-gray-300 hover:bg-gray-400': currentPage !== page,
-        }"
-      >
-        {{ page }}
-      </button>
-
-      <!-- Next Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-      >
-        &rarr;
-      </button>
-    </div>  
+    <!-- Error State -->
+    <div v-if="error" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+      {{ error }}
+    </div>
   </div>
 </template>
 
 <script>
 import { useVoucher } from '@/composables/useVoucher'
-
-const {error, loading, getUserVoucher} = useVoucher()
+import BasePagination from '@/components/BasePagination.vue';
 
 export default {
+  components: {
+    BasePagination
+  },
+  setup() {
+    const { error, loading, getUserVoucher } = useVoucher()
+    return {
+      error,
+      loading,
+      getUserVoucher
+    }
+  },
   data() {
     return {
       vouchers: [],
@@ -72,73 +85,26 @@ export default {
       rowsPerPage: 10,
       totalElements: 0,
       totalPages: 0,
-    };
-  },
-  computed: {
-    paginatedVoucher() {
-      const start = (this.currentPage - 1) * this.rowsPerPage;
-      const end = start + this.rowsPerPage;
-      return this.vouchers.slice(start, end);
-    },
-    totalPages() {
-      return Math.ceil(this.vouchers.length / this.rowsPerPage);
-    },
+    }
   },
   methods: {
-
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
+    handlePageChange(page) {
+      this.currentPage = page + 1;
+      this.fetchVouchers();
     },
-
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    },
-
-    goToPage(page) {
-      this.currentPage = page;
-    },
-
     async fetchVouchers() {
       try {
-        const response = await getUserVoucher();
+        const response = await this.getUserVoucher()
         this.vouchers = response.content
-        this.totalElements = response.data.totalElements;
-        this.totalPages = response.data.totalPages;
-
+        this.totalElements = response.totalElements
+        this.totalPages = response.totalPages
       } catch (err) {
-        console.log(err);
+        console.error('Error fetching vouchers:', err)
       }
     }
   },
   created() {
-    this.fetchVouchers();
+    this.fetchVouchers()
   }
 }
-
 </script>
-
-
-<style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th,
-td {
-  text-align: center;
-  padding: 8px;
-}
-th {
-  background-color: #f0f0f0;
-}
-.pagination-container {
-  background-color: #f0f0f0; /* Hellgraue Hintergrundfarbe */
-  padding: 10px; /* Etwas Innenabstand */
-  border-radius: 8px; /* Optional: Runde Ecken */
-}
-</style>
-

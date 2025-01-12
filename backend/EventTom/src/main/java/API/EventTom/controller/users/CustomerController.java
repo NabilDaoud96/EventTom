@@ -37,8 +37,8 @@ public class CustomerController {
         return ResponseEntity.ok(customerDTO);
     }
 
-    @GetMapping("/voucher-information")
-    public ResponseEntity<DashboardInformation> getVoucherInformation(@AuthenticatedUserId Long userId) {
+    @GetMapping("/dashboard-information")
+    public ResponseEntity<DashboardInformation> getDashboardInformation(@AuthenticatedUserId Long userId) {
         return ResponseEntity.ok(customerService.getCustomerDashboardInformationByUserId(userId));
     }
 }

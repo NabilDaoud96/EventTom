@@ -1,62 +1,91 @@
+# template section
 <template>
   <div class="flex flex-col items-center justify-start min-h-screen mt-6">
     <!-- Cards Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full px-4">
-
-      <!-- First Card: Booked Events -->
-      <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition duration-150 ease-in-out">
-        <div class="text-center">
-          <h2 class="text-xl font-bold text-gray-700">🎫 Booked Events</h2>
-          <p class="text-sm text-gray-500 mt-2">
-            You have <br> {{ dashboardInfo?.eventDashboard?.count || 0 }} events booked.
-          </p>
-          <router-link to="/tickets">
-            <div class="mt-4">
-              <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Show my tickets
-              </button>
+      <!-- Booked Events Card -->
+      <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+        <div class="flex-auto p-4">
+          <div class="flex flex-wrap">
+            <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
+              <h5 class="text-blueGray-400 uppercase font-bold text-xs">
+                Booked Events
+              </h5>
+              <span class="font-semibold text-xl text-blueGray-700">
+                {{ dashboardInfo?.eventDashboard?.count || 0 }} Events
+              </span>
             </div>
-          </router-link>
+            <router-link to="/tickets" class="relative w-auto pl-4 flex-initial">
+              <div class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-emerald-500">
+                <i class="fas fa-ticket-alt"></i>
+              </div>
+            </router-link>
+          </div>
+          <p class="text-sm text-blueGray-400 mt-4">
+            <router-link to="/tickets" class="text-emerald-500 hover:text-emerald-600">
+              View your tickets →
+            </router-link>
+          </p>
         </div>
       </div>
 
-      <!-- Second Card: Next Event -->
-      <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition duration-150 ease-in-out">
-        <div class="text-center">
-          <h2 class="text-xl font-bold text-gray-700">⏳ My Next Event</h2>
-          <div v-if="dashboardInfo?.nextEvent" class="text-sm text-gray-500 mt-2">
-            <p class="font-medium text-gray-700">{{ dashboardInfo.nextEvent.title }}</p>
+      <!-- Next Event Card -->
+      <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+        <div class="flex-auto p-4">
+          <div class="flex flex-wrap">
+            <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
+              <h5 class="text-blueGray-400 uppercase font-bold text-xs">
+                Next Event
+              </h5>
+              <span class="font-semibold text-xl text-blueGray-700">
+                {{ dashboardInfo?.nextEvent?.title || 'No upcoming events' }}
+              </span>
+            </div>
+            <router-link to="/events" class="relative w-auto pl-4 flex-initial">
+              <div class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-red-500">
+                <i class="fas fa-calendar"></i>
+              </div>
+            </router-link>
+          </div>
+          <div v-if="dashboardInfo?.nextEvent" class="text-sm text-blueGray-400 mt-4">
             <p>{{ formatDate(dashboardInfo.nextEvent.dateOfEvent) }}</p>
             <p>{{ dashboardInfo.nextEvent.location }}</p>
+            <router-link to="/events" class="text-red-500 hover:text-red-600">
+              View all events →
+            </router-link>
           </div>
-          <p v-else class="text-sm text-gray-500 mt-2">
-            No upcoming events
+          <p v-else class="text-sm text-blueGray-400 mt-4">
+            <router-link to="/events" class="text-red-500 hover:text-red-600">
+              Browse available events →
+            </router-link>
           </p>
-          <router-link to="/events">
-            <div class="mt-4">
-              <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                View all Events
-              </button>
-            </div>
-          </router-link>
         </div>
       </div>
 
-      <!-- Third Card: Vouchers -->
-      <div class="bg-white shadow-lg rounded-lg p-6 hover:shadow-xl transition duration-150 ease-in-out">
-        <div class="text-center">
-          <h2 class="text-xl font-bold text-gray-700">🎁 Vouchers</h2>
-          <p class="text-sm text-gray-500 mt-2">
-            {{ dashboardInfo?.voucherDashboard?.count || 0 }} Voucher available <br>
-            Total Voucher Value: {{ formatCurrency(dashboardInfo?.voucherDashboard?.value || 0) }}€
-          </p>
-          <router-link to="/vouchers">
-            <div class="mt-4">
-              <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                Use Vouchers
-              </button>
+      <!-- Vouchers Card -->
+      <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
+        <div class="flex-auto p-4">
+          <div class="flex flex-wrap">
+            <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
+              <h5 class="text-blueGray-400 uppercase font-bold text-xs">
+                Available Vouchers
+              </h5>
+              <span class="font-semibold text-xl text-blueGray-700">
+                {{ formatCurrency(dashboardInfo?.voucherDashboard?.value || 0) }}€
+              </span>
             </div>
-          </router-link>
+            <router-link to="/vouchers" class="relative w-auto pl-4 flex-initial">
+              <div class="text-white p-3 text-center inline-flex items-center justify-center w-12 h-12 shadow-lg rounded-full bg-blue-500">
+                <i class="fas fa-gift"></i>
+              </div>
+            </router-link>
+          </div>
+          <p class="text-sm text-blueGray-400 mt-4">
+            {{ dashboardInfo?.voucherDashboard?.count || 0 }} vouchers available
+            <router-link to="/vouchers" class="block text-blue-500 hover:text-blue-600 mt-1">
+              View your vouchers →
+            </router-link>
+          </p>
         </div>
       </div>
 
@@ -66,7 +95,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useDashboard } from "@/composables/useDashboard";
+import { useDashboard } from "@/composables/useDashboard"
 
 const { error, loading, getDashboardInformation } = useDashboard()
 const dashboardInfo = ref(null)

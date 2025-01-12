@@ -4,6 +4,7 @@ import API.EventTom.dto.response.ErrorMessageDTO;
 
 import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
 import API.EventTom.exceptions.tokenException.UserNotAuthenticatedException;
+import API.EventTom.exceptions.userExceptions.EmailAlreadyExistsException;
 import io.jsonwebtoken.JwtException;
 import jakarta.validation.ValidationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -45,11 +46,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorMessageDTO> handleDataIntegrityViolationException(DataIntegrityViolationException e) {
         return buildResponseEntity("Error handling Data", HttpStatus.INTERNAL_SERVER_ERROR, e);
     }
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorMessageDTO> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+        return buildResponseEntity("Error handling Data", HttpStatus.CONFLICT, e);
+    }
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorMessageDTO> handleBadCredentialsException(BadCredentialsException e) {
         return buildResponseEntity("Invalid username or password", HttpStatus.UNAUTHORIZED, e);
     }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorMessageDTO> handleAuthenticationException(AuthenticationException e) {
         return buildResponseEntity("Authentication failed", HttpStatus.UNAUTHORIZED, e);

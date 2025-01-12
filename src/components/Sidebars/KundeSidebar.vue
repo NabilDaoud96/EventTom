@@ -70,7 +70,7 @@
         <!-- Navigation -->
 
         <ul class="md:flex-col md:min-w-full flex flex-col list-none">
-    
+
           <!-- Dashboard -->
           <li class="items-center">
             <router-link
@@ -92,31 +92,6 @@
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
                 Dashboard
-              </a>
-            </router-link>
-          </li>
-
-          <!-- Buy Ticket -->
-           <li class="items-center">
-            <router-link
-              to="/buy_ticket"
-              v-slot="{ href, navigate, isActive }"
-            >
-              <a
-                :href="href"
-                @click="navigate"
-                class="text-xs uppercase py-3 font-bold block"
-                :class="[
-                  isActive
-                    ? 'text-emerald-500 hover:text-emerald-600'
-                    : 'text-blueGray-700 hover:text-blueGray-500',
-                ]"
-              >
-                <i
-                  class="fas fa-shopping-cart mr-2 text-sm"
-                  :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
-                ></i>
-                Buy Ticket
               </a>
             </router-link>
           </li>
@@ -167,6 +142,29 @@
                   :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
                 My Tickets
+              </a>
+            </router-link>
+          </li>
+          <li class="items-center">
+            <router-link
+                to="/vouchers"
+                v-slot="{ href, navigate, isActive }"
+            >
+              <a
+                  :href="href"
+                  @click="navigate"
+                  class="text-xs uppercase py-3 font-bold block"
+                  :class="[
+                  isActive
+                    ? 'text-emerald-500 hover:text-emerald-600'
+                    : 'text-blueGray-700 hover:text-blueGray-500',
+                ]"
+              >
+                <i
+                    class="fas fa-ticket-alt mr-2 text-sm"
+                    :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
+                ></i>
+                My Vouchers
               </a>
             </router-link>
           </li>

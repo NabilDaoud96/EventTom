@@ -52,7 +52,8 @@ public class StandardDTOMapper {
                 event.getThresholdValue(),
                 event.getAvailableTickets(),
                 priceCalculator.calculateBasePrice(event),
-                event.getLocation()
+                event.getLocation(),
+                event.getMaxTotalTickets()
         );
     }
 

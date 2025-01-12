@@ -3,13 +3,13 @@ import axios from 'axios'
 import api from "@/utils/axios-auth";
 
 const state = {
-    token: localStorage.getItem('token') || null,
     user: JSON.parse(localStorage.getItem('user')) || null
 }
 
 const getters = {
-    isAuthenticated: state => !!state.token,
-    userProfile: state => state.user
+    isAuthenticated: state => !!state.user,
+    userProfile: state => state.user,
+    userRoles: state => state.user ? state.user.roles : []
 }
 
 const actions = {
@@ -24,7 +24,6 @@ const actions = {
             return response
         } catch (error) {
             commit('SET_AUTH_ERROR')
-            localStorage.removeItem('token')
             localStorage.removeItem('user')
             throw error
         }
@@ -58,7 +57,6 @@ const actions = {
             return await api.post('/auth/refreshtoken', credentials)
         } catch (error) {
             commit('SET_AUTH_ERROR')
-            localStorage.removeItem('token')
             localStorage.removeItem('user')
             throw error
         }
@@ -80,18 +78,15 @@ const actions = {
 }
 
 const mutations = {
-    SET_AUTH_SUCCESS(state, { token, user }) {
-        state.token = token
+    SET_AUTH_SUCCESS(state, {  user }) {
         state.user = user
     },
 
     SET_AUTH_ERROR(state) {
-        state.token = null
         state.user = null
     },
 
     SET_LOGOUT(state) {
-        state.token = null
         state.user = null
     },
 

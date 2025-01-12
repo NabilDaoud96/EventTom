@@ -35,10 +35,54 @@ export function useEvent() {
             loading.value = false;
         }
     };
+    const getEventsByManager = async ({
+                                          page = 0,
+                                          size = 10,
+                                          sortBy = 'read',
+                                          direction = 'asc'
+                                      }) => {
+
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.get(`events/manager`, {
+                    params: {
+                        page,
+                        size,
+                        sortBy,
+                        direction
+                    }
+                }
+            );
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error;
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
+    const updateEvent = async (id, event) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.put(`events/update/${id}`, event);
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.message
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
     return {
         loading,
         error,
         getEvent,
-        getEvents
+        getEvents,
+        getEventsByManager,
+        updateEvent
     }
 }

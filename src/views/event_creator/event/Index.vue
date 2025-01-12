@@ -1,180 +1,144 @@
 <template>
-  <div class="p-6">
-    <h2 class="text-2xl font-semibold mb-4">All Events</h2>
+  <div class="p-6 w-full">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-800">All Events</h2>
+    </div>
 
-    <!-- Table -->
-    <table class="min-w-full table-auto border-collapse border border-gray-200">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="px-4 py-2 border text-left">Event Name</th>
-          <th class="px-4 py-2 border text-left">Datum</th>
-          <th class="px-4 py-2 border text-left">Ort</th>
-          <th class="px-4 py-2 border text-left">Preis</th>
-          <th class="px-4 py-2 border text-left">Verfügbare Tickets</th>
-          <th class="px-4 py-2 border text-left">Aktion</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="event in paginatedEvents" :key="event.id">
-          <td class="px-4 py-2 border">{{ event.name }}</td>
-          <td class="px-4 py-2 border">{{ event.date }}</td>
-          <td class="px-4 py-2 border">{{ event.location }}</td>
-          <td class="px-4 py-2 border">{{ event.price }}€</td>
-          <td class="px-4 py-2 border">
-            {{ event.availableTickets === 0 ? "Ausverkauft" : event.availableTickets }}
-          </td>
-          <td class="px-6 py-2 border text-center">
-            <!-- Show Event Link -->
-            <router-link
-              to="/Kunde/event_show"
-              class="px-1 py-1 bg-blue-500 text-white text-sm rounded hover:bg-blue-600 focus:outline-none flex justify-center items-center"
-            >
-              <i class="fa fa-eye" ></i>
-            </router-link>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="bg-white shadow-lg overflow-hidden w-full">
+      <div class="overflow-x-auto w-full">
+        <table class="w-full divide-y divide-gray-200">
+          <thead>
+          <tr>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Event Name
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Datum
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Ort
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Preis
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Verfügbare Tickets
+            </th>
+            <th class="px-6 py-3 bg-gray-50 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Aktion
+            </th>
+          </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+          <tr v-for="event in events" :key="event.id" class="hover:bg-gray-50">
+            <td class="px-6 py-4">
+              <div class="text-sm font-medium text-gray-900">{{ event.title }}</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-500">{{ event.dateOfEvent }}</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-500">{{ event.location }}</div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="text-sm font-medium text-gray-900">{{ event.basePrice }}€</div>
+            </td>
+            <td class="px-6 py-4">
+                <span v-if="event.availableTickets > 0"
+                      class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ">
+                  {{ event.availableTickets }} available
+                </span>
+              <span v-else
+                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-500">
+                  Ausverkauft
+                </span>
+            </td>
+            <td class="px-6 py-4 text-center">
+              <router-link
+                  to="/Kunde/event_show"
+                  class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center justify-center"
+              >
+                <i class="fas fa-eye mr-2"></i>
+                Details
+              </router-link>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-    <!-- Pagination Controls -->
-    <div class="pagination-container flex justify-center items-center mt-4 space-x-2">
-      <!-- Previous Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="prevPage"
-        :disabled="currentPage === 1"
-      >
-        &larr;
-      </button>
+    <!-- Loading State -->
+    <div v-if="loading" class="flex justify-center items-center mt-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+    </div>
 
-      <!-- Page Numbers -->
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        @click="goToPage(page)"
-        class="px-3 py-1 rounded border"
-        :class="{
-          'bg-blue-500 text-white': currentPage === page,
-          'bg-gray-300 hover:bg-gray-400': currentPage !== page,
-        }"
-      >
-        {{ page }}
-      </button>
+    <!-- Error State -->
+    <div v-if="error" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+      {{ error }}
+    </div>
 
-      <!-- Next Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-      >
-        &rarr;
-      </button>
-    </div>  
+    <BasePagination
+        :current-page="currentPage - 1"
+        :total-pages="totalPages"
+        @page-change="handlePageChange"
+    />
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import BasePagination from '@/components/BasePagination.vue';
+import { useEvent } from "@/composables/useEvent";
 
 export default {
-  data() {
+  components: {
+    BasePagination
+  },
+  setup() {
+    const {error, loading, getEventsByManager} = useEvent();
     return {
-      events: [], // All events
-      currentPage: 1, // Current page
-      rowsPerPage: 10, // Rows per page
-      sortBy: 'date', // Default sorting by date
-      sortOrder: 'asc', // Default sorting order is ascending
+      error,
+      loading,
+      getEventsByManager
     };
   },
-  computed: {
-    // Paginated Events for the Current Page
-    paginatedEvents() {
-      const start = (this.currentPage - 1) * this.rowsPerPage;
-      const end = start + this.rowsPerPage;
-      return this.events.slice(start, end);
-    },
-    // Total Pages Calculation
-    totalPages() {
-      return Math.ceil(this.events.length / this.rowsPerPage);
-    },
+  data() {
+    return {
+      events: [],
+      currentPage: 1,
+      rowsPerPage: 10,
+      totalElements: 0,
+      totalPages: 0,
+      sortConfig: {
+        sortBy: 'dateOfEvent',
+        direction: 'asc'
+      }
+    };
   },
   methods: {
-    // Move to the Previous Page
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
+    handlePageChange(page) {
+      this.currentPage = page + 1;
+      this.fetchEvents();
+    },
+    async fetchEvents() {
+      try {
+        const response = await this.getEventsByManager({
+          page: this.currentPage - 1,
+          size: this.rowsPerPage,
+          sortBy: this.sortConfig.sortBy,
+          direction:this.sortConfig.direction
+        });
+
+        this.events = response.content;
+        this.totalElements = response.totalElements;
+        this.totalPages = response.totalPages;
+      } catch (err) {
+        console.error("Error loading events:", err);
       }
-    },
-    // Move to the Next Page
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    },
-    // Go to Specific Page
-    goToPage(page) {
-      this.currentPage = page;
-    },
+    }
   },
   created() {
-    // Fetch Events from the API
-    axios
-      .get("https://jsonplaceholder.typicode.com/posts")
-      .then((response) => {
-        const cities = ["Berlin", "Hamburg", "München", "Köln", "Frankfurt", "Stuttgart", "Düsseldorf", "Leipzig", "Dortmund", "Essen"];
-        const today = new Date();
-        // Map the response data to match the event structure
-        this.events = response.data.map((item) => {
-          const eventDate = new Date();
-          eventDate.setDate(today.getDate() + Math.floor(Math.random() * 30)); // Random days ahead
-          const availableTickets = Math.floor(Math.random() * 20); // Random number of tickets
-          return {
-            id: item.id,
-            name: item.title.split(" ").slice(0, 5).join(" "),
-            date : eventDate.toLocaleDateString('en-GB').replace(/\//g, '-'),
-            location: cities[Math.floor(Math.random() * cities.length)], // Random city from the list
-            price: (Math.random() * 100).toFixed(2),
-            availableTickets,
-          };
-        });
-        // Sort events by default column (date) in ascending order
-        this.sortTable('date');
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-  },
+    this.fetchEvents();
+  }
 };
 </script>
-
-<style scoped>
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-th,
-td {
-  text-align: center;
-  padding: 12px;
-}
-th {
-  background-color: #f0f0f0;
-}
-.pagination-container {
-  background-color: #f0f0f0; /* Hellgraue Hintergrundfarbe */
-  padding: 10px; /* Etwas Innenabstand */
-  border-radius: 8px; /* Optional: Runde Ecken */
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-button:focus {
-  outline: none;
-}
-</style>
