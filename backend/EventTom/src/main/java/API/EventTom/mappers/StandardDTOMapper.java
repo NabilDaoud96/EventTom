@@ -85,7 +85,7 @@ public class StandardDTOMapper {
         );
     }
     public NotificationDTO mapNotificationToNotificationDTO(Notification notification) {
-        return new NotificationDTO(notification.getId(), notification.getUser().getId(), notification.getCreatedAt(), notification.getMessage(), notification.getNotificationType());
+        return new NotificationDTO(notification.getId(), notification.getUser().getId(), notification.getCreatedAt(), notification.getMessage(), notification.getNotificationType(), notification.isRead());
     }
 
     public UserDTO mapUserToUserDTO(User user) {

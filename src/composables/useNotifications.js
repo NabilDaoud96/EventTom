@@ -42,7 +42,20 @@ export function useNotifications() {
             loading.value = false;
         }
     };
-
+    const markAsRead = async (id) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.put(`notifications/${id}/read`);
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.message
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
     return {
         loading,
         error,
@@ -50,6 +63,7 @@ export function useNotifications() {
         totalPages,
         totalElements,
         currentPage,
-        getUserNotifications
+        getUserNotifications,
+        markAsRead
     };
 }

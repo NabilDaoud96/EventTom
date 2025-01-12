@@ -38,7 +38,10 @@ public class WebsiteNotificationServiceImpl implements IWebsiteNotificationServi
 
 
     @Transactional
-    public void markAsRead(Long notificationId) {
+    public void markAsRead(Long notificationId, Long userId) {
+
+        // TODO: ADD CHECK IF CORRECT USER READ NOTIFICATION
+
         notificationRepository.findById(notificationId).ifPresent(notification -> {
             notification.setRead(true);
             notificationRepository.save(notification);

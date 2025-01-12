@@ -23,14 +23,14 @@
       </thead>
       <tbody>
       <tr v-for="notification in notifications" :key="notification.id"
-          :class="{'bg-gray-50': notification.read}">
+          :class="{'bg-gray-50': notification.isRead}">
         <td class="px-4 py-2 border">{{ notification.message }}</td>
-        <td class="px-4 py-2 border">{{ formatDate(notification.date) }}</td>
+        <td class="px-4 py-2 border">{{ formatDate(notification.createdAt) }}</td>
         <td class="px-4 py-2 border">{{ notification.type }}</td>
         <td class="px-4 py-2 border">
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                  :class="notification.read ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
-              {{ notification.read ? 'Read' : 'Unread' }}
+                  :class="notification.isRead ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+              {{ notification.isRead ? 'Gelesen' : 'Ungelesen' }}
             </span>
         </td>
       </tr>
@@ -59,7 +59,7 @@
 
 <script>
 import { useNotifications } from "@/composables/useNotifications";
-import BasePagination from '@/components/BasePagination.vue'; // Adjust path as needed
+import BasePagination from '@/components/BasePagination.vue';
 
 export default {
   name: 'NotificationsTable',
@@ -67,11 +67,12 @@ export default {
     BasePagination
   },
   setup() {
-    const { loading, error, getUserNotifications } = useNotifications();
+    const { loading, error, getUserNotifications, markAsRead } = useNotifications();
     return {
       loading,
       error,
-      getUserNotifications
+      getUserNotifications,
+      markAsRead
     };
   },
   data() {
@@ -90,8 +91,6 @@ export default {
       return new Date(date).toLocaleDateString();
     },
     async loadPage(page) {
-      // Add validation to prevent invalid page loads
-      // if (page < 0 || page >= this.totalPages) return;
 
       const response = await this.getUserNotifications({
         page,
@@ -104,6 +103,13 @@ export default {
         this.notifications = response.content;
         this.totalPages = response.totalPages;
         this.currentPage = response.number;
+      }
+
+      for (const notification of this.notifications) {
+        if (!notification.isRead) {
+          await this.markAsRead(notification.id);
+
+        }
       }
     },
     async handleSort() {

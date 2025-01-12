@@ -5,6 +5,6 @@ import java.util.List;
 
 public interface IWebsiteNotificationService extends INotificationService {
     List<Notification> getUnreadNotifications(Long userId);
-    void markAsRead(Long notificationId);
+    void markAsRead(Long notificationId, Long userId);
     void markAllAsRead(Long userId);
 }
