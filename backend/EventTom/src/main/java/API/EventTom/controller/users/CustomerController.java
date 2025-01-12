@@ -34,7 +34,6 @@ public class CustomerController {
     @GetMapping("/user")
     public ResponseEntity<CustomerDTO> getLoggedInCustomerById(@AuthenticatedUserId Long userId) {
         CustomerDTO customerDTO = customerService.getById(userId);
-
         return ResponseEntity.ok(customerDTO);
     }
 

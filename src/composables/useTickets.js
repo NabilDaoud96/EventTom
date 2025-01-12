@@ -5,17 +5,28 @@ export function useTickets() {
     const loading = ref(false);
     const error = ref('');
 
-    const getUserTickets = async () => {
+    const getUserTickets = async ({
+                                      page = 0,
+                                      size = 10,
+                                      sortBy = 'read',
+                                      direction = 'asc'
+                                  }= {}) => {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.get('tickets/query/user');
-            console.log(response.data)
+            const response = await api.get('tickets/query/user', {
+                params: {
+                    page,
+                    size,
+                    sortBy,
+                    direction
+                }
+            });
             return response.data;
 
         } catch (err) {
             if (err.response) {
-                error.value = err.response.data.error
+                error.value = err.response.data.error;
             }
         } finally {
             loading.value = false;

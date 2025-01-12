@@ -13,7 +13,7 @@ import BuyTicket from "../views/kunde/ticket/BuyTicket.vue";
 import Profile from "../views/kunde/profile/Edit.vue";
 import IndexEvents from "../views/kunde/event/Index.vue";
 import EventShow from "../views/kunde/event/Show.vue";
-
+import Notifications from "@/views/kunde/notification/Index.vue";
 
 // Event Creator Views
 import EventCreatorProfile from "../views/event_creator/profile/Edit.vue";
@@ -58,6 +58,10 @@ const routes = [
         {
             path: "/profile",
             component: Profile,
+        },
+        {
+            path: "/notifications",
+            component: Notifications,
         },
         {
             path: "/buy_ticket",

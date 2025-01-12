@@ -27,14 +27,7 @@
               <i class="fa fa-shopping-cart mr-2 text-sm"></i>
               Buy Ticket
             </button>
-            <!-- Button für "Use Voucher" -->
-            <button
-              class="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 focus:outline-none flex items-center"
-              @click="useVoucher(event.id)"
-            >
-              <i class="fa fa-gift mr-2 text-sm"></i>
-              Use Voucher
-            </button>
+
           </div>
         </div>
       </div>
@@ -130,17 +123,7 @@ export default {
     },
     // Ticketkauf über API
     buyTicket(eventId) {
-      api
-        .post("/tickets/command/purchase", {
-          eventId: eventId,
-        })
-        .then(() => {
-          alert(`Ticket successfully purchased for Event ID: ${eventId}`);
-        })
-        .catch((error) => {
-          console.error("Error purchasing ticket:", error.response?.data?.error);
-          alert(`Failed to purchase ticket for Event ID: ${eventId}`);
-        });
+
     },
     // Gutschein verwenden
     useVoucher(eventId) {

@@ -2,14 +2,13 @@
   <div class="flex items-center justify-center min-h-screen">
     <div class="w-full max-w-lg px-4">
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
-      
         <div class="rounded-t bg-white mb-0 px-6 py-6">
           <div class="flex justify-center -mt-10 mb-3">
             <div class="w-20 h-20 bg-blueGray-200 inline-flex items-center justify-center rounded-full shadow-lg">
               <img
-                alt="Profile Picture"
-                class="w-full h-full rounded-full align-middle"
-                :src="profilePicture"
+                  alt="Profile Picture"
+                  class="w-full h-full rounded-full align-middle"
+                  :src="profilePicture"
               />
             </div>
           </div>
@@ -29,16 +28,16 @@
               <div class="w-full lg:w-6/12 px-4">
                 <div class="relative w-full mb-3">
                   <label
-                    class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    for="lastname"
+                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      for="lastname"
                   >
                     Last Name
                   </label>
                   <input
-                    id="lastname"
-                    type="text"
-                    v-model="profile.lastName"
-                    class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      id="lastname"
+                      type="text"
+                      v-model="profile.lastName"
+                      class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
                 </div>
               </div>
@@ -47,16 +46,16 @@
               <div class="w-full lg:w-6/12 px-4">
                 <div class="relative w-full mb-3">
                   <label
-                    class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    for="firstname"
+                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      for="firstname"
                   >
                     First Name
                   </label>
                   <input
-                    id="firstname"
-                    type="text"
-                    v-model="profile.firstName"
-                    class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      id="firstname"
+                      type="text"
+                      v-model="profile.firstName"
+                      class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
                 </div>
               </div>
@@ -65,46 +64,31 @@
               <div class="w-full lg:w-6/12 px-4">
                 <div class="relative w-full mb-3">
                   <label
-                    class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    for="email"
+                      class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      for="email"
                   >
                     Email Address
                   </label>
                   <input
-                    id="email"
-                    type="email"
-                    v-model="profile.email"
-                    class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                      id="email"
+                      type="email"
+                      v-model="profile.email"
+                      class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
                 </div>
               </div>
 
-              <!-- Password -->
-              <div class="w-full lg:w-6/12 px-4">
-                <div class="relative w-full mb-3">
-                  <label
-                    class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
-                    for="password"
-                  >
-                    Password
-                  </label>
-                  <input
-                    id="password"
-                    type="password"
-                    v-model="profile.password"
-                    class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
-                  />
-                </div>
-              </div>
+
             </div>
 
             <!-- Save Button -->
             <div class="mt-6 mr-4 text-right">
               <button
-                class="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
-                type="submit"
+                  class="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                  type="submit"
+                  :disabled="loading"
               >
-                Save
+                {{ loading ? 'Saving...' : 'Save' }}
               </button>
             </div>
           </form>
@@ -115,10 +99,19 @@
 </template>
 
 <script>
-import api from "@/utils/axios-auth";
+import { useUser } from '@/composables/useUser';
 import image from "@/assets/img/team-1-800x800.jpg"; // Default Profile Image
 
 export default {
+  setup() {
+    const { editUser, getCurrentCustomer, loading, error } = useUser();
+    return {
+      loading,
+      error,
+      editUser,
+      getCurrentCustomer
+    };
+  },
   data() {
     return {
       profile: {
@@ -126,66 +119,47 @@ export default {
         lastName: "",
         email: "",
         password: "",
+        customerNumber: ""
       },
       profilePicture: image, // Default profile image
     };
   },
   methods: {
-    // Fetch authenticated user's profile
-    fetchProfile() {
-      const userId = this.getAuthUserId();
-      if (!userId) {
-        console.error("User ID not available");
-        return;
-      }
+    async loadUserData() {
+      try {
+        // Get user data
+        const userData = await this.getCurrentCustomer();
+        if (userData) {
+          this.profile.firstName = userData.user.firstName || '';
+          this.profile.lastName = userData.user.lastName || '';
+          this.profile.email = userData.user.email || '';
+          this.profile.customerNumber = userData.customerNumber;
+        }
 
-      api
-        .get(`/customers/${userId}`)
-        .then((response) => {
-          const userData = response.data;
-          this.profile.firstName = userData.firstName || "";
-          this.profile.lastName = userData.lastName || "";
-          this.profile.email = userData.email || "";
-          if (userData.profilePicture) {
-            this.profilePicture = userData.profilePicture;
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user profile:", error.response?.data?.error || error.message);
-        });
+
+      } catch (err) {
+        console.error('Error loading user data:', err);
+      }
     },
 
-    // Save user profile
-    saveProfile() {
-      const userId = this.getAuthUserId();
-      if (!userId) {
-        alert("Unable to save profile. User ID is missing.");
-        return;
-      }
+    async saveProfile() {
+      try {
+        const payload = {
+          firstName: this.profile.firstName,
+          lastName: this.profile.lastName,
+          email: this.profile.email,
+        };
+        await this.editUser(payload)
 
-      api
-        .put(`/customers/${userId}`, this.profile)
-        .then(() => {
-          alert("Profile updated successfully!");
-        })
-        .catch((error) => {
-          console.error("Error saving profile:", error.response?.data?.error || error.message);
-          alert("Failed to update profile.");
-        });
-    },
-
-    // Get authenticated user ID
-    getAuthUserId() {
-      const authData = localStorage.getItem("authData");
-      if (authData) {
-        const parsedData = JSON.parse(authData);
-        return parsedData?.userId || null;
+      } catch (err) {
+        console.error('Error saving profile:', err);
+        alert('Failed to update profile. Please try again.');
       }
-      return null;
     },
   },
   created() {
-    this.fetchProfile(); // Load profile data on component creation
+    // Load user data when component is created
+    this.loadUserData();
   },
 };
 </script>

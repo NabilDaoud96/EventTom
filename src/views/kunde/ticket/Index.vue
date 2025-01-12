@@ -5,134 +5,112 @@
     <!-- Table -->
     <table class="min-w-full table-auto border-collapse border border-gray-200">
       <thead>
-        <tr class="bg-gray-100">
-          <th class="px-4 py-2 border">Event Name</th>
-          <th class="px-4 py-2 border">Datum</th>
-          <th class="px-4 py-2 border">Ort</th>
-          <th class="px-4 py-2 border">Final Preis</th>
-          <th class="px-4 py-2 border">Days Left</th>
-        </tr>
+      <tr class="bg-gray-100">
+        <th class="px-4 py-2 border">Event Name</th>
+        <th class="px-4 py-2 border">Datum</th>
+        <th class="px-4 py-2 border">Ort</th>
+        <th class="px-4 py-2 border">Final Preis</th>
+        <th class="px-4 py-2 border">Days Left</th>
+      </tr>
       </thead>
       <tbody>
-        <tr v-for="ticket in paginatedTickets" :key="ticket.id">
-          <td class="px-4 py-2 border">{{ ticket.eventTitle }}</td>
-          <td class="px-4 py-2 border">{{ ticket.date}}</td>
-          <td class="px-4 py-2 border">{{ ticket.location }}</td>
-          <td class="px-4 py-2 border">{{ ticket.finalPrice }}</td>
-          <td class="px-4 py-2 border">{{ ticket.statusUsed }}</td>  <!-- noch berechnen -->
-        </tr>
+      <tr v-for="ticket in tickets" :key="ticket.id">
+        <td class="px-4 py-2 border">{{ ticket.eventTitle }}</td>
+        <td class="px-4 py-2 border">{{ ticket.date }}</td>
+        <td class="px-4 py-2 border">{{ ticket.location }}</td>
+        <td class="px-4 py-2 border">{{ ticket.finalPrice }}</td>
+        <td class="px-4 py-2 border">{{ calculateDaysLeft(ticket.date) }}</td>
+      </tr>
       </tbody>
     </table>
 
-    <!-- Pagination Controls -->
-    <div class="pagination-container flex justify-center items-center mt-4 space-x-2">
-      <!-- Previous Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="prevPage"
-        :disabled="currentPage === 1"
-      >
-        &larr;
-      </button>
+    <BasePagination
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @page-change="loadPage"
+    />
 
-      <!-- Page Numbers -->
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        @click="goToPage(page)"
-        class="px-3 py-1 rounded border"
-        :class="{
-          'bg-blue-500 text-white': currentPage === page,
-          'bg-gray-300 hover:bg-gray-400': currentPage !== page,
-        }"
-      >
-        {{ page }}
-      </button>
+    <!-- Loading State -->
+    <div v-if="loading" class="flex justify-center items-center mt-4">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+    </div>
 
-      <!-- Next Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-      >
-        &rarr;
-      </button>
-    </div>  
+    <!-- Error State -->
+    <div v-if="error" class="mt-4 p-4 bg-red-100 text-red-700 rounded">
+      {{ error }}
+    </div>
   </div>
 </template>
 
 <script>
-import { useTickets } from '@/composables/useTickets'
-
-const {error, loading, getUserTickets} = useTickets()
+import { useTickets } from '@/composables/useTickets';
+import BasePagination from '@/components/BasePagination.vue';
 
 export default {
-  data() {
+  name: 'TicketsTable',
+  components: {
+    BasePagination
+  },
+  setup() {
+    const { error, loading, getUserTickets } = useTickets();
     return {
-      tickets: [], // All events
-      currentPage: 1, // Current page
-      rowsPerPage: 10, // Anzahl der Events pro Seite
-      totalElements: 0, // Gesamtanzahl der Events
-      totalPages: 0, // Gesamtanzahl der Seiten
+      error,
+      loading,
+      getUserTickets,
+
     };
   },
-  computed: {
-    paginatedTickets() {
-      const start = (this.currentPage - 1) * this.rowsPerPage;
-      const end = start + this.rowsPerPage;
-      return this.tickets.slice(start, end);
-    },
-    totalPages() {
-      return Math.ceil(this.tickets.length / this.rowsPerPage);
-    },
+  data() {
+    return {
+      tickets: [],
+      totalPages: 0,
+      currentPage: 0,
+      sortConfig: {
+        sortBy: 'event.dateOfEvent',
+        direction: 'asc'
+      }
+    };
   },
   methods: {
+    async loadPage(page) {
+      const response = await this.getUserTickets({
+        page,
+        size: 10,
+        sortBy: this.sortConfig.sortBy,
+        direction: this.sortConfig.direction
+      });
 
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
+      if (response) {
+        this.tickets = response.content;
+        this.totalPages = response.totalPages;
+        this.currentPage = response.number;
       }
     },
+    calculateDaysLeft(eventDate) {
+      const today = new Date();
+      const event = new Date(eventDate);
 
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
+      // Reset the time part to compare full days only
+      today.setHours(0, 0, 0, 0);
+      event.setHours(0, 0, 0, 0);
+
+      const diffTime = event.getTime() - today.getTime();
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) {
+        return 'Event passed';
+      } else if (diffDays === 0) {
+        return 'Today!';
+      } else {
+        return `${diffDays} days`;
       }
     },
-
-    goToPage(page) {
-      this.currentPage = page;
-    },
-
-    async fetchTickets() {
-      try {
-        const response = await getUserTickets();
-        if (response && response.content) {
-          this.tickets = response.content;
-          this.totalElements = response.totalElements;
-          this.totalPages = response.totalPages;
-        } else if (response && response.data) {
-          this.tickets = response.data.content;
-          this.totalElements = response.data.totalElements;
-          this.totalPages = response.data.totalPages;
-        } else {
-          this.tickets = response;
-          this.totalElements = response.length;
-          this.totalPages = Math.ceil(response.length / this.rowsPerPage);
-        }
-      } catch (err) {
-        console.error('Error fetching tickets:', err);
-      }
-    }
-
   },
-  created() {
-    this.fetchTickets();
+  mounted() {
+    this.loadPage(0);
   }
-}
-
+};
 </script>
-
 
 <style scoped>
 table {
@@ -147,10 +125,4 @@ td {
 th {
   background-color: #f0f0f0;
 }
-.pagination-container {
-  background-color: #f0f0f0; /* Hellgraue Hintergrundfarbe */
-  padding: 10px; /* Etwas Innenabstand */
-  border-radius: 8px; /* Optional: Runde Ecken */
-}
 </style>
-

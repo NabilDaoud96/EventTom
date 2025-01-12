@@ -36,10 +36,27 @@ export function useUser() {
             loading.value = false;
         }
     };
+    const editUser = async (profile) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.put('user/command/edit', profile);
+            return response.data;
+
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
+
     return {
         loading,
         error,
         getUser,
-        getCurrentCustomer
+        getCurrentCustomer,
+        editUser
     }
 }

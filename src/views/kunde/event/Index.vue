@@ -37,94 +37,53 @@
     </table>
 
     <!-- Pagination Controls -->
-    <div class="pagination-container flex justify-center items-center mt-4 space-x-2">
-      <!-- Previous Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="prevPage"
-        :disabled="currentPage === 1"
-      >
-        &larr;
-      </button>
-
-      <!-- Page Numbers -->
-      <button
-        v-for="page in totalPages"
-        :key="page"
-        @click="goToPage(page)"
-        class="px-3 py-1 rounded border"
-        :class="{
-          'bg-blue-500 text-white': currentPage === page,
-          'bg-gray-300 hover:bg-gray-400': currentPage !== page,
-        }"
-      >
-        {{ page }}
-      </button>
-
-      <!-- Next Arrow -->
-      <button
-        class="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 disabled:opacity-50"
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-      >
-        &rarr;
-      </button>
-    </div>  
+    <BasePagination
+        :current-page="currentPage - 1"
+    :total-pages="totalPages"
+    @page-change="handlePageChange"
+    />
   </div>
 </template>
 
 <script>
 import api from "@/utils/axios-auth";
+import BasePagination from '@/components/BasePagination.vue';  // Adjust path as needed
 
 export default {
+  components: {
+    BasePagination
+  },
   data() {
     return {
-      events: [], // Events für die aktuelle Seite
-      currentPage: 1, // Aktuelle Seite
-      rowsPerPage: 10, // Anzahl der Events pro Seite
-      totalElements: 0, // Gesamtanzahl der Events
-      totalPages: 0, // Gesamtanzahl der Seiten
+      events: [],
+      currentPage: 1,
+      rowsPerPage: 10,
+      totalElements: 0,
+      totalPages: 0,
     };
   },
   methods: {
-    // API-Aufruf zum Laden der Events für die aktuelle Seite
-    fetchEvents() {
-      api
-          .get("/events", {  // Note: Remove the full URL since baseURL is set in api instance
-            params: {
-              page: this.currentPage - 1,
-              size: this.rowsPerPage,
-            },
-          })
-          .then((response) => {
-            this.events = response.data.content;
-            this.totalElements = response.data.totalElements;
-            this.totalPages = response.data.totalPages;
-          })
-          .catch((error) => {
-            console.error("Fehler beim Laden der Daten:", error.response?.data?.error);
-          });
-    },
-    // Zur vorherigen Seite wechseln
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.fetchEvents(); // Neue Events laden
+    async fetchEvents() {
+      try {
+        const response = await api.get("/events", {
+          params: {
+            page: this.currentPage - 1,  // Backend expects 0-based index
+            size: this.rowsPerPage,
+          },
+        });
+        this.events = response.data.content;
+        this.totalElements = response.data.totalElements;
+        this.totalPages = response.data.totalPages;
+      } catch (error) {
+        console.error("Fehler beim Laden der Daten:", error.response?.data?.error);
       }
     },
-    // Zur nächsten Seite wechseln
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-        this.fetchEvents(); // Neue Events laden
-      }
+
+    handlePageChange(page) {
+      this.currentPage = page + 1;  // Convert from 0-based to 1-based
+      this.fetchEvents();
     },
-    // Zu einer bestimmten Seite wechseln
-    goToPage(page) {
-      this.currentPage = page;
-      this.fetchEvents(); // Neue Events laden
-    },
-    // Datum formatieren (DD.MM.YYYY)
+
     formatDate(date) {
       const eventDate = new Date(date);
       const day = String(eventDate.getDate()).padStart(2, '0');
@@ -134,7 +93,6 @@ export default {
     },
   },
   created() {
-    // Events für die erste Seite laden
     this.fetchEvents();
   },
 };
@@ -152,22 +110,5 @@ td {
 }
 th {
   background-color: #f0f0f0;
-}
-.pagination-container {
-  background-color: #f0f0f0;
-  padding: 10px;
-  border-radius: 8px;
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-button:focus {
-  outline: none;
 }
 </style>
