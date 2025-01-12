@@ -31,6 +31,13 @@ public class CustomerController {
         return ResponseEntity.ok(customerDTO);
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<CustomerDTO> getLoggedInCustomerById(@AuthenticatedUserId Long userId) {
+        System.out.println(userId);
+        CustomerDTO customerDTO = customerService.getById(userId);
+        return ResponseEntity.ok(customerDTO);
+    }
+
     @GetMapping("/voucher-information")
     public ResponseEntity<DashboardInformation> getVoucherInformation(@AuthenticatedUserId Long userId) {
         return ResponseEntity.ok(customerService.getCustomerDashboardInformationByUserId(userId));

@@ -20,14 +20,8 @@ public class StandardDTOMapper {
     public CustomerDTO mapCustomerToCustomerDTO(Customer customer) {
         User user = customer.getUser();
         return new CustomerDTO(
-                user.getFirstName() + " " + user.getLastName(),
-                user.getEmail(),
-                customer.getVouchers().stream()
-                        .map(this::mapVoucherToVoucherDTO)
-                        .collect(Collectors.toList()),
-                customer.getTickets().stream()
-                        .map(this::mapTicketToTicketDTO)
-                        .collect(Collectors.toList())
+                new UserDTO(user.getId(), user.getFirstName(), user.getLastName(), user.getEmail()),
+                customer.getCustomerNumber()
         );
     }
 

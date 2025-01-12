@@ -27,6 +27,8 @@ import Register from "../views/auth/Register.vue";
 
 // Voucher Views
 import IndexVoucher from "@/views/kunde/voucher/Index.vue";
+import PurchaseTicket from "@/views/kunde/ticket/PurchaseTicket.vue"
+
 
 // // routes
 
@@ -62,10 +64,15 @@ const routes = [
             component: BuyTicket,
         }, 
         {
-            path: "/event/:id",
+            path: "/events/:id",
             name: 'EventShow',
             component: EventShow,
-        }, 
+        },
+        {
+            path: '/purchase-ticket/:id',
+            name: 'PurchaseTicket',
+            component: PurchaseTicket
+        }
         ],
     },
     {

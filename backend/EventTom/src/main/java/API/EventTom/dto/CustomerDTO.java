@@ -1,9 +1,9 @@
 package API.EventTom.dto;
 
+import API.EventTom.dto.response.UserDTO;
+
 import java.util.List;
 public record CustomerDTO(
-        String name,
-        String email,
-        List<VoucherDTO> vouchers,
-        List<TicketDTO> tickets
+        UserDTO user,
+        String customerNumber
 ) {}

@@ -1,6 +1,9 @@
 package API.EventTom.config.initializers;
 
+import API.EventTom.dto.CustomerDTO;
+import API.EventTom.dto.request.CustomerPurchaseRequestDTO;
 import API.EventTom.dto.request.PurchaseTicketDTO;
+import API.EventTom.dto.response.UserDTO;
 import API.EventTom.models.user.Customer;
 import API.EventTom.models.event.Event;
 import API.EventTom.repositories.CustomerRepository;
