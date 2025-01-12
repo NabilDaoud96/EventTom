@@ -18,6 +18,7 @@
 <script>
 import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vue";
+import {mapGetters} from "vuex";
 
 export default {
   components: {
@@ -25,6 +26,8 @@ export default {
     NotificationDropdown
   },
   computed: {
+    ...mapGetters('auth', ['isAuthenticated']),
+
     currentPage() {
       switch (this.$route.path) {
           // Dashboard routes

@@ -48,6 +48,9 @@ export default {
   },
 
   computed: {
+    ...mapGetters('auth', ['isAuthenticated']),
+
+
     currentPage() {
       switch (this.$route.path) {
           // Dashboard routes
