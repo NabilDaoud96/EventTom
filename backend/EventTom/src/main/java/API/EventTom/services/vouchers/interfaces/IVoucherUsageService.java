@@ -9,6 +9,7 @@ import java.util.List;
 public interface IVoucherUsageService {
     void useVoucherForPurchase(String code, Customer customer);
     BigDecimal calculateDiscountedAmount(BigDecimal originalAmount, Voucher voucher);
+    Voucher validateVoucher(String code, Long userId);
     Voucher validateVoucher(String code);
     List<Voucher> validateVouchers(List<String> code);
     BigDecimal calculateTotalDiscount(List<Voucher> vouchers);

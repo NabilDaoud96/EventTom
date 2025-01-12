@@ -21,9 +21,26 @@ export function useTickets() {
             loading.value = false;
         }
     };
+    const purchaseTicket = async (purchaseData) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.post('tickets/command/purchase', purchaseData);
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error;
+            }
+            throw err;
+        } finally {
+            loading.value = false;
+        }
+    };
+
     return {
         loading,
         error,
-        getUserTickets
+        getUserTickets,
+        purchaseTicket
     }
 }

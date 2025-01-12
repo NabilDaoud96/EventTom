@@ -7,5 +7,7 @@ public record VoucherDTO(
         long customerId,
         BigDecimal amount,
         LocalDateTime voucherValidUntil,
-        boolean used
+        boolean used,
+        String voucherCode,
+        Long voucherId
 ) {}

@@ -33,8 +33,8 @@ public class CustomerController {
 
     @GetMapping("/user")
     public ResponseEntity<CustomerDTO> getLoggedInCustomerById(@AuthenticatedUserId Long userId) {
-        System.out.println(userId);
         CustomerDTO customerDTO = customerService.getById(userId);
+
         return ResponseEntity.ok(customerDTO);
     }
 

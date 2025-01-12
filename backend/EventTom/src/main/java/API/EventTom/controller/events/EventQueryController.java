@@ -25,6 +25,7 @@ public class EventQueryController {
     ) {
         return ResponseEntity.ok(eventQueryService.getAllEvents(page, size, sortBy, direction));
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<EventDTO> getEventById(@PathVariable long id) {
         return ResponseEntity.ok(eventQueryService.getById(id));

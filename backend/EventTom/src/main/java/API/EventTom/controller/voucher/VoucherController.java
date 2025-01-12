@@ -64,8 +64,8 @@ public class VoucherController {
     }
 
     @GetMapping("/{code}/validate")
-    public ResponseEntity<VoucherResponseDTO> validateVoucher(@PathVariable String code) {
-        Voucher voucher = voucherUsageService.validateVoucher(code);
+    public ResponseEntity<VoucherResponseDTO> validateVoucher(@PathVariable String code, @AuthenticatedUserId Long userId) {
+        Voucher voucher = voucherUsageService.validateVoucher(code, userId);
         return ResponseEntity.ok(VoucherResponseDTO.fromVoucher(voucher));
     }
 
@@ -88,6 +88,14 @@ public class VoucherController {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
         Page<VoucherDTO> vouchers = voucherQueryService.findAllByUserId(userId, pageable);
+        return ResponseEntity.ok(vouchers);
+    }
+
+    @GetMapping("/user-vouchers")
+    public ResponseEntity<List<VoucherDTO>> getMyVouchers(
+            @AuthenticatedUserId Long userId
+    ) {
+        List<VoucherDTO> vouchers = voucherQueryService.findAllByUserId(userId);
         return ResponseEntity.ok(vouchers);
     }
 }

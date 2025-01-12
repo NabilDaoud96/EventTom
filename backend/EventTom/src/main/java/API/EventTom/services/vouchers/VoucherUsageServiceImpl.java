@@ -52,9 +52,19 @@ class VoucherUsageServiceImpl implements IVoucherUsageService {
 
         validationService.validateVoucherNotExpired(voucher);
         validationService.validateVoucherNotUsed(voucher);
-
         return voucher;
     }
+
+    @Override
+    public Voucher validateVoucher(String code, Long userId) {
+        Voucher voucher = validationService.validateVoucherExists(code);
+
+        validationService.validateVoucherNotExpired(voucher);
+        validationService.validateVoucherNotUsed(voucher);
+        validationService.validateVoucherOwnership(voucher, userId);
+        return voucher;
+    }
+
     @Override
     public List<Voucher> validateVouchers(List<String> codes) {
         if (codes == null || codes.isEmpty()) {

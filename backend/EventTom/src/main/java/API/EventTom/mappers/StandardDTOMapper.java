@@ -10,12 +10,16 @@ import API.EventTom.models.user.Customer;
 import API.EventTom.models.user.Employee;
 import API.EventTom.models.user.Role;
 import API.EventTom.models.user.User;
+import API.EventTom.services.tickets.interfaces.ITicketPriceCalculator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class StandardDTOMapper {
+    private final ITicketPriceCalculator priceCalculator;
 
     public CustomerDTO mapCustomerToCustomerDTO(Customer customer) {
         User user = customer.getUser();
@@ -47,7 +51,7 @@ public class StandardDTOMapper {
                 event.getTotalSoldTickets(),
                 event.getThresholdValue(),
                 event.getAvailableTickets(),
-                event.getBasePrice(),
+                priceCalculator.calculateBasePrice(event),
                 event.getLocation()
         );
     }
@@ -57,7 +61,9 @@ public class StandardDTOMapper {
                 voucher.getCustomer().getUser().getId(),
                 voucher.getAmount(),
                 voucher.getExpirationDate(),
-                voucher.isUsed()
+                voucher.isUsed(),
+                voucher.getCode(),
+                voucher.getId()
         );
     }
 
