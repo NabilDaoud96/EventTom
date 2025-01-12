@@ -125,7 +125,7 @@
                       required
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
-                  <p class="text-xs text-blueGray-400 mt-1">Final price: {{ formatPrice(formData.price) }}</p>
+                  <p class="text-xs text-blueGray-400 mt-1">Final price: {{formatPrice(calculatePrice(formData.basePrice, formData.totalTickets > formData.thresholdValue)) }}</p>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-4">
@@ -203,7 +203,11 @@ export default {
       price: 0,
       managerIds: []
     });
-
+    const calculatePrice = (basePrice, thresholdReached) => {
+      if (!basePrice) return 0;
+      const THRESHOLD_MULTIPLIER = 1.2;
+      return thresholdReached ? basePrice * THRESHOLD_MULTIPLIER : basePrice;
+    };
     // Get current date and format it for datetime-local min attribute
     const minDateTime = computed(() => {
       const now = new Date();
@@ -285,7 +289,8 @@ export default {
       minDateTime,
       maxDateTime,
       dateError,
-      handleSubmit
+      handleSubmit,
+      calculatePrice
     };
   }
 }
