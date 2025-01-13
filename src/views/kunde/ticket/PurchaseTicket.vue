@@ -350,7 +350,7 @@ export default {
           voucherError.value = '';
         }
       } catch (err) {
-        voucherError.value = err.response?.data?.message || 'Invalid voucher code';
+        voucherError.value = err.response?.data?.error || 'Invalid voucher code';
       }
     }
 
@@ -395,7 +395,7 @@ export default {
         }
 
       } catch (err) {
-        purchaseError.value = err.response?.data?.message || 'Failed to complete purchase. Please try again.';
+        purchaseError.value = err.response?.data?.error || 'Failed to complete purchase. Please try again.';
       } finally {
         purchaseLoading.value = false;
       }
