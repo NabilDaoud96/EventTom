@@ -1,4 +1,4 @@
-package API.EventTom.config.security;
+package API.EventTom.config.initializers;
 
 import API.EventTom.models.user.Role;
 import API.EventTom.models.user.Roles;
