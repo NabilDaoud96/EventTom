@@ -93,7 +93,7 @@ public class StandardDTOMapper {
 
     public TicketDTO mapTicketToTicketDTO(Ticket ticket) {
         return new TicketDTO(
-                ticket.getBasePrice(),
+                ticket.getFinalPrice(),
                 ticket.getPurchaseDate(),
                 ticket.isStatusUsed(),
                 ticket.getEvent().getId(),

@@ -24,7 +24,7 @@
       <tbody>
       <tr v-for="notification in notifications" :key="notification.id"
           :class="{'bg-gray-50': notification.isRead}">
-        <td class="px-4 py-2 border">{{ notification.message }}</td>
+        <td class="px-4 py-2 border notification-message">{{ notification.message }}</td>
         <td class="px-4 py-2 border">{{ formatDate(notification.createdAt) }}</td>
         <td class="px-4 py-2 border">{{ notification.type }}</td>
         <td class="px-4 py-2 border">
@@ -81,8 +81,8 @@ export default {
       totalPages: 0,
       currentPage: 0,
       sortConfig: {
-        sortBy: 'notificationType',
-        direction: 'asc'
+        sortBy: 'createdAt',
+        direction: 'desc'
       },
       unsubscribeWebSocket: null
     };
@@ -151,3 +151,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.notification-message {
+    white-space: pre-line;
+}
+</style>

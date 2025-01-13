@@ -72,11 +72,13 @@ public class TicketNotificationListener {
                 "Thank you for your purchase!\n\n" +
                         "Event: %s\n" +
                         "Date: %s\n" +
-                        "Purchase Time: %s\n\n" +
+                        "Purchase Time: %s\n" +
+                        "Price: $%.2f\n\n" +
                         "Please keep this confirmation for your records.",
                 event.getEvent().getTitle(),
                 event.getEvent().getDateOfEvent(),
-                event.getTicket().getPurchaseDate()
+                event.getTicket().getPurchaseDate(),
+                event.getTicket().getFinalPrice()
         );
     }
 }

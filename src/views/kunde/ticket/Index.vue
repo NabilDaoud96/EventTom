@@ -98,8 +98,8 @@ export default {
       totalPages: 0,
       currentPage: 0,
       sortConfig: {
-        sortBy: 'event.dateOfEvent',
-        direction: 'asc'
+        sortBy: 'purchaseDate',
+        direction: 'desc'
       }
     };
   },
