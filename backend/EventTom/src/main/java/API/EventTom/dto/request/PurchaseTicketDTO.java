@@ -1,7 +1,6 @@
 package API.EventTom.dto.request;
 
 
-import API.EventTom.dto.CustomerDTO;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -14,10 +13,10 @@ public record PurchaseTicketDTO(
         Long eventId,
 
         @Positive(message = "Amount must be positive")
-        @Max(value = 10, message = "Cannot purchase more than 10 tickets at once")
+        @Max(value = 100, message = "Cannot purchase more than 100 tickets at once")
         int amount,
 
-        @Size(max = 5, message = "Cannot use more than 5 vouchers per purchase")
+        @Size(max = 50, message = "Cannot use more than 5 vouchers per purchase")
         List<String> voucherCodes
 
 ) {}

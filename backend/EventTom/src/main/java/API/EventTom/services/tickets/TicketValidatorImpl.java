@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Service
 @AllArgsConstructor
 public class TicketValidatorImpl implements ITicketValidator {
-    private static final int MAX_TICKETS_PER_PURCHASE = 10;
+    private static final int MAX_TICKETS_PER_PURCHASE = 100;
 
     @Override
     public void validatePurchaseRequest(Event event, PurchaseTicketDTO dto) {
