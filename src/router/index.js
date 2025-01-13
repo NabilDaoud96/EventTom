@@ -60,6 +60,7 @@ const routes = [
             },
             {
                 path: "/profile",
+                meta: { requiresAuth: true, roles: ['ROLE_NONE'] },
                 component: Profile,
             },
             {
