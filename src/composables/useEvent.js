@@ -79,6 +79,7 @@ export function useEvent() {
             loading.value = false;
         }
     };
+
     const updateEvent = async (id, event) => {
         try {
             loading.value = true;

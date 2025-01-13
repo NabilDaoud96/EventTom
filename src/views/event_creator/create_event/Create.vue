@@ -186,7 +186,7 @@ export default {
     setup() {
         const eventManagers = ref([]);
         const dateError = ref('');
-        const { error, loading, getEventManagers } = useManager();
+        const { error, loading, getEventManagers, createEvent } = useManager();
 
         // Get current date and format it for datetime-local min attribute
         const minDateTime = computed(() => {
@@ -221,7 +221,8 @@ export default {
             loading,
             minDateTime,
             maxDateTime,
-            dateError
+            dateError,
+            createEvent
         };
     },
 
@@ -243,27 +244,20 @@ export default {
       preventNonNumeric,
 
 
-        handleSubmit() {
-            if (this.dateError) {
-                return;
-            }
+        async handleSubmit() {
+          if (this.dateError) {
+            return;
+          }
 
-            const dateTime = new Date(this.formData.dateOfEvent);
-            const isoDateTime = dateTime.toISOString().slice(0, 19);
+          const dateTime = new Date(this.formData.dateOfEvent);
+          const isoDateTime = dateTime.toISOString().slice(0, 19);
 
-            const eventData = {
-                ...this.formData,
-                dateOfEvent: isoDateTime,
-            };
+          const eventData = {
+            ...this.formData,
+            dateOfEvent: isoDateTime,
+          };
 
-            api.post('events/create', eventData)
-                .then(response => {
-                    this.resetForm();
-                    this.$emit('event-created', response.data);
-                })
-                .catch(error => {
-                    console.error('Error creating event:', error);
-                });
+          await this.createEvent(eventData);
         },
 
         resetForm() {
