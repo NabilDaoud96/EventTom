@@ -14,11 +14,12 @@
         <p class="mt-2 text-center text-gray-600">Date: {{ formatDate(event.dateOfEvent) }}</p>
         <p class="mt-2 text-center text-gray-600">Location: {{ event.location }}</p>
         <p class="mt-2 text-center text-gray-600">Available Tickets: {{ event.availableTickets }}</p>
-        <p class="mt-4 text-center text-xl font-bold">Price: €{{ event.basePrice }}</p>
-        <div class="flex justify-between mt-6">
+        <p class="mt-4 text-center text-xl font-bold">Price: €{{ event.price }}</p>
+        <router-link v-if="event.availableTickets > 0"
+                     :to="{ name: 'PurchaseTicket', params: { id: event.id } }" class="flex justify-between mt-6">
           <button 
             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
-            @click="buyTicket"
+
           >
             <i class="fa fa-shopping-cart mr-2"></i> Buy Ticket
           </button>
@@ -29,7 +30,7 @@
           >
             <i class="fa fa-gift mr-2"></i> Use Voucher
           </button>
-        </div>
+        </router-link>
       </div>
     </div>
   </div>
@@ -59,8 +60,7 @@ export default {
       }
     },
     buyTicket() {
-      alert('Ticket purchased!');
-      // Hier kann die Logik für den Ticketkauf hinzugefügt werden
+
     },
     useVoucher() {
       if (this.event.hasVoucher) {

@@ -7,7 +7,16 @@
             <h6 class="text-blueGray-700 text-xl font-bold">Update Event</h6>
           </div>
         </div>
-
+        <div class="rounded-t bg-white mb-0 px-6 py-6">
+          <div class="text-center">
+            <h6 class="text-blueGray-700 text-xl font-bold">Update Event</h6>
+          </div>
+          <!-- Added error alert -->
+          <div v-if="eventError" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <p class="font-medium">Error</p>
+            <p>{{ eventError }}</p>
+          </div>
+        </div>
         <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
           <form @submit.prevent="handleSubmit">
             <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -125,6 +134,7 @@
                       required
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
+                  <p class="text-xs text-blueGray-400 mt-1">Final price: {{formatPrice(calculatePrice(formData.basePrice, formData.totalTickets > formData.thresholdValue)) }}</p>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-4">
@@ -177,13 +187,14 @@
 import { useManager } from "@/composables/useManager";
 import { useEvent } from "@/composables/useEvent";
 import { onMounted, ref, computed } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
+import {formatPrice} from "../../../utils/formatter";
 
 export default {
   name: 'UpdateEventForm',
+  methods: {formatPrice},
   setup() {
     const route = useRoute();
-    const router = useRouter();
     const eventManagers = ref([]);
     const dateError = ref('');
     const { error: managerError, loading: managerLoading, getEventManagers } = useManager();
@@ -197,9 +208,14 @@ export default {
       totalTickets: null,
       thresholdValue: 0,
       basePrice: null,
+      price: 0,
       managerIds: []
     });
-
+    const calculatePrice = (basePrice, thresholdReached) => {
+      if (!basePrice) return 0;
+      const THRESHOLD_MULTIPLIER = 1.2;
+      return thresholdReached ? basePrice * THRESHOLD_MULTIPLIER : basePrice;
+    };
     // Get current date and format it for datetime-local min attribute
     const minDateTime = computed(() => {
       const now = new Date();
@@ -228,18 +244,16 @@ export default {
       try {
         const eventData = await getEventManaged(route.params.id);
         if (eventData) {
-          // Format the date to work with datetime-local input
           const dateObj = new Date(eventData.dateOfEvent);
           dateObj.setMinutes(dateObj.getMinutes() - dateObj.getTimezoneOffset());
           const formattedDate = dateObj.toISOString().slice(0, 16);
 
-          // Round the base price to 2 decimal places
           const roundedBasePrice = eventData.basePrice ? Number(eventData.basePrice.toFixed(2)) : null;
-
           formData.value = {
             ...eventData,
             dateOfEvent: formattedDate,
-            basePrice: roundedBasePrice
+            basePrice: roundedBasePrice,
+            managerIds: eventData.managerIds || []
           };
         }
       } catch (err) {
@@ -259,7 +273,7 @@ export default {
         const eventData = {
           ...formData.value,
           dateOfEvent: isoDateTime,
-          basePrice: Number(formData.value.basePrice.toFixed(2))
+          basePrice: Number(formData.value.basePrice.toFixed(2)),
         };
 
         await updateEvent(formData.value.id, eventData);
@@ -283,7 +297,8 @@ export default {
       minDateTime,
       maxDateTime,
       dateError,
-      handleSubmit
+      handleSubmit,
+      calculatePrice
     };
   }
 }

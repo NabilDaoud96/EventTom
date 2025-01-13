@@ -1,129 +1,147 @@
 <template>
-  <!-- Previous sections remain the same until voucher section -->
-  <div class="min-h-screen bg-gray-50 py-8">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gray-100">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
       <!-- Loading State -->
-      <div v-if="loading" class="flex justify-center items-center py-12">
-        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <div v-if="loading" class="flex justify-center items-center py-16">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-indigo-600"></div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-md p-4 mt-4">
-        <div class="flex">
+      <div v-else-if="error" class="bg-red-50 border-l-4 border-red-400 shadow-lg rounded-lg p-6 mt-4">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+            </svg>
+          </div>
           <div class="ml-3">
             <h3 class="text-sm font-medium text-red-800">Error loading event</h3>
             <div class="mt-2 text-sm text-red-700">{{ error }}</div>
           </div>
         </div>
       </div>
-
-      <!-- Main Content -->
-      <div v-else class="bg-white shadow rounded-lg">
-        <!-- Header -->
-        <div class="px-6 py-5 border-b border-gray-200">
-          <h1 class="text-2xl font-semibold text-gray-900">Purchase Ticket</h1>
+      <div v-if="purchaseError" class="mt-6">
+        <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-md">
+          <div class="flex">
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">Purchase failed</h3>
+              <div class="mt-2 text-sm text-red-700">{{ purchaseError }}</div>
+            </div>
+          </div>
         </div>
+      </div>
+      <!-- Main Content -->
+      <div v-else class="bg-white shadow-xl rounded-md overflow-hidden">
 
-        <!-- Event Details Section -->
-        <div class="px-6 py-5 space-y-4">
-          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-700">Event Name</label>
-              <p class="text-lg text-gray-900">{{ event?.title }}</p>
-            </div>
-            <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-700">Date</label>
-              <p class="text-lg text-gray-900">{{ event?.dateOfEvent || 'TBD' }}</p>
-            </div>
-            <div class="space-y-2">
-              <label class="block text-sm font-medium text-gray-700">Preis</label>
-              <p class="text-lg text-gray-900">{{ event?.basePrice }} $</p>
+
+        <div class="px-6 py-8 space-y-8">
+          <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">Event Details</h3>
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-500">Event Name</label>
+                <p class="text-lg font-medium text-gray-900">{{ event?.title }}</p>
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-500">Date</label>
+                <p class="text-lg font-medium text-gray-900">{{ event?.dateOfEvent || 'TBD' }}</p>
+              </div>
+              <div class="space-y-2">
+                <label class="block text-sm font-medium text-gray-500">Price</label>
+                <p class="text-lg font-medium text-indigo-600">{{ event?.price }} $</p>
+              </div>
             </div>
           </div>
 
           <!-- Customer Details -->
-          <div class="mt-6">
-            <h3 class="text-lg font-medium text-gray-900">Customer Details</h3>
-            <div v-if="customerLoading" class="mt-2 text-sm text-gray-500">
-              Loading customer information...
+          <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">Customer Details</h3>
+            <div v-if="customerLoading" class="animate-pulse flex space-x-4">
+              <div class="flex-1 space-y-4 py-1">
+                <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div class="space-y-2">
+                  <div class="h-4 bg-gray-200 rounded"></div>
+                  <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+                </div>
+              </div>
             </div>
-            <div v-else-if="customerError" class="mt-2 text-sm text-red-600">
+            <div v-else-if="customerError" class="text-sm text-red-600">
               {{ customerError }}
             </div>
-            <div v-else-if="customer" class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div v-else-if="customer" class="grid grid-cols-1 gap-6 sm:grid-cols-3">
               <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700">Customer Number</label>
-                <p class="text-lg text-gray-900">{{ customer.customerNumber }}</p>
+                <label class="block text-sm font-medium text-gray-500">Customer Number</label>
+                <p class="text-lg font-medium text-gray-900">{{ customer.customerNumber }}</p>
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                <p class="text-lg text-gray-900">{{ customer.user.firstName }} {{ customer.user.lastName }}</p>
+                <label class="block text-sm font-medium text-gray-500">Full Name</label>
+                <p class="text-lg font-medium text-gray-900">{{ customer.user.firstName }} {{ customer.user.lastName }}</p>
               </div>
               <div class="space-y-2">
-                <label class="block text-sm font-medium text-gray-700">Email</label>
-                <p class="text-lg text-gray-900">{{ customer.user.email }}</p>
+                <label class="block text-sm font-medium text-gray-500">Email</label>
+                <p class="text-lg font-medium text-gray-900">{{ customer.user.email }}</p>
               </div>
             </div>
           </div>
 
           <!-- Voucher Section -->
-          <div class="mt-6">
-            <h3 class="text-lg font-medium text-gray-900">Vouchers</h3>
+          <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+            <h3 class="text-xl font-semibold text-gray-900 mb-6">Vouchers</h3>
 
-            <!-- Available Vouchers Selection -->
-            <div class="mt-4" v-if="vouchers && vouchers.length > 0">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Select Available Vouchers</label>
-              <div class="space-y-2">
+            <!-- Available Vouchers -->
+            <div class="mt-6" v-if="vouchers && vouchers.length > 0">
+              <label class="block text-sm font-medium text-gray-500 mb-4">Available Vouchers</label>
+              <div class="space-y-3">
                 <div v-for="voucher in unusedVouchers" :key="voucher.voucherCode"
-                     class="flex items-center p-3 border rounded-md hover:bg-gray-50">
+                     class="flex items-center p-4 border rounded-lg hover:bg-gray-50 transition-colors duration-150 shadow-sm">
                   <input
                       type="checkbox"
                       :value="voucher.voucherCode"
                       v-model="formData.voucherCodes"
-                      class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                      class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                   />
-                  <label class="ml-3 block text-sm text-gray-700">
-                      {{ voucher.voucherCode	 }}
-                    <span v-if="voucher.amount" class="text-gray-500 ml-2">({{ voucher.amount }}$)</span>
+                  <label class="ml-4 flex items-center justify-between flex-grow">
+                    <span class="text-sm font-medium text-gray-900">{{ voucher.voucherCode }}</span>
+                    <span class="text-sm font-semibold text-indigo-600">{{ voucher.amount }}$</span>
                   </label>
                 </div>
               </div>
             </div>
 
             <!-- Manual Voucher Entry -->
-            <div class="mt-4">
-              <label class="block text-sm font-medium text-gray-700">Enter Voucher Code Manually</label>
-              <div class="mt-2 flex rounded-md shadow-sm">
+            <div class="mt-6">
+              <label class="block text-sm font-medium text-gray-500 mb-2">Add Voucher Code</label>
+              <div class="flex rounded-md shadow-sm">
                 <input
                     v-model="newVoucherCode"
                     type="text"
-                    class="flex-1 min-w-0 block w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    class="flex-1 min-w-0 block w-full px-4 py-3 rounded-l-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     placeholder="Enter voucher code"
                 />
                 <button
                     @click="addVoucherCode"
                     type="button"
-                    class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-r-md text-white bg-indigo-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150"
                 >
                   Apply
                 </button>
               </div>
               <p v-if="voucherError" class="mt-2 text-sm text-red-600">{{ voucherError }}</p>
             </div>
-            <!-- Selected Vouchers List -->
 
-            <div v-if="formData.voucherCodes.length > 0" class="mt-4">
-              <label class="block text-sm font-medium text-gray-700">Selected Vouchers</label>
-              <div class="mt-2 space-y-2">
+            <!-- Selected Vouchers -->
+            <div v-if="formData.voucherCodes.length > 0" class="mt-6">
+              <label class="block text-sm font-medium text-gray-500 mb-3">Selected Vouchers</label>
+              <div class="space-y-2">
                 <div v-for="code in formData.voucherCodes" :key="code"
-                     class="flex justify-between items-center p-2 bg-gray-50 rounded-md">
-                  <div class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-700">{{ code }}</span>
-                    <span class="text-sm text-green-600">({{ getVoucherAmount(code) }} $)</span>
+                     class="flex justify-between items-center p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                  <div class="flex items-center space-x-3">
+                    <span class="text-sm font-medium text-indigo-900">{{ code }}</span>
+                    <span class="text-sm font-semibold text-indigo-600">{{ getVoucherAmount(code) }}$</span>
                   </div>
                   <button
                       @click="removeVoucherCode(code)"
-                      class="text-sm text-red-600 hover:text-red-800"
+                      class="text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors duration-150"
                   >
                     Remove
                   </button>
@@ -131,32 +149,42 @@
               </div>
             </div>
           </div>
-          <div class="space-y-2">
-            <label for="ticketQuantity" class="block text-sm font-medium text-gray-700">Number of Tickets</label>
-            <div class="mt-1 flex rounded-md shadow-sm">
-              <input
-                  id="ticketQuantity"
-                  type="number"
-                  min="1"
-                  v-model.number="formData.amount"
-                  class="flex-1 min-w-0 block w-full px-3 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  required
-              />
-            </div>
-            <!-- Updated price display -->
-            <div class="mt-2 space-y-1">
-              <p class="text-sm text-gray-500">Subtotal: {{ calculateSubtotal }} $</p>
-              <p v-if="totalVoucherAmount > 0" class="text-sm text-green-600">Voucher Discount: -{{ totalVoucherAmount }} $</p>
-              <p class="text-sm font-medium text-gray-900">Final Total: {{ calculateTotal }} $</p>
+
+          <!-- Quantity and Total -->
+          <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div class="space-y-3">
+                <label for="ticketQuantity" class="block text-sm font-medium text-gray-500">Number of Tickets</label>
+                <input
+                    id="ticketQuantity"
+                    type="number"
+                    min="1"
+                    v-model.number="formData.amount"
+                    class="block w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    required
+                />
+              </div>
+              <div class="space-y-3 bg-gray-50 p-4 rounded-lg">
+                <p class="text-sm text-gray-500">Subtotal: <span class="float-right font-medium text-gray-900">{{ calculateSubtotal }}$</span></p>
+                <p v-if="totalVoucherAmount > 0" class="text-sm text-indigo-600">
+                  Voucher Discount: <span class="float-right font-medium">-{{ totalVoucherAmount }}$</span>
+                </p>
+                <div class="pt-2 border-t border-gray-200">
+                  <p class="text-lg font-semibold text-gray-900">
+                    Final Total: <span class="float-right">{{ calculateTotal }}$</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <!-- Purchase Actions -->
-          <div class="mt-8 flex justify-end space-x-4">
+
+          <!-- Actions -->
+          <div class="flex justify-end space-x-4 pt-6">
             <button
                 type="button"
                 :disabled="purchaseLoading"
-                @click="$router.push('/events')"
-                class="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                @click="router().push('/events')"
+                class="px-6 py-3 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150"
             >
               Cancel
             </button>
@@ -164,24 +192,14 @@
                 type="submit"
                 :disabled="purchaseLoading"
                 @click="handlePurchase"
-                class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                class="px-6 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-150 disabled:opacity-50"
             >
               <span v-if="purchaseLoading">Processing...</span>
-              <span v-else>Purchase Ticket</span>
+              <span v-else>Purchase Tickets</span>
             </button>
           </div>
 
-          <!-- Purchase Error Message -->
-          <div v-if="purchaseError" class="mt-4">
-            <div class="bg-red-50 border border-red-200 rounded-md p-4">
-              <div class="flex">
-                <div class="ml-3">
-                  <h3 class="text-sm font-medium text-red-800">Purchase failed</h3>
-                  <div class="mt-2 text-sm text-red-700">{{ purchaseError }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
@@ -189,13 +207,14 @@
 </template>
 
 <script>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref, computed, onBeforeUnmount } from 'vue'
 import { useEvent } from '@/composables/useEvent'
 import { useUser } from '@/composables/useUser'
 import { useVoucher } from '@/composables/useVoucher'
-import { useRoute } from 'vue-router'
-import {useTickets} from "@/composables/useTickets";
-import router from "@/router";
+import { createRouter as $router, useRoute } from 'vue-router'
+import { useTickets } from "@/composables/useTickets"
+import router from "@/router"
+import websocketService from '@/utils/websocket'
 
 export default {
   name: 'PurchaseTicket',
@@ -209,20 +228,76 @@ export default {
     const purchaseLoading = ref(false)
     const purchaseError = ref('')
 
-    const {error, loading, getEvent} = useEvent()
-    const {customerError, customerLoading, getCurrentCustomer} = useUser()
-    const {voucherError, voucherLoading, getUserVoucherAll, validateVoucher} = useVoucher()
-    const {  purchaseTicket } = useTickets()
+    const { error, loading, getEvent } = useEvent()
+    const { customerError, customerLoading, getCurrentCustomer } = useUser()
+    const { voucherError, voucherLoading, getUserVoucherAll, validateVoucher } = useVoucher()
+    const { purchaseTicket } = useTickets()
 
-    const eventId = route.params.id;
+    const eventId = route.params.id
+
+    let unsubscribeFromEventUpdates = null
+
+    const handleEventUpdate = (updatedEvent) => {
+      console.log(updatedEvent)
+      console.log(eventId)
+      console.log(updatedEvent.id)
+      console.log(eventId)
+      if (updatedEvent.id.toString() === eventId) {
+        console.log(event)
+        event.value = updatedEvent
+      }
+    }
+
+    const setupWebSocket = async () => {
+      try {
+        if (!websocketService.isConnected) {
+          await websocketService.connect()
+        }
+
+        unsubscribeFromEventUpdates = websocketService.on('eventUpdate', handleEventUpdate)
+
+      } catch (error) {
+        console.error('Failed to setup WebSocket connection:', error)
+      }
+    }
+
+    onMounted(async () => {
+      if (route.params.id) {
+        try {
+          event.value = await getEvent(eventId)
+          await setupWebSocket()
+        } catch (err) {
+          console.error('Error fetching event:', err)
+        }
+        try {
+          vouchers.value = await getUserVoucherAll()
+        } catch (err) {
+          console.error('Error fetching vouchers:', err)
+        }
+        try {
+          customer.value = await getCurrentCustomer()
+        } catch (err) {
+          console.error('Error fetching Customer:', err)
+        }
+      }
+    })
+
+    // Cleanup WebSocket subscription when component is destroyed
+    onBeforeUnmount(() => {
+      if (unsubscribeFromEventUpdates) {
+        unsubscribeFromEventUpdates()
+      }
+    })
+
+    // Rest of the component code remains the same...
     const formData = ref({
       amount: 0,
       voucherCodes: [],
     })
 
     const calculateSubtotal = computed(() => {
-      if (!event.value?.basePrice || !formData.value.amount) return 0
-      return event.value.basePrice * formData.value.amount
+      if (!event.value?.price || !formData.value.amount) return 0
+      return event.value.price * formData.value.amount
     })
 
     const totalVoucherAmount = computed(() => {
@@ -260,8 +335,8 @@ export default {
               used: false
             });
           }
-          newVoucherCode.value = ''; // Clear the input
-          voucherError.value = ''; // Clear any previous errors
+          newVoucherCode.value = '';
+          voucherError.value = '';
         }
       } catch (err) {
         voucherError.value = err.response?.data?.error || 'Invalid voucher code';
@@ -276,6 +351,7 @@ export default {
       const voucher = vouchers.value.find(v => v.voucherCode === code);
       return voucher?.amount || 0;
     }
+
     const handlePurchase = async () => {
       purchaseLoading.value = true;
       purchaseError.value = '';
@@ -288,13 +364,13 @@ export default {
         const purchaseData = {
           eventId: eventId,
           amount: formData.value.amount,
-          voucherCodes: [...formData.value.voucherCodes] // Convert Proxy to plain array
-                };
-        console.log(purchaseData)
+          voucherCodes: [...formData.value.voucherCodes]
+        };
+
         const response = await purchaseTicket(purchaseData);
 
         router.push({
-          path: '/tickets',
+          path: '/notifications',
           query: {
             purchase: 'success',
             reference: response.reference
@@ -305,26 +381,7 @@ export default {
       } finally {
         purchaseLoading.value = false;
       }
-    };
-    onMounted(async () => {
-      if (route.params.id) {
-        try {
-          event.value = await getEvent(eventId)
-        } catch (err) {
-          console.error('Error fetching event:', err)
-        }
-        try {
-          vouchers.value = await getUserVoucherAll()
-        } catch (err) {
-          console.error('Error fetching vouchers:', err)
-        }
-        try {
-          customer.value = await getCurrentCustomer()
-        } catch (err) {
-          console.error('Error fetching Customer:', err)
-        }
-      }
-    })
+    }
 
     return {
       error,
@@ -352,6 +409,10 @@ export default {
   },
 
   methods: {
+    router() {
+      return router
+    },
+    $router,
     resetForm() {
       this.formData = {
         amount: 0,

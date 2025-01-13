@@ -4,6 +4,7 @@ import API.EventTom.models.Notification;
 import API.EventTom.models.user.User;
 import API.EventTom.repositories.NotificationRepository;
 import API.EventTom.repositories.UserRepository;
+import API.EventTom.services.websockets.interfaces.IUserBroadcastService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.util.List;
 public class WebsiteNotificationServiceImpl implements IWebsiteNotificationService {
     private final NotificationRepository notificationRepository;
     private final UserRepository userRepository;
+    private final IUserBroadcastService userBroadcastService;
 
     @Override
     @Transactional
@@ -25,7 +27,7 @@ public class WebsiteNotificationServiceImpl implements IWebsiteNotificationServi
         notification.setMessage(message);
         notification.setCreatedAt(LocalDateTime.now());
         notification.setNotificationType(notificationType);
-
+        userBroadcastService.broadcastToUser(recipient.getId(), notification);
         notificationRepository.save(notification);
     }
 

@@ -1,6 +1,7 @@
 package API.EventTom.services.events;
 
 import API.EventTom.dto.EventDTO;
+import API.EventTom.dto.response.EventUpdateResponseDTO;
 import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.event.Event;
 import API.EventTom.repositories.EventRepository;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
@@ -21,40 +23,58 @@ import java.util.stream.Collectors;
 public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Long>
         implements IEventQueryService {
     private final EventRepository eventRepository;
+    private final StandardDTOMapper standardDTOMapper;
 
     public EventQueryServiceImpl(
             EventRepository eventRepository,
-            StandardDTOMapper standardDTOMapper, EventRepository eventRepository1) {
+            StandardDTOMapper standardDTOMapper, EventRepository eventRepository1, StandardDTOMapper standardDTOMapper1) {
         super(eventRepository,
                 standardDTOMapper,
                 standardDTOMapper::mapEventToEventDTO,
                 "Event");
         this.eventRepository = eventRepository1;
+        this.standardDTOMapper = standardDTOMapper1;
     }
 
     @Override
-    public Page<EventDTO> getAllEvents(int page, int size, String sortBy, String direction) {
+    public Page<EventDTO> getAllEvents(
+            int page, int size, String sortBy, String direction,
+            String search) {
+
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
-        return getAll(pageable);
+
+        Specification<Event> spec = Specification.where(null);
+
+        if (search != null && !search.trim().isEmpty()) {
+            spec = spec.and((root, query, cb) -> {
+                String searchLower = "%" + search.toLowerCase() + "%";
+                return cb.or(
+                        cb.like(cb.lower(root.get("title")), searchLower),
+                        cb.like(cb.lower(root.get("location")), searchLower)
+                );
+            });
+        }
+
+        Page<Event> events = eventRepository.findAll(spec, pageable);
+        return events.map(mapperFunction);
     }
 
     @Override
-    public EventDTO getByIdWithManagerCheck(Long id, Long userId) {
+    public EventUpdateResponseDTO getByIdWithManagerCheck(Long id, Long userId) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
 
         boolean isManager = event.getManagers().stream()
                 .anyMatch(manager -> manager.getId().equals(userId));
+        boolean isCreator = event.getCreator().getId().equals(userId);
 
-        if (!isManager) {
+        if (!isManager && !isCreator) {
             throw new AccessDeniedException("User does not have permission to access this event");
         }
 
-        return mapperFunction.apply(event);
+        return standardDTOMapper.mapEventToEventUpdateDTO(event);  // Use the new mapper method
     }
-
-
 
     @Override
     public List<EventDTO> findAllByUserId(Long userId) {
@@ -68,6 +88,27 @@ public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Lon
     public Page<EventDTO> findAllByUserId(Long userId, Pageable pageable) {
         Page<Event> eventPage = eventRepository.findByManagers_Id(userId, pageable);
         return eventPage.map(mapperFunction);
+    }
+
+    @Override
+    public Page<EventDTO> findAllByUserId(Long userId, Pageable pageable, String search) {
+        Specification<Event> spec = Specification.where(
+                Specification.where(eventRepository.hasManagerId(userId))
+                        .or((root, query, cb) -> cb.equal(root.get("creator").get("id"), userId))
+        );
+
+        if (search != null && !search.trim().isEmpty()) {
+            spec = spec.and((root, query, cb) -> {
+                String searchLower = "%" + search.toLowerCase() + "%";
+                return cb.or(
+                        cb.like(cb.lower(root.get("title")), searchLower),
+                        cb.like(cb.lower(root.get("location")), searchLower)
+                );
+            });
+        }
+
+        Page<Event> events = eventRepository.findAll(spec, pageable);
+        return events.map(mapperFunction);
     }
 
 }

@@ -176,7 +176,7 @@ router.beforeEach(async (to, from, next) => {
             );
 
             if (!hasRequiredRole) {
-                next({ path: '/dashboard' });
+                next({ path: '/auth/login' });
                 return;
             }
         }
@@ -187,6 +187,8 @@ router.beforeEach(async (to, from, next) => {
             next({ path: '/dashboard' });
             return;
         }
+        next({ path: '/auth/login' });
+
     }
 
     // If all checks pass, proceed to route

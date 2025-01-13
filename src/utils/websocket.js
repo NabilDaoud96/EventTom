@@ -74,7 +74,6 @@ class WebSocketService {
         }
 
         const destination = `/user/${userProfile.id}/queue/notifications`;
-        console.log('Subscribing to user notifications:', destination);
 
         return this.subscribe(destination, message => {
             try {

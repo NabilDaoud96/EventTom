@@ -4,10 +4,14 @@ import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record EventUpdateDTO(
         @Size(max = 100, message = "Title cannot exceed 100 characters")
         String title,
+
+        @Size(max = 200, message = "Location cannot exceed 200 characters")
+        String location,
 
         @Future(message = "Event date must be in the future")
         LocalDateTime dateOfEvent,
@@ -20,5 +24,7 @@ public record EventUpdateDTO(
         int thresholdValue,
 
         @Positive(message = "Base price must be positive")
-        BigDecimal basePrice
+        BigDecimal basePrice,
+
+        List<Long> managerIds
 ) {}

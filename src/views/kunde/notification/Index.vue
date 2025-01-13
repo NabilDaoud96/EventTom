@@ -24,7 +24,7 @@
       <tbody>
       <tr v-for="notification in notifications" :key="notification.id"
           :class="{'bg-gray-50': notification.isRead}">
-        <td class="px-4 py-2 border">{{ notification.message }}</td>
+        <td class="px-4 py-2 border notification-message">{{ notification.message }}</td>
         <td class="px-4 py-2 border">{{ formatDate(notification.createdAt) }}</td>
         <td class="px-4 py-2 border">{{ notification.type }}</td>
         <td class="px-4 py-2 border">
@@ -44,7 +44,6 @@
         @page-change="loadPage"
     />
 
-
     <!-- Loading State -->
     <div v-if="loading" class="flex justify-center items-center mt-4">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
@@ -60,6 +59,7 @@
 <script>
 import { useNotifications } from "@/composables/useNotifications";
 import BasePagination from '@/components/BasePagination.vue';
+import websocketService from '@/utils/websocket';
 
 export default {
   name: 'NotificationsTable',
@@ -81,9 +81,10 @@ export default {
       totalPages: 0,
       currentPage: 0,
       sortConfig: {
-        sortBy: 'notificationType',
-        direction: 'asc'
-      }
+        sortBy: 'createdAt',
+        direction: 'desc'
+      },
+      unsubscribeWebSocket: null
     };
   },
   methods: {
@@ -91,7 +92,6 @@ export default {
       return new Date(date).toLocaleDateString();
     },
     async loadPage(page) {
-
       const response = await this.getUserNotifications({
         page,
         size: 10,
@@ -108,16 +108,52 @@ export default {
       for (const notification of this.notifications) {
         if (!notification.isRead) {
           await this.markAsRead(notification.id);
-
         }
       }
     },
     async handleSort() {
       await this.loadPage(0);
+    },
+    handleNewNotification(notification) {
+      // Add the new notification to the top of the list
+      this.notifications.unshift({
+        ...notification,
+        isRead: false
+      });
+
+      // If we're at the page size limit, remove the last notification
+      if (this.notifications.length > 10) {
+        this.notifications.pop();
+      }
     }
   },
-  mounted() {
-    this.loadPage(0);
+  async mounted() {
+    // First load the initial page of notifications
+    await this.loadPage(0);
+
+    // Then connect to WebSocket if not already connected
+    try {
+      if (!websocketService.isConnected) {
+        await websocketService.connect();
+      }
+
+      // Subscribe to user notifications
+      this.unsubscribeWebSocket = websocketService.on('userNotification', this.handleNewNotification);
+    } catch (error) {
+      console.error('Failed to connect to WebSocket:', error);
+    }
+  },
+  beforeUnmount() {
+    // Clean up WebSocket subscription when component is destroyed
+    if (this.unsubscribeWebSocket) {
+      this.unsubscribeWebSocket();
+    }
   }
 };
 </script>
+
+<style>
+.notification-message {
+    white-space: pre-line;
+}
+</style>
