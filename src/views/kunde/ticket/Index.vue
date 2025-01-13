@@ -1,7 +1,7 @@
 <template>
   <div class="p-6 w-full">
     <div class="mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">Purchased Tickets</h2>
+      <h2 class="text-2xl font-bold text-gray-800">Gekaufte Tickets</h2>
     </div>
 
     <div class="bg-white shadow-lg overflow-hidden w-full">

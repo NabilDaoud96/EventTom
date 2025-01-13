@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("api/events")
+@RequestMapping("api/events/query")
 public class EventQueryController {
     private final IEventQueryService eventQueryService;
 

@@ -26,14 +26,6 @@
         block: dropdownPopoverShow,
       }"
     >
-      <router-link
-          class="text-sm py-2 px-4 font-normal block w-full whitespace-nowrap bg-transparent text-blueGray-700"
-          to="/profile"
-      >
-        Profile
-      </router-link>
-
-      <div class="h-0 my-2 border border-solid border-blueGray-100" />
       <a
           href="#"
           @click.prevent="handleLogout"
@@ -50,6 +42,7 @@ import { ref } from 'vue'
 import { createPopper } from "@popperjs/core"
 import { useAuth } from '@/composables/useAuth'
 import { useRouter } from 'vue-router'
+import image from "@/assets/img/team-1-800x800.jpg"; // Default Profile Image
 
 const router = useRouter()
 

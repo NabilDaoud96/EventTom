@@ -98,6 +98,7 @@ import BasePagination from '@/components/BasePagination.vue';
 import SearchInput from '@/components/SearchComponent.vue';
 import websocketService from '@/utils/websocket';
 import { formatDate, formatPrice } from "@/utils/formatter";
+import {useEvent} from "@/composables/useEvent";
 
 export default {
     components: {
@@ -114,7 +115,7 @@ export default {
         const searchQuery = ref('');
         let unsubscribeNewEvent = null;
         let unsubscribeEventUpdate = null;
-
+        const {error, loading, getAllEvents} = useEvent()
         const handleNewEvent = (newEvent) => {
             if (!searchQuery.value ||
                 newEvent.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -132,17 +133,16 @@ export default {
 
         const fetchEvents = async () => {
             try {
-                const response = await api.get("/events", {
-                    params: {
-                        page: currentPage.value - 1,
-                        size: rowsPerPage.value,
-                        sortBy: 'dateOfEvent',
-                        search: searchQuery.value
-                    },
-                });
-                events.value = response.data.content;
-                totalElements.value = response.data.totalElements;
-                totalPages.value = response.data.totalPages;
+                const response = await getAllEvents({
+                  page: currentPage.value - 1,
+                  size: rowsPerPage.value,
+                  sortBy: 'dateOfEvent',
+                  search: searchQuery.value
+                })
+
+                events.value = response.content;
+                totalElements.value = response.totalElements;
+                totalPages.value = response.totalPages;
             } catch (error) {
                 console.error("Error loading data:", error.response?.data?.error);
             }

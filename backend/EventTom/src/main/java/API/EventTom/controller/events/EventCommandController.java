@@ -16,7 +16,7 @@ import java.nio.file.AccessDeniedException;
 @RestController
 @AllArgsConstructor
 //sollte api/events/commands sein
-@RequestMapping("api/events")
+@RequestMapping("api/events/command")
 public class EventCommandController {
     private final IEventCommandService eventCommandService;
 

@@ -37,7 +37,8 @@
 </template>
 
 <script>
-import axios from 'axios';
+
+import {useEvent} from "@/composables/useEvent";
 
 export default {
   data() {
@@ -50,27 +51,24 @@ export default {
   methods: {
     async fetchEvent() {
       try {
-        const eventId = this.$route.params.id; // Abrufen der ID aus der Route
-        const response = await axios.get(`http://localhost:8080/api/events/${eventId}`);
-        this.event = response.data; // Daten von der API abrufen
+        const {error, loading, getEvent} = useEvent()
+        const eventId = this.$route.params.id;
+        this.event = await getEvent(eventId);
         this.isLoading = false;
       } catch (err) {
         this.error = "Failed to load event data.";
         this.isLoading = false;
       }
     },
-    buyTicket() {
 
-    },
     useVoucher() {
       if (this.event.hasVoucher) {
-        const discount = 10; // Beispiel für einen Rabatt durch Gutschein
-        this.event.price -= discount; // Preis lokal anpassen
+        const discount = 10;
+        this.event.price -= discount;
         alert(`Voucher applied! New price: €${this.event.price}`);
-        this.event.hasVoucher = false; // Gutschein nach der Verwendung deaktivieren
+        this.event.hasVoucher = false;
       }
     },
-    // Datum formatieren (DD.MM.YYYY)
     formatDate(date) {
       const eventDate = new Date(date);
       const day = String(eventDate.getDate()).padStart(2, '0');

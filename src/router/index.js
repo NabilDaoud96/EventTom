@@ -42,6 +42,7 @@ const routes = [
             {
                 path: "/dashboard",
                 component: Dashboard,
+                meta: { requiresAuth: true }
             },
             {
                 path: "/tickets",
@@ -84,7 +85,7 @@ const routes = [
             },
             {
                 path: "/event-creator/dashboard",
-                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER'] },
+                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER', 'ROLE_ADMINISTRATOR'] },
                 component: EventCreatorDashboard,
             },
             {
@@ -130,7 +131,6 @@ const routes = [
         path: "/",
         redirect: "/dashboard",
         component: Auth,
-        // meta: { requiresAuth: false },
         children: [
             {
                 path: "/auth/login",
@@ -167,9 +167,21 @@ router.beforeEach(async (to, from, next) => {
             // Redirect to login if not authenticated
             next({
                 path: '/auth/login',
-                query: { redirect: to.fullPath } // Store intended destination
+                query: { redirect: to.fullPath }
             });
             return;
+        }
+
+        // Special handling for dashboard route
+        if (to.path === '/dashboard') {
+            const hasSpecialRole = roles.some(role =>
+                ['ROLE_ADMINISTRATOR', 'ROLE_EVENT_MANAGER', 'ROLE_EVENT_CREATOR'].includes(role)
+            );
+
+            if (hasSpecialRole) {
+                next({ path: '/event-creator/dashboard' });
+                return;
+            }
         }
 
         if (to.matched.some(record => record.meta.roles)) {
@@ -195,10 +207,8 @@ router.beforeEach(async (to, from, next) => {
             return;
         }
         next({ path: '/auth/login' });
-
     }
 
-    // If all checks pass, proceed to route
     next();
 });
 

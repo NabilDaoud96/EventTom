@@ -24,7 +24,7 @@ export function useManager() {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.post(`events/create`, event);
+            const response = await api.post(`events/command/create`, event);
             return response.data;
         } catch (err) {
             if (err.response) {

@@ -21,12 +21,40 @@ export function useEvent() {
             loading.value = false;
         }
     };
+    const getAllEvents = async ({
+                                    page = 0,
+                                    size = 10,
+                                    sortBy = 'read',
+                                    direction = 'asc',
+                                    search = ''  // Single search parameter
+                                }) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.get('events/query', {
+                params: {
+                    page,
+                    size,
+                    sortBy,
+                    direction,
+                    search
+                }
+            });
+            return response.data;
 
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
     const getEvent = async (id) => {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.get(`events/${id}`);
+            const response = await api.get(`events/query/${id}`);
             return response.data;
         } catch (err) {
             if (err.response) {
@@ -40,7 +68,7 @@ export function useEvent() {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.get(`events/managed/${id}`);
+            const response = await api.get(`events/query/managed/${id}`);
             return response.data;
         } catch (err) {
             if (err.response) {
@@ -61,7 +89,7 @@ export function useEvent() {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.get(`events/manager`, {
+            const response = await api.get(`events/query/manager`, {
                 params: {
                     page,
                     size,
@@ -84,7 +112,7 @@ export function useEvent() {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.put(`events/update/${id}`, event);
+            const response = await api.put(`events/command/update/${id}`, event);
             return response.data;
         } catch (err) {
             if (err.response) {
@@ -98,7 +126,7 @@ export function useEvent() {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.delete(`events/delete/${id}`);
+            const response = await api.delete(`events/command/delete/${id}`);
             return response.data;
         } catch (err) {
             if (err.response) {
@@ -116,6 +144,7 @@ export function useEvent() {
         getEventsByManager,
         updateEvent,
         getEventManaged,
-        deleteEvent
+        deleteEvent,
+        getAllEvents
     }
 }
