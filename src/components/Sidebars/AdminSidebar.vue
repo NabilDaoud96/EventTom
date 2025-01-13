@@ -218,7 +218,7 @@
           <!-- Profil -->
           <li class="items-center">
             <router-link
-                to="/profile"
+                to="/event-creator/profile"
                 v-slot="{ href, navigate, isActive }"
             >
               <a
