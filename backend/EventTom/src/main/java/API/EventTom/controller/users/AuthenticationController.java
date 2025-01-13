@@ -8,6 +8,7 @@ import API.EventTom.services.security.interfaces.IAuthenticationService;
 import API.EventTom.services.security.interfaces.ICookieExtractorService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class AuthenticationController {
     private final ICookieExtractorService cookieExtractorService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request, HttpServletResponse response) {
+    public ResponseEntity<LoginResponseDTO> login(@Valid @RequestBody LoginRequestDTO request, HttpServletResponse response) {
         LoginResponseDTO loginResponseDTO = authenticationService.authenticate(request, response);
         return ResponseEntity.ok(loginResponseDTO);
     }
