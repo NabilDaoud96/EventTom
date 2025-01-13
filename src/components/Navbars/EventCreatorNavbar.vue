@@ -81,7 +81,7 @@ export default {
           if (this.$route.name === 'EventShow') return 'Veranstaltungsdetails';
           if (this.$route.name === 'PurchaseTicket') return 'Ticket kaufen';
           if (this.$route.name === 'UpdateEventForm') return 'Veranstaltung bearbeiten';
-          if (this.$route.name === 'EventCreatorEventShow') return "Event"
+          if (this.$route.name === 'EventCreatorEventShow') return "Veranstaltung"
           return 'Unbekannte Seite';
       }
     }
