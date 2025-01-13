@@ -4,20 +4,13 @@
       <div class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-100 border-0">
         <div class="rounded-t bg-white mb-0 px-6 py-6">
           <div class="text-center">
-            <h6 class="text-blueGray-700 text-xl font-bold">Update Event</h6>
+            <h6 class="text-blueGray-800 text-xl font-bold">Update Event</h6>
           </div>
         </div>
-        <div class="rounded-t bg-white mb-0 px-6 py-6">
-          <div class="text-center">
-            <h6 class="text-blueGray-700 text-xl font-bold">Update Event</h6>
-          </div>
-          <!-- Added error alert -->
-          <div v-if="eventError" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <p class="font-medium">Error</p>
-            <p>{{ eventError }}</p>
-          </div>
+        <div v-if="eventError" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+          <p class="font-medium">Error</p>
+          <p>{{ eventError }}</p>
         </div>
-
         <div v-if="showSuccess" class="mt-4 mb-2 p-4 bg-emerald-200 border border-emerald-400 text-green-700 rounded mx-4">
           <div class="flex items-center">
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
