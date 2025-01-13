@@ -23,7 +23,7 @@
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
             </svg>
-            <p class="font-medium">Success! Event has been created successfully.</p>
+            <p class="font-medium">Success! Event has been updated successfully.</p>
           </div>
         </div>
 
@@ -102,6 +102,7 @@
                       id="tickets"
                       type="number"
                       v-model.number="formData.totalTickets"
+                      @beforeinput="preventNonNumeric"
                       min="1"
                       max="100000"
                       required
@@ -121,6 +122,7 @@
                       id="threshold"
                       type="number"
                       v-model.number="formData.thresholdValue"
+                      @beforeinput="preventNonNumeric"
                       min="0"
                       required
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -139,6 +141,7 @@
                       id="price"
                       type="number"
                       v-model.number="formData.basePrice"
+                      @beforeinput="preventNonNumeric"
                       min="0.01"
                       step="0.01"
                       required
@@ -200,11 +203,11 @@ import { useManager } from "@/composables/useManager";
 import { useEvent } from "@/composables/useEvent";
 import {onMounted, ref, computed, watch} from 'vue';
 import { useRoute } from 'vue-router';
-import {formatPrice} from "../../../utils/formatter";
+import {formatPrice, preventNonNumeric} from "../../../utils/formatter";
 
 export default {
   name: 'UpdateEventForm',
-  methods: {formatPrice},
+  methods: {preventNonNumeric, formatPrice},
   setup() {
     const route = useRoute();
     const eventManagers = ref([]);
