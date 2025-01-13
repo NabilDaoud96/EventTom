@@ -1,34 +1,14 @@
 <template>
+  <!-- Navbar -->
   <nav class="border-gray-200 bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <a href="#" class="flex items-center space-x-3 rtl:space-x-reverse">
         <span class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">{{ currentPage }}</span>
       </a>
-
-      <!-- Authenticated User View -->
-      <ul v-if="isAuthenticated" class="flex-col md:flex-row list-none items-center hidden md:flex">
+      <!-- User -->
+      <ul class="flex-col md:flex-row list-none items-center hidden md:flex">
         <notification-dropdown />
         <user-dropdown />
-      </ul>
-
-      <!-- Guest View -->
-      <ul v-else class="flex-col md:flex-row list-none items-center hidden md:flex space-x-4">
-        <li>
-          <router-link
-              to="/auth/login"
-              class="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
-          >
-            Login
-          </router-link>
-        </li>
-        <li>
-          <router-link
-              to="/auth/register"
-              class="text-gray-700 hover:text-gray-900 dark:text-gray-200 dark:hover:text-white"
-          >
-            Register
-          </router-link>
-        </li>
       </ul>
     </div>
     <hr class="mb-4 border-b-1 border-blueGray-200" />
@@ -36,74 +16,77 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vue";
-
+import {mapGetters} from "vuex";
 
 export default {
   components: {
     UserDropdown,
     NotificationDropdown
   },
-
   computed: {
     ...mapGetters('auth', ['isAuthenticated']),
 
-
     currentPage() {
       switch (this.$route.path) {
-          // Dashboard routes
+          // Dashboard-Routen
         case '/dashboard':
-          return 'Dashboard';
+          return 'Übersicht';
 
-          // Kunde routes
+          // Kunden-Routen
         case '/tickets':
-          return 'My Tickets';
+          return 'Meine Tickets';
         case '/vouchers':
-          return 'My Vouchers';
+          return 'Meine Gutscheine';
         case '/events':
-          return 'Events';
+          return 'Veranstaltungen';
         case '/profile':
-          return 'Profile';
+          return 'Profil';
         case '/notifications':
-          return 'Notifications';
+          return 'Benachrichtigungen';
         case '/purchase-ticket':
-          return 'Purchase Ticket';
+          return 'Ticket kaufen';
 
-          // Event Creator routes
+          // Veranstalter-Routen
         case '/event-creator/dashboard':
-          return 'Event Creator Dashboard';
+          return 'Veranstalter Übersicht';
         case '/event-creator/profile':
-          return 'Event Creator Profile';
+          return 'Veranstalter Profil';
         case '/event-creator/events':
-          return 'Manage Events';
+          return 'Veranstaltungen verwalten';
         case '/event-creator/create':
-          return 'Create New Event';
+          return 'Neue Veranstaltung erstellen';
 
-          // Admin routes
+          // Admin-Routen
         case '/admin/employee-register':
-          return 'Register Employee';
+          return 'Mitarbeiter registrieren';
+        case '/admin/events':
+          return 'Veranstaltungen verwalten';
+        case '/admin/vouchers':
+          return 'Gutscheine verwalten';
+        case '/admin/vouchers/create':
+          return 'Gutschein erstellen';
 
-          // Auth routes
+          // Authentifizierungs-Routen
         case '/auth/login':
-          return 'Login';
+          return 'Anmelden';
         case '/auth/register':
-          return 'Register';
+          return 'Registrieren';
 
-          // Dynamic routes with parameters
+          // Dynamische Routen mit Parametern
         default:
-          // Handle routes with parameters
+          // Parameter-Routen behandeln
           if (this.$route.name === 'EventShow') {
-            return 'Event Details';
+            return 'Veranstaltungsdetails';
           }
           if (this.$route.name === 'PurchaseTicket') {
-            return 'Purchase Ticket';
+            return 'Ticket kaufen';
           }
           if (this.$route.name === 'UpdateEventForm') {
-            return 'Update Event';
+            return 'Veranstaltung bearbeiten';
           }
-          return 'Unknown Page';
+          return 'Unbekannte Seite';
       }
     }
   }

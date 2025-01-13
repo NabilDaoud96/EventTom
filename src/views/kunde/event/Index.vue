@@ -1,102 +1,94 @@
 <template>
-    <div class="p-6 w-full">
-        <!-- Search Component -->
-        <div class="mb-6 bg-white p-4 rounded-lg shadow">
-            <div class="max-w-md">
+  <div class="p-6 w-full">
+    <div class="mb-6 bg-white p-4 rounded-lg shadow">
+      <div class="max-w-md">
+        <p class="text-xl mb-2 font-bold text-gray-800">Veranstaltungen suchen</p>
 
-                <p class="text-xl mb-2 font-bold text-gray-800">Search for Events </p>
+        <SearchInput
+            v-model="searchQuery"
+            placeholder="Nach Titel oder Ort suchen"
+            @search="handleSearch"
+        />
+      </div>
+    </div>
 
-                <SearchInput
-                        v-model="searchQuery"
-                        placeholder="Search by title or location"
-                        @search="handleSearch"
-                />
-            </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div
+          v-for="event in events"
+          :key="event.id"
+          class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      >
+        <div class="p-4 border-b border-gray-200 bg-gray-50">
+          <h3 class="text-xl font-semibold text-gray-900 truncate">{{ event.title }}</h3>
         </div>
 
+        <div class="p-4 space-y-3">
+          <div class="flex items-center text-gray-600">
+            <i class="fas fa-calendar-alt mr-2"></i>
+            <span>{{ formatDate(event.dateOfEvent) }}</span>
+          </div>
 
-        <!-- Grid of Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div
-                    v-for="event in events"
-                    :key="event.id"
-                    class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-            >
-                <!-- Card Header -->
-                <div class="p-4 border-b border-gray-200 bg-gray-50">
-                    <h3 class="text-xl font-semibold text-gray-900 truncate">{{ event.title }}</h3>
-                </div>
+          <div class="flex items-center text-gray-600">
+            <i class="fas fa-map-marker-alt mr-2"></i>
+            <span>{{ event.location }}</span>
+          </div>
 
-                <!-- Card Content -->
-                <div class="p-4 space-y-3">
-                    <div class="flex items-center text-gray-600">
-                        <i class="fas fa-calendar-alt mr-2"></i>
-                        <span>{{ formatDate(event.dateOfEvent) }}</span>
-                    </div>
+          <div class="flex items-center font-semibold">
+            <i class="fas fa-tag mr-2"></i>
+            <span>{{ formatPrice(event.price) }}</span>
+          </div>
 
-                    <div class="flex items-center text-gray-600">
-                        <i class="fas fa-map-marker-alt mr-2"></i>
-                        <span>{{ event.location }}</span>
-                    </div>
-
-                    <div class="flex items-center font-semibold">
-                        <i class="fas fa-tag mr-2"></i>
-                        <span>{{ formatPrice(event.price) }}</span>
-                    </div>
-
-                    <div class="flex items-center">
+          <div class="flex items-center">
             <span
-                    v-if="event.availableTickets > 0"
-                    class="px-3 py-1 rounded-full text-emerald-500 font-semibold"
+                v-if="event.availableTickets > 0"
+                class="px-3 py-1 rounded-full text-emerald-500 font-semibold"
             >
-              {{ event.availableTickets }} tickets available
+              {{ event.availableTickets }} Tickets verfügbar
             </span>
-                        <span
-                                v-else
-                                class="px-3 py-1 rounded-full text-red-500 font-semibold"
-                        >
+            <span
+                v-else
+                class="px-3 py-1 rounded-full text-red-500 font-semibold"
+            >
               Ausverkauft
             </span>
-                    </div>
-                </div>
+          </div>
+        </div>
 
-                <!-- Card Actions -->
-                <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between">
-                    <router-link
-                            :to="{ name: 'EventShow', params: { id: event.id } }"
-                            class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center"
-                    >
-                        <i class="fas fa-eye mr-2"></i>
-                        Details
-                    </router-link>
+        <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between">
+          <router-link
+              :to="{ name: 'EventShow', params: { id: event.id } }"
+              class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center"
+          >
+            <i class="fas fa-eye mr-2"></i>
+            Details
+          </router-link>
 
-                    <router-link
-                            v-if="event.availableTickets > 0"
-                            :to="{ name: 'PurchaseTicket', params: { id: event.id } }"
-                            class="text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-sm inline-flex items-center"
-                    >
-                        <i class="fas fa-ticket-alt mr-2"></i>
-                        Kaufen
-                    </router-link>
-                    <span
-                            v-else
-                            class="text-red-500 text-sm font-medium py-2"
-                    >
+          <router-link
+              v-if="event.availableTickets > 0"
+              :to="{ name: 'PurchaseTicket', params: { id: event.id } }"
+              class="text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-sm inline-flex items-center"
+          >
+            <i class="fas fa-ticket-alt mr-2"></i>
+            Kaufen
+          </router-link>
+          <span
+              v-else
+              class="text-red-500 text-sm font-medium py-2"
+          >
             Ausverkauft
           </span>
-                </div>
-            </div>
         </div>
-
-        <!-- Pagination -->
-        <div class="mt-6">
-            <BasePagination
-                    :current-page="currentPage - 1"
-                    :total-pages="totalPages"
-                    @page-change="handlePageChange"
-            />
-        </div>
+      </div>
     </div>
+
+    <div class="mt-6">
+      <BasePagination
+          :current-page="currentPage - 1"
+          :total-pages="totalPages"
+          @page-change="handlePageChange"
+      />
+    </div>
+  </div>
 </template>
 
 <script>

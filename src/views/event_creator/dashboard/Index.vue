@@ -1,19 +1,18 @@
-# template section
 <template>
   <div class="flex flex-col items-center justify-start min-h-screen mt-6">
-    <!-- Cards Grid -->
+    <!-- Karten-Raster -->
     <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full px-4">
-      <!-- Create Event Card -->
+      <!-- Veranstaltung erstellen Karte -->
       <router-link to="/event-creator/create"
                    class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
         <div class="flex-auto p-4">
           <div class="flex flex-wrap">
             <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
               <h5 class="text-blueGray-400 uppercase font-bold text-xs">
-                Create New Event
+                Neue Veranstaltung erstellen
               </h5>
               <span class="font-semibold text-xl text-blueGray-700">
-                Start Planning
+                Mit Planung beginnen
               </span>
             </div>
             <div class="relative w-auto pl-4 flex-initial">
@@ -23,22 +22,22 @@
             </div>
           </div>
           <p class="text-sm text-blueGray-400 mt-4">
-            <span class="whitespace-nowrap">Click to create a new event</span>
+            <span class="whitespace-nowrap">Klicken Sie hier, um eine neue Veranstaltung zu erstellen</span>
           </p>
         </div>
       </router-link>
 
-      <!-- My Events Card -->
+      <!-- Meine Veranstaltungen Karte -->
       <router-link to="/event-creator/events"
                    class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
         <div class="flex-auto p-4">
           <div class="flex flex-wrap">
             <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
               <h5 class="text-blueGray-400 uppercase font-bold text-xs">
-                My Events
+                Meine Veranstaltungen
               </h5>
               <span class="font-semibold text-xl text-blueGray-700">
-                View All Events
+                Alle Veranstaltungen anzeigen
               </span>
             </div>
             <div class="relative w-auto pl-4 flex-initial">
@@ -48,7 +47,7 @@
             </div>
           </div>
           <p class="text-sm text-blueGray-400 mt-4">
-            <span class="whitespace-nowrap">Manage your existing events</span>
+            <span class="whitespace-nowrap">Verwalten Sie Ihre bestehenden Veranstaltungen</span>
           </p>
         </div>
       </router-link>
@@ -57,26 +56,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
 
-const dashboardInfo = ref(null)
 
-// Currency formatter
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('de-DE', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(value)
-}
 
-// You can add your API call here
-onMounted(async () => {
-  try {
-    // Example API call:
-    // const response = await axios.get('/api/dashboard-info')
-    // dashboardInfo.value = response.data
-  } catch (error) {
-    console.error('Error fetching dashboard info:', error)
-  }
-})
 </script>

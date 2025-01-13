@@ -31,7 +31,6 @@ export function useRegistration() {
             error.value = '';
 
             const response = await api.post('registration/employee', formData);
-            await router.push('/auth/login');
 
             return response.data;
 

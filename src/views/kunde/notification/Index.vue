@@ -1,24 +1,15 @@
 <template>
-  <div class="p-6">
-    <h2 class="text-2xl font-semibold mb-4">Notifications</h2>
+  <div class="p-6 flex flex-col items-center">
+    <h2 class="text-2xl  font-semibold mb-4">Notifications</h2>
 
     <!-- Table -->
-    <table class="min-w-full table-auto border-collapse border border-gray-200">
+    <table class="min-w-full  table-auto border-collapse border border-gray-200">
       <thead>
       <tr class="bg-gray-100">
-        <th class="px-4 py-2 border">Message</th>
-        <th class="px-4 py-2 border">Date</th>
+        <th class="px-4 py-2 border">Nachricht</th>
+        <th class="px-4 py-2 border">Datum</th>
         <th class="px-4 py-2 border">Typ</th>
-        <th class="px-4 py-2 border">
-          <select
-              v-model="sortConfig.direction"
-              class="bg-transparent text-sm focus:outline-none"
-              @change="handleSort"
-          >
-            <option value="asc">Read ↑</option>
-            <option value="desc">Read ↓</option>
-          </select>
-        </th>
+        <th class="px-4 py-2 border">Status</th>
       </tr>
       </thead>
       <tbody>

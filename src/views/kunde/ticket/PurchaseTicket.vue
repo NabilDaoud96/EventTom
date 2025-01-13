@@ -30,7 +30,8 @@
           </div>
         </div>
       </div>
-      <!-- Main Content -->
+
+
       <div class="bg-white shadow-xl rounded-md overflow-hidden">
 
 
@@ -178,7 +179,14 @@
               </div>
             </div>
           </div>
-
+          <div v-if="showSuccess" class="mt-4 mb-2 p-4 bg-emerald-200 border border-emerald-400 text-green-700 rounded mx-4">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <p class="font-medium">Erfolg! Tickets wurde erfolgreich gekauft.</p>
+            </div>
+          </div>
           <!-- Actions -->
           <div class="flex justify-end space-x-4 pt-6">
             <button
@@ -229,6 +237,7 @@ export default {
     const newVoucherCode = ref('')
     const purchaseLoading = ref(false)
     const purchaseError = ref('')
+    const showSuccess = ref(false);
 
     const { error, loading, getEvent } = useEvent()
     const { customerError, customerLoading, getCurrentCustomer } = useUser()
@@ -370,14 +379,21 @@ export default {
         };
 
         const response = await purchaseTicket(purchaseData);
+        if (response) {
+          showSuccess.value = true;
 
-        router.push({
-          path: '/notifications',
-          query: {
-            purchase: 'success',
-            reference: response.reference
-          }
-        });
+          await new Promise(resolve => setTimeout(resolve, 3000));
+
+          showSuccess.value = false;
+          router.push({
+            path: '/notifications',
+            query: {
+              purchase: 'success',
+              reference: response.reference
+            }
+          });
+        }
+
       } catch (err) {
         purchaseError.value = err.response?.data?.error || 'Failed to complete purchase. Please try again.';
       } finally {
@@ -406,7 +422,8 @@ export default {
       handlePurchase,
       purchaseLoading,
       purchaseError,
-      getVoucherAmount
+      getVoucherAmount,
+      showSuccess
     }
   },
 

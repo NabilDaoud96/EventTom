@@ -7,9 +7,17 @@
                         <h6 class="text-blueGray-700 text-xl font-bold">Create Event</h6>
                     </div>
                 </div>
-              <div v-if="error" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+              <div v-if="error" class="mt-4 p-4 bg-red-200 text-red-500 rounded">
                 <p class="font-medium">Error</p>
                 <p>{{ error }}</p>
+              </div>
+              <div v-if="showSuccess" class="mt-4 p-4 bg-emerald-200 border border-emerald-400 text-green-700 rounded mx-4">
+                <div class="flex items-center">
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                  <p class="font-medium">Success! Event has been created successfully.</p>
+                </div>
               </div>
                 <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
                     <form @submit.prevent="handleSubmit">
@@ -24,7 +32,7 @@
                                             class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                             for="title"
                                     >
-                                        Title
+                                        Titel
                                     </label>
                                     <input
                                             id="title"
@@ -42,7 +50,7 @@
                                             class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                             for="location"
                                     >
-                                        Location
+                                        Ort
                                     </label>
                                     <input
                                             id="location"
@@ -59,7 +67,7 @@
                                         class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                         for="date"
                                     >
-                                        Date & Time
+                                        Datum & Zeit
                                     </label>
                                     <input
                                         id="date"
@@ -82,7 +90,7 @@
                                             class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                             for="tickets"
                                     >
-                                        Total Tickets
+                                        Anzahl an Tickets
                                     </label>
                                     <input
                                             id="tickets"
@@ -102,7 +110,7 @@
                                             class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                             for="threshold"
                                     >
-                                        Threshold Value
+                                        Schwellenwert
                                     </label>
                                     <input
                                             id="threshold"
@@ -121,7 +129,7 @@
                                             class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                                             for="price"
                                     >
-                                        Base Price
+                                        Basis Price
                                     </label>
                                     <input
                                             id="price"
@@ -176,7 +184,6 @@
     </div>
 </template>
 <script>
-import api from "@/utils/axios-auth";
 import { useManager } from "@/composables/useManager";
 import { onMounted, ref, computed } from 'vue';
 import {preventNonNumeric} from "@/utils/formatter";
@@ -186,6 +193,7 @@ export default {
     setup() {
         const eventManagers = ref([]);
         const dateError = ref('');
+        const showSuccess = ref(false);
         const { error, loading, getEventManagers, createEvent } = useManager();
 
         // Get current date and format it for datetime-local min attribute
@@ -222,7 +230,8 @@ export default {
             minDateTime,
             maxDateTime,
             dateError,
-            createEvent
+            createEvent,
+          showSuccess
         };
     },
 
@@ -257,7 +266,15 @@ export default {
             dateOfEvent: isoDateTime,
           };
 
-          await this.createEvent(eventData);
+          const response = await this.createEvent(eventData);
+          if (response) {
+            this.showSuccess = true;
+            this.resetForm();
+            setTimeout(() => {
+              this.showSuccess = false;
+            }, 3000);
+          }
+
         },
 
         resetForm() {

@@ -5,7 +5,7 @@
     <div
         class="md:flex-col md:items-stretch md:min-h-full md:flex-nowrap px-0 flex flex-wrap items-center justify-between w-full mx-auto"
     >
-      <!-- Toggler -->
+      <!-- Menü-Schalter -->
       <button
           class="cursor-pointer text-black opacity-50 md:hidden px-3 py-1 text-xl leading-none bg-transparent rounded border border-solid border-transparent"
           type="button"
@@ -13,14 +13,14 @@
       >
         <i class="fas fa-bars"></i>
       </button>
-      <!-- Brand -->
+      <!-- Marke -->
       <router-link
           class="md:block text-left md:pb-2 text-blueGray-600 mr-0 inline-block whitespace-nowrap text-xl font-bold p-4 px-0"
           to="event-creator/dashboard"
       >
         EventTom
       </router-link>
-      <!-- User -->
+      <!-- Benutzer -->
       <ul class="md:hidden items-center flex flex-wrap list-none">
         <li class="inline-block relative">
           <notification-dropdown />
@@ -29,12 +29,12 @@
           <user-dropdown />
         </li>
       </ul>
-      <!-- Collapse -->
+      <!-- Ausklappbereich -->
       <div
           class="md:flex md:flex-col md:items-stretch md:opacity-100 md:relative md:mt-4 md:shadow-none shadow absolute top-0 left-0 right-0 z-40 overflow-y-auto overflow-x-hidden h-auto items-center flex-1 rounded"
           v-bind:class="collapseShow"
       >
-        <!-- Collapse header -->
+        <!-- Ausklapp-Header -->
         <div
             class="md:min-w-full md:hidden block pb-4 mb-4 border-b border-solid border-blueGray-200"
         >
@@ -59,13 +59,13 @@
           </div>
         </div>
 
-        <!-- Divider -->
+        <!-- Trennlinie -->
         <hr class="my-4 md:min-w-full" />
-        <!-- Heading -->
+        <!-- Überschrift -->
         <h6
             class="md:min-w-full text-blueGray-500 text-xs uppercase font-bold block pt-1 pb-4 no-underline"
         >
-          Employee Layout Pages
+          Mitarbeiterbereich
         </h6>
         <!-- Navigation -->
 
@@ -96,7 +96,7 @@
             </router-link>
           </li>
 
-          <!-- Events -->
+          <!-- Veranstaltungen -->
           <li class="items-center">
             <router-link
                 to="/event-creator/events"
@@ -116,12 +116,12 @@
                     class="fas fa-calendar-alt mr-2 text-sm"
                     :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                My Events
+                Meine Veranstaltungen
               </a>
             </router-link>
           </li>
 
-          <!-- Create Event -->
+          <!-- Veranstaltung erstellen -->
           <li class="items-center">
             <router-link
                 to="/event-creator/create"
@@ -141,7 +141,7 @@
                     class="fas fa-calendar-alt mr-2 text-sm"
                     :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                Create Event
+                Veranstaltung erstellen
               </a>
             </router-link>
           </li>
@@ -164,7 +164,7 @@
                     class="fas fa-calendar-alt mr-2 text-sm"
                     :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                All vouchers
+                Alle Gutscheine
               </a>
             </router-link>
           </li>
@@ -187,7 +187,7 @@
                     class="fas fa-calendar-alt mr-2 text-sm"
                     :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                Create Vouchers
+                Gutscheine erstellen
               </a>
             </router-link>
           </li>
@@ -210,13 +210,12 @@
                     class="fas fa-calendar-alt mr-2 text-sm"
                     :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                Create Employee
+                Mitarbeiter erstellen
               </a>
             </router-link>
           </li>
 
-
-          <!-- Profile -->
+          <!-- Profil -->
           <li class="items-center">
             <router-link
                 to="/profile"
@@ -236,21 +235,21 @@
                     class="fas fa-user-circle mr-2 text-sm"
                     :class="[isActive ? 'opacity-75' : 'text-blueGray-300']"
                 ></i>
-                Profile
+                Profil
               </a>
             </router-link>
           </li>
         </ul>
 
-        <!-- Divider -->
+        <!-- Trennlinie -->
         <hr class="my-4 md:min-w-full" />
-        <!-- Logout -->
+        <!-- Abmelden -->
         <ul class="md:flex-col md:min-w-full flex flex-col list-none">
           <li class="items-center">
             <a href="#"
                @click.prevent="handleLogout" class="text-xs uppercase py-3 font-bold block text-red-500 hover:text-red-600">
               <i class="fas fa-sign-out-alt mr-2 text-sm"></i>
-              Logout
+              Abmelden
             </a>
           </li>
         </ul>
@@ -258,7 +257,6 @@
     </div>
   </nav>
 </template>
-); }
 
 <script>
 import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vue";
@@ -275,7 +273,7 @@ export default {
         await logout()
         await router.push('/auth/login')
       } catch (error) {
-        console.error('Logout failed:', error)
+        console.error('Abmeldung fehlgeschlagen:', error)
       }
     }
     return {

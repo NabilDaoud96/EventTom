@@ -64,7 +64,6 @@ const routes = [
             },
             {
                 path: "/notifications",
-
                 component: Notifications,
             },
             {
@@ -179,7 +178,7 @@ router.beforeEach(async (to, from, next) => {
             );
 
             if (!hasRequiredRole) {
-                next({ path: '/dashboard' });
+                next({ path: '/auth/login' });
                 return;
             }
         }

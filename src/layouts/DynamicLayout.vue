@@ -49,21 +49,27 @@ export default defineComponent({
       if (userRoles.value.includes('ROLE_ADMINISTRATOR')) {
         return 'AdminSidebar'
       }
-      return userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'EventCreatorSidebar' : 'KundeSidebar'
+      return userRoles.value.includes('ROLE_EVENT_CREATOR') || userRoles.value.includes('ROLE_EVENT_MANAGER')
+          ? 'EventCreatorSidebar'
+          : 'KundeSidebar'
     })
 
     const currentNavbar = computed(() => {
       if (userRoles.value.includes('ROLE_ADMINISTRATOR')) {
         return 'AdminNavbar'
       }
-      return userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'EventCreatorNavbar' : 'KundeNavbar'
+      return userRoles.value.includes('ROLE_EVENT_CREATOR') || userRoles.value.includes('ROLE_EVENT_MANAGER')
+          ? 'EventCreatorNavbar'
+          : 'KundeNavbar'
     })
 
     const currentFooter = computed(() => {
       if (userRoles.value.includes('ROLE_ADMINISTRATOR')) {
         return 'FooterAdmin'
       }
-      return userRoles.value.includes('ROLE_EVENT_CREATOR') ? 'FooterEventCreator' : 'FooterKunde'
+      return userRoles.value.includes('ROLE_EVENT_CREATOR') || userRoles.value.includes('ROLE_EVENT_MANAGER')
+          ? 'FooterEventCreator'
+          : 'FooterKunde'
     })
 
     return {

@@ -1,6 +1,7 @@
 // src/utils/axios-auth.js
 import axios from 'axios';
 import store from '@/store';
+import router from "@/router";
 
 const api = axios.create({
     baseURL: 'http://localhost:8080/api/',
@@ -48,6 +49,7 @@ api.interceptors.response.use(
         } catch (refreshError) {
             processQueue(refreshError, null);
             await store.dispatch('auth/logout');
+            router.push('auth/login');
             return Promise.reject(refreshError);
         } finally {
             isRefreshing = false;

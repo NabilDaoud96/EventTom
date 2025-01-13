@@ -30,57 +30,63 @@ export default {
 
     currentPage() {
       switch (this.$route.path) {
-          // Dashboard routes
+          // Dashboard-Routen
         case '/dashboard':
-          return 'Dashboard';
+          return 'Übersicht';
 
-          // Kunde routes
+          // Kunden-Routen
         case '/tickets':
-          return 'My Tickets';
+          return 'Meine Tickets';
         case '/vouchers':
-          return 'My Vouchers';
+          return 'Meine Gutscheine';
         case '/events':
-          return 'Events';
+          return 'Veranstaltungen';
         case '/profile':
-          return 'Profile';
+          return 'Profil';
         case '/notifications':
-          return 'Notifications';
+          return 'Benachrichtigungen';
         case '/purchase-ticket':
-          return 'Purchase Ticket';
+          return 'Ticket kaufen';
 
-          // Event Creator routes
+          // Veranstalter-Routen
         case '/event-creator/dashboard':
-          return 'Event Creator Dashboard';
+          return 'Veranstalter Übersicht';
         case '/event-creator/profile':
-          return 'Event Creator Profile';
+          return 'Veranstalter Profil';
         case '/event-creator/events':
-          return 'Manage Events';
+          return 'Veranstaltungen verwalten';
         case '/event-creator/create':
-          return 'Create New Event';
+          return 'Neue Veranstaltung erstellen';
 
-          // Admin routes
+          // Admin-Routen
         case '/admin/employee-register':
-          return 'Register Employee';
+          return 'Mitarbeiter registrieren';
+        case '/admin/events':
+          return 'Veranstaltungen verwalten';
+        case '/admin/vouchers':
+          return 'Gutscheine verwalten';
+        case '/admin/vouchers/create':
+          return 'Gutschein erstellen';
 
-          // Auth routes
+          // Authentifizierungs-Routen
         case '/auth/login':
-          return 'Login';
+          return 'Anmelden';
         case '/auth/register':
-          return 'Register';
+          return 'Registrieren';
 
-          // Dynamic routes with parameters
+          // Dynamische Routen mit Parametern
         default:
-          // Handle routes with parameters
+          // Parameter-Routen behandeln
           if (this.$route.name === 'EventShow') {
-            return 'Event Details';
+            return 'Veranstaltungsdetails';
           }
           if (this.$route.name === 'PurchaseTicket') {
-            return 'Purchase Ticket';
+            return 'Ticket kaufen';
           }
           if (this.$route.name === 'UpdateEventForm') {
-            return 'Update Event';
+            return 'Veranstaltung bearbeiten';
           }
-          return 'Unknown Page';
+          return 'Unbekannte Seite';
       }
     }
   }

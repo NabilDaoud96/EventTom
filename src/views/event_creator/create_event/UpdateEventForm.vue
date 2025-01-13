@@ -17,6 +17,16 @@
             <p>{{ eventError }}</p>
           </div>
         </div>
+
+        <div v-if="showSuccess" class="mt-4 mb-2 p-4 bg-emerald-200 border border-emerald-400 text-green-700 rounded mx-4">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+            <p class="font-medium">Success! Event has been created successfully.</p>
+          </div>
+        </div>
+
         <div class="flex-auto px-4 lg:px-10 py-10 pt-0">
           <form @submit.prevent="handleSubmit">
             <h6 class="text-blueGray-400 text-sm mt-3 mb-6 font-bold uppercase">
@@ -29,7 +39,7 @@
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       for="title"
                   >
-                    Title
+                    Titel
                   </label>
                   <input
                       id="title"
@@ -47,7 +57,7 @@
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       for="location"
                   >
-                    Location
+                    Ort
                   </label>
                   <input
                       id="location"
@@ -64,7 +74,7 @@
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       for="date"
                   >
-                    Date & Time
+                    Datum & Zeit
                   </label>
                   <input
                       id="date"
@@ -86,7 +96,7 @@
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       for="tickets"
                   >
-                    Total Tickets
+                    Anzahl an Tickets
                   </label>
                   <input
                       id="tickets"
@@ -105,7 +115,7 @@
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       for="threshold"
                   >
-                    Threshold Value
+                    Schwellenwert
                   </label>
                   <input
                       id="threshold"
@@ -123,7 +133,7 @@
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       for="price"
                   >
-                    Base Price
+                    Basis Preis
                   </label>
                   <input
                       id="price"
@@ -135,7 +145,7 @@
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
                   <p class="text-xs text-blueGray-400 mt-1">
-                    Final price: {{ formatPrice(finalPrice) }}
+                    Finaler Preis: {{ formatPrice(finalPrice) }}
                   </p>
                 </div>
               </div>
@@ -201,6 +211,7 @@ export default {
     const dateError = ref('');
     const { error: managerError, loading: managerLoading, getEventManagers } = useManager();
     const { error: eventError, loading: eventLoading, getEventManaged, updateEvent } = useEvent();
+    const showSuccess = ref(false);
 
     const formData = ref({
       id: '',
@@ -287,7 +298,17 @@ export default {
           basePrice: Number(formData.value.basePrice.toFixed(2)),
         };
 
-        await updateEvent(formData.value.id, eventData);
+        const response = await updateEvent(formData.value.id, eventData);
+
+        if (response) {
+          showSuccess.value = true;
+
+          await new Promise(resolve => setTimeout(resolve, 3000));
+
+          showSuccess.value = false;
+
+        }
+
       } catch (err) {
         console.error('Error updating event:', err);
       }
@@ -309,7 +330,8 @@ export default {
       maxDateTime,
       dateError,
       handleSubmit,
-      finalPrice
+      finalPrice,
+      showSuccess
     };
   }
 }

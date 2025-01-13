@@ -1,18 +1,15 @@
-# template section
 <template>
   <div class="flex flex-col items-center justify-start min-h-screen mt-6">
-    <!-- Cards Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full px-4">
-      <!-- Booked Events Card -->
       <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
         <div class="flex-auto p-4">
           <div class="flex flex-wrap">
             <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
               <h5 class="text-blueGray-400 uppercase font-bold text-xs">
-                Booked Events
+                Gebuchte Veranstaltungen
               </h5>
               <span class="font-semibold text-xl text-blueGray-700">
-                {{ dashboardInfo?.eventDashboard?.count || 0 }} Events
+                {{ dashboardInfo?.eventDashboard?.count || 0 }} Veranstaltungen
               </span>
             </div>
             <router-link to="/tickets" class="relative w-auto pl-4 flex-initial">
@@ -23,22 +20,21 @@
           </div>
           <p class="text-sm text-blueGray-400 mt-4">
             <router-link to="/tickets" class="text-emerald-500 hover:text-emerald-600">
-              View your tickets →
+              Tickets anzeigen →
             </router-link>
           </p>
         </div>
       </div>
 
-      <!-- Next Event Card -->
       <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
         <div class="flex-auto p-4">
           <div class="flex flex-wrap">
             <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
               <h5 class="text-blueGray-400 uppercase font-bold text-xs">
-                Next Event
+                Nächste Veranstaltung
               </h5>
               <span class="font-semibold text-xl text-blueGray-700">
-                {{ dashboardInfo?.nextEvent?.title || 'No upcoming events' }}
+                {{ dashboardInfo?.nextEvent?.title || 'Keine anstehenden Veranstaltungen' }}
               </span>
             </div>
             <router-link to="/events" class="relative w-auto pl-4 flex-initial">
@@ -51,24 +47,23 @@
             <p>{{ formatDate(dashboardInfo.nextEvent.dateOfEvent) }}</p>
             <p>{{ dashboardInfo.nextEvent.location }}</p>
             <router-link to="/events" class="text-red-500 hover:text-red-600">
-              View all events →
+              Alle Veranstaltungen anzeigen →
             </router-link>
           </div>
           <p v-else class="text-sm text-blueGray-400 mt-4">
             <router-link to="/events" class="text-red-500 hover:text-red-600">
-              Browse available events →
+              Verfügbare Veranstaltungen durchsuchen →
             </router-link>
           </p>
         </div>
       </div>
 
-      <!-- Vouchers Card -->
       <div class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg">
         <div class="flex-auto p-4">
           <div class="flex flex-wrap">
             <div class="relative w-full pr-4 max-w-full flex-grow flex-1">
               <h5 class="text-blueGray-400 uppercase font-bold text-xs">
-                Available Vouchers
+                Verfügbare Gutscheine
               </h5>
               <span class="font-semibold text-xl text-blueGray-700">
                 {{ formatPrice(dashboardInfo?.voucherDashboard?.value || 0) }}
@@ -81,9 +76,9 @@
             </router-link>
           </div>
           <p class="text-sm text-blueGray-400 mt-4">
-            {{ dashboardInfo?.voucherDashboard?.count || 0 }} vouchers available
+            {{ dashboardInfo?.voucherDashboard?.count || 0 }} Gutscheine verfügbar
             <router-link to="/vouchers" class="block text-blue-500 hover:text-blue-600 mt-1">
-              View your vouchers →
+              Gutscheine anzeigen →
             </router-link>
           </p>
         </div>
@@ -92,6 +87,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
