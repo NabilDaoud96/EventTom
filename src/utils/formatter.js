@@ -32,12 +32,20 @@ export const formatPrice = (amount) => {
 
 
 export const preventNonNumeric = (event) => {
+    // Allow deletion operations (backspace, delete, cut)
+    if (event.inputType === 'deleteContentBackward' ||
+        event.inputType === 'deleteContentForward' ||
+        event.inputType === 'deleteByCut') {
+        return;
+    }
+
+    // For actual input, only allow numbers and decimal point
     if (!/^[0-9.]$/.test(event.data)) {
-        event.preventDefault()
+        event.preventDefault();
     }
 
     // Prevent multiple decimal points
     if (event.data === '.' && event.target.value.includes('.')) {
-        event.preventDefault()
+        event.preventDefault();
     }
 }
