@@ -79,8 +79,8 @@
                     </div>
                 </div>
 
-                <div class="p-4 bg-gray-50 border-t border-gray-200 flex flex-wrap gap-2 justify-between">
-                    <router-link
+                <div  class="p-4 bg-gray-50 border-t border-gray-200 flex flex-wrap gap-2 justify-between">
+                    <router-link v-if="hasEventManagerRole"
                             :to="{ name: 'UpdateEventForm', params: { id: event.id } }"
                             class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center"
                     >
@@ -125,12 +125,13 @@
 
 
 <script>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import {ref, onMounted, onBeforeUnmount} from 'vue';
 import BasePagination from '@/components/BasePagination.vue';
 import { useEvent } from "@/composables/useEvent";
 import { formatDate, formatPrice } from "@/utils/formatter";
 import SearchInput from "@/components/SearchComponent.vue";
 import websocketService from "@/utils/websocket";
+import {hasEventManagerRole} from "@/utils/roles";
 
 export default {
   components: {
@@ -295,7 +296,8 @@ export default {
       handlePageChange,
       handleSearch,
       handleDelete,
-      fetchEvents
+      fetchEvents,
+        hasEventManagerRole
     };
   }
 };

@@ -27,7 +27,7 @@ public class EventCommandController {
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR', 'EVENT_MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_MANAGER')")
     public ResponseEntity<EventDTO> updateEvent(@Valid @PathVariable long id, @RequestBody EventUpdateDTO eventUpdateDTO, @AuthenticatedUserId Long userId) throws AccessDeniedException {
         return ResponseEntity.ok(eventCommandService.updateEvent(id, eventUpdateDTO, userId));
     }

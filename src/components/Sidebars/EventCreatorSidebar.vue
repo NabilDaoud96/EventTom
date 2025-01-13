@@ -96,7 +96,6 @@
             </router-link>
           </li>
 
-          <!-- Veranstaltungen -->
           <li class="items-center">
             <router-link
                 to="/event-creator/events"
@@ -156,9 +155,7 @@
           </li>
         </ul>
 
-        <!-- Trennlinie -->
         <hr class="my-4 md:min-w-full" />
-        <!-- Abmelden -->
         <ul class="md:flex-col md:min-w-full flex flex-col list-none">
           <li class="items-center">
             <a href="#"

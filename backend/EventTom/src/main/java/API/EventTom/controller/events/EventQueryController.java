@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,10 +40,10 @@ public class EventQueryController {
     }
 
     @GetMapping("/managed/{id}")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_MANAGER')")
     public ResponseEntity<EventUpdateResponseDTO> getManagedEventById(@PathVariable long id, @AuthenticatedUserId Long userId) {
         return ResponseEntity.ok(eventQueryService.getByIdWithManagerCheck(id, userId));
     }
-
 
     @GetMapping("/manager")
     public ResponseEntity<Page<EventDTO>> getEventsByManager(
