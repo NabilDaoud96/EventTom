@@ -45,7 +45,7 @@ export function useUser() {
             return response.data;
         } catch (err) {
             if (err.response) {
-                error.value = err.response.data.message
+                error.value = err.response.data.error
             }
         } finally {
             loading.value = false;
