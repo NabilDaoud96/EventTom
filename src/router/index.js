@@ -13,6 +13,7 @@ import Notifications from "@/views/kunde/notification/Index.vue";
 
 // Event Creator Views
 import EventCreatorEvents from "../views/event_creator/event/Index.vue";
+import EventCreatorEventShow from "@/views/event_creator/event/Show.vue"
 import EventCreatorCreateEvent from "../views/event_creator/create_event/Create.vue"
 import EventCreatorDashboard from "@/views/event_creator/dashboard/Index.vue";
 import EventCreatorProfile from "@/views/event_creator/profile/Edit.vue"
@@ -92,6 +93,12 @@ const routes = [
                 path: "/event-creator/events",
                 meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER'] },
                 component: EventCreatorEvents,
+            },
+            {
+                path: "/event-creator/event/:id",
+                name: 'EventCreatorEventShow',
+                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER'] },
+                component: EventCreatorEventShow,
             },
             {
                 path: "/event-creator/create",

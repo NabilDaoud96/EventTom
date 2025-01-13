@@ -87,7 +87,13 @@
             <i class="fas fa-edit mr-2"></i>
             Bearbeiten
           </router-link>
-
+          <router-link
+              :to="{ name: 'EventCreatorEventShow', params: { id: event.id } }"
+              class="text-white bg-emerald-400 hover:text-blueGray-300 px-4 py-2 rounded text-sm inline-flex items-center"
+          >
+            <i class="fas fa-eye mr-2"></i>
+            Zeigen
+          </router-link>
           <button
               @click="handleDelete(event.id)"
               class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm inline-flex items-center"

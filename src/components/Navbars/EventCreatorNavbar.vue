@@ -57,7 +57,8 @@ export default {
           return 'Veranstaltungen verwalten';
         case '/event-creator/create':
           return 'Neue Veranstaltung erstellen';
-
+        case '/event-creator/event':
+          return 'Event';
           // Admin-Routen
         case '/admin/employee-register':
           return 'Mitarbeiter registrieren';
@@ -77,15 +78,10 @@ export default {
           // Dynamische Routen mit Parametern
         default:
           // Parameter-Routen behandeln
-          if (this.$route.name === 'EventShow') {
-            return 'Veranstaltungsdetails';
-          }
-          if (this.$route.name === 'PurchaseTicket') {
-            return 'Ticket kaufen';
-          }
-          if (this.$route.name === 'UpdateEventForm') {
-            return 'Veranstaltung bearbeiten';
-          }
+          if (this.$route.name === 'EventShow') return 'Veranstaltungsdetails';
+          if (this.$route.name === 'PurchaseTicket') return 'Ticket kaufen';
+          if (this.$route.name === 'UpdateEventForm') return 'Veranstaltung bearbeiten';
+          if (this.$route.name === 'EventCreatorEventShow') return "Event"
           return 'Unbekannte Seite';
       }
     }
