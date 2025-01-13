@@ -118,10 +118,12 @@
 </template>
 
 <script>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import BasePagination from '@/components/BasePagination.vue';
 import { useEvent } from "@/composables/useEvent";
-import { formatDate, formatPrice } from "../../../utils/formatter";
+import { formatDate, formatPrice } from "@/utils/formatter";
 import SearchInput from "@/components/SearchComponent.vue";
+import websocketService from "@/utils/websocket";
 
 export default {
   components: {
@@ -130,31 +132,19 @@ export default {
   },
   setup() {
     const { error, loading, getEventsByManager, deleteEvent } = useEvent();
-    return {
-      error,
-      loading,
-      getEventsByManager,
-      deleteEvent
-    };
-  },
-  data() {
-    return {
-      events: [],
-      currentPage: 1,
-      rowsPerPage: 12, // Changed to match customer view
-      totalElements: 0,
-      totalPages: 0,
-      sortConfig: {
-        sortBy: 'dateOfEvent', // Changed to match customer view
-        direction: 'asc'
-      },
-      searchQuery: '',
-    };
-  },
-  methods: {
-    formatPrice,
-    formatDate,
-    getThresholdClass(event) {
+
+    const events = ref([]);
+    const currentPage = ref(1);
+    const rowsPerPage = ref(12);
+    const totalElements = ref(0);
+    const totalPages = ref(0);
+    const sortConfig = ref({
+      sortBy: 'dateOfEvent',
+      direction: 'asc'
+    });
+    const searchQuery = ref('');
+
+    const getThresholdClass = (event) => {
       const ratio = event.soldTickets / event.thresholdValue;
       if (ratio >= 1.1) {
         return 'text-emerald-500';
@@ -162,8 +152,9 @@ export default {
         return 'text-red-500';
       }
       return '';
-    },
-    getThresholdIcon(event) {
+    };
+
+    const getThresholdIcon = (event) => {
       const ratio = event.soldTickets / event.thresholdValue;
       if (ratio >= 1.1) {
         return 'fa-arrow-trend-up';
@@ -171,8 +162,9 @@ export default {
         return 'fa-arrow-trend-down';
       }
       return 'fa-equals';
-    },
-    getThresholdMessage(event) {
+    };
+
+    const getThresholdMessage = (event) => {
       const ratio = event.soldTickets / event.thresholdValue;
       const percentage = Math.abs((ratio - 1) * 100).toFixed(1);
 
@@ -182,55 +174,122 @@ export default {
         return `${percentage}% unter Schwellenwert`;
       }
       return 'Nahe am Schwellenwert';
-    },
-    handlePageChange(page) {
-      this.currentPage = page + 1;
-      this.fetchEvents();
-    },
-    handleSearch(value) {
-      this.searchQuery = value;
-      this.currentPage = 1;
-      this.fetchEvents();
-    },
-    async handleDelete(id) {
+    };
+
+    const fetchEvents = async () => {
+      try {
+        const response = await getEventsByManager({
+          page: currentPage.value - 1,
+          size: rowsPerPage.value,
+          sortBy: sortConfig.value.sortBy,
+          direction: sortConfig.value.direction,
+          search: searchQuery.value
+        });
+
+        events.value = response.content;
+        totalElements.value = response.totalElements;
+        totalPages.value = response.totalPages;
+      } catch (err) {
+        console.error("Error loading events:", err);
+      }
+    };
+
+    const handlePageChange = (page) => {
+      currentPage.value = page + 1;
+      fetchEvents();
+    };
+
+    const handleSearch = (value) => {
+      searchQuery.value = value;
+      currentPage.value = 1;
+      fetchEvents();
+    };
+
+    const handleDelete = async (id) => {
       try {
         const confirmed = await confirm('Are you sure you want to delete this item?');
 
         if (confirmed) {
-          await this.deleteEvent(id);
-          this.events = this.events.filter(event => event.id !== id);
+          await deleteEvent(id);
+          events.value = events.value.filter(event => event.id !== id);
 
-          if (this.events.length === 0 && this.currentPage > 1) {
-            this.currentPage--;
-            await this.fetchEvents();
+          if (events.value.length === 0 && currentPage.value > 1) {
+            currentPage.value--;
+            await fetchEvents();
           }
-          this.totalElements--;
-          this.totalPages = Math.ceil(this.totalElements / this.rowsPerPage);
+          totalElements.value--;
+          totalPages.value = Math.ceil(totalElements.value / rowsPerPage.value);
         }
       } catch (error) {
         console.error("Error deleting event:", error);
       }
-    },
-    async fetchEvents() {
-      try {
-        const response = await this.getEventsByManager({
-          page: this.currentPage - 1,
-          size: this.rowsPerPage,
-          sortBy: this.sortConfig.sortBy,
-          direction: this.sortConfig.direction,
-          search: this.searchQuery
-        });
+    };
 
-        this.events = response.content;
-        this.totalElements = response.totalElements;
-        this.totalPages = response.totalPages;
-      } catch (err) {
-        console.error("Error loading events:", err);
+    const setupWebSocketListeners = () => {
+      // Handle new events
+      const newEventUnsub = websocketService.on('newEvent', (newEvent) => {
+        if (events.value.length < rowsPerPage.value) {
+          events.value.unshift(newEvent);
+          totalElements.value++;
+          totalPages.value = Math.ceil(totalElements.value / rowsPerPage.value);
+        }
+      });
+
+      const eventUpdateUnsub = websocketService.on('eventUpdate', (updatedEvent) => {
+        const index = events.value.findIndex(event => event.id === updatedEvent.id);
+        if (index !== -1) {
+          events.value[index] = { ...events.value[index], ...updatedEvent };
+        }
+      });
+
+      const notificationUnsub = websocketService.on('userNotification', (notification) => {
+        // Handle notification
+      });
+
+      return [newEventUnsub, eventUpdateUnsub, notificationUnsub];
+    };
+
+    // Lifecycle hooks
+    onMounted(async () => {
+      fetchEvents();
+
+      try {
+        await websocketService.connect();
+        const unsubCallbacks = setupWebSocketListeners();
+
+        onBeforeUnmount(() => {
+          unsubCallbacks.forEach(cleanup => cleanup());
+          websocketService.disconnect();
+        });
+      } catch (error) {
+        console.error('Failed to connect to WebSocket:', error);
       }
-    }
-  },
-  created() {
-    this.fetchEvents();
+    });
+
+    // Return everything that's used in the template
+    return {
+      // State
+      events,
+      currentPage,
+      rowsPerPage,
+      totalElements,
+      totalPages,
+      sortConfig,
+      searchQuery,
+      error,
+      loading,
+
+      // Methods
+      formatPrice,
+      formatDate,
+      getThresholdClass,
+      getThresholdIcon,
+      getThresholdMessage,
+      handlePageChange,
+      handleSearch,
+      handleDelete,
+      fetchEvents
+    };
   }
 };
 </script>

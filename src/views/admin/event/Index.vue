@@ -106,7 +106,7 @@ export default {
     return {
       events: [],
       currentPage: 1,
-      rowsPerPage: 10,
+      rowsPerPage: 12,
       totalElements: 0,
       totalPages: 0,
       sortConfig: {
