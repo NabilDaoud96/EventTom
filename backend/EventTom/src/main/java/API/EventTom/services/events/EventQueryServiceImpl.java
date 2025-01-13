@@ -4,9 +4,12 @@ import API.EventTom.dto.EventDTO;
 import API.EventTom.dto.response.EventUpdateResponseDTO;
 import API.EventTom.mappers.StandardDTOMapper;
 import API.EventTom.models.event.Event;
+import API.EventTom.models.user.Employee;
 import API.EventTom.repositories.EventRepository;
 import API.EventTom.services.common.BaseQueryService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -89,13 +92,18 @@ public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Lon
         Page<Event> eventPage = eventRepository.findByManagers_Id(userId, pageable);
         return eventPage.map(mapperFunction);
     }
-
     @Override
     public Page<EventDTO> findAllByUserId(Long userId, Pageable pageable, String search) {
-        Specification<Event> spec = Specification.where(
-                Specification.where(eventRepository.hasManagerId(userId))
-                        .or((root, query, cb) -> cb.equal(root.get("creator").get("id"), userId))
-        );
+        Specification<Event> spec = (root, query, cb) -> {
+            query.distinct(true);
+
+            Join<Event, Employee> managersJoin = root.join("managers", JoinType.LEFT);
+
+            return cb.or(
+                    cb.equal(root.get("creator").get("id"), userId),
+                    cb.equal(managersJoin.get("id"), userId)
+            );
+        };
 
         if (search != null && !search.trim().isEmpty()) {
             spec = spec.and((root, query, cb) -> {
@@ -110,5 +118,4 @@ public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Lon
         Page<Event> events = eventRepository.findAll(spec, pageable);
         return events.map(mapperFunction);
     }
-
 }

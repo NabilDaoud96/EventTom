@@ -188,7 +188,7 @@ export default {
 
         if (confirmed) {
           await deleteEvent(route.params.id);
-          router.push({ name: 'EventList' });
+          router.push({ name: 'EventCreatorEvents' });
         }
       } catch (error) {
         console.error("Error deleting event:", error);

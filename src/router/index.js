@@ -91,6 +91,7 @@ const routes = [
             },
             {
                 path: "/event-creator/events",
+                name: "EventCreatorEvents",
                 meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER'] },
                 component: EventCreatorEvents,
             },
