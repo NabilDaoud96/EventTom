@@ -1,4 +1,3 @@
-# EventForm.vue
 <template>
     <div class="flex items-center justify-center">
         <div class="w-full px-4">
@@ -89,6 +88,7 @@
                                             id="tickets"
                                             type="number"
                                             v-model.number="formData.totalTickets"
+                                            @beforeinput="preventNonNumeric"
                                             min="1"
                                             max="100000"
                                             required
@@ -108,6 +108,7 @@
                                             id="threshold"
                                             type="number"
                                             v-model.number="formData.thresholdValue"
+                                            @beforeinput="preventNonNumeric"
                                             min="0"
                                             required
                                             class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -126,6 +127,8 @@
                                             id="price"
                                             type="number"
                                             v-model.number="formData.basePrice"
+                                            @beforeinput="preventNonNumeric"
+
                                             min="0.01"
                                             step="0.01"
                                             required
@@ -176,6 +179,7 @@
 import api from "@/utils/axios-auth";
 import { useManager } from "@/composables/useManager";
 import { onMounted, ref, computed } from 'vue';
+import {preventNonNumeric} from "@/utils/formatter";
 
 export default {
     name: 'EventForm',
@@ -236,6 +240,7 @@ export default {
     },
 
     methods: {
+      preventNonNumeric,
 
 
         handleSubmit() {

@@ -63,12 +63,71 @@ export function useVoucher() {
             loading.value = false;
         }
     };
+    const bulkCreateVoucher = async (count) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.post('vouchers/bulk', count);
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error;
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
+
+    const getVoucherTypes = async () => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.get('vouchers/types');
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error;
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
+    const getAllVouchers = async ({
+                                      page = 0,
+                                      size = 10,
+                                      sortBy = 'used',
+                                      direction = 'asc',
+                                  }) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.get('vouchers/all', {
+                params: {
+                    page,
+                    size,
+                    sortBy,
+                    direction
+                }
+            });
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.error;
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
+
     return {
         loading,
         error,
         getUserVouchers,
         getUserVoucherAll,
-        validateVoucher
+        validateVoucher,
+        bulkCreateVoucher,
+        getVoucherTypes,
+        getAllVouchers
     }
 
 }

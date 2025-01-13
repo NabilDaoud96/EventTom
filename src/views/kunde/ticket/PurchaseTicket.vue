@@ -160,6 +160,7 @@
                     type="number"
                     min="1"
                     v-model.number="formData.amount"
+                    @beforeinput="preventNonNumeric"
                     class="block w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     required
                 />
@@ -215,6 +216,7 @@ import { createRouter as $router, useRoute } from 'vue-router'
 import { useTickets } from "@/composables/useTickets"
 import router from "@/router"
 import websocketService from '@/utils/websocket'
+import {preventNonNumeric} from "@/utils/formatter";
 
 export default {
   name: 'PurchaseTicket',
@@ -409,6 +411,7 @@ export default {
   },
 
   methods: {
+    preventNonNumeric,
     router() {
       return router
     },

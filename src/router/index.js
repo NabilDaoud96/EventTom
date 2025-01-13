@@ -1,9 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 // Layouts
-import Kunde from "../layouts/Kunde.vue";
 import Auth from "../layouts/Auth.vue";
-import EventCreator from "../layouts/EventCreator.vue";
 
 // Kunde Views
 import Dashboard from "../views/kunde/dashboard/Index.vue";
@@ -14,7 +12,6 @@ import EventShow from "../views/kunde/event/Show.vue";
 import Notifications from "@/views/kunde/notification/Index.vue";
 
 // Event Creator Views
-import EventCreatorProfile from "../views/event_creator/profile/Edit.vue";
 import EventCreatorEvents from "../views/event_creator/event/Index.vue";
 import EventCreatorCreateEvent from "../views/event_creator/create_event/Create.vue"
 import EventCreatorDashboard from "@/views/event_creator/dashboard/Index.vue";
@@ -22,6 +19,8 @@ import EventCreatorDashboard from "@/views/event_creator/dashboard/Index.vue";
 // Admin Views
 import RegisterEmployee from "@/views/admin/employee/Create.vue"
 import EventManagerEvents from "../views/admin/event/Index.vue";
+import CreateVoucher from "@/views/admin/voucher/Create.vue"
+import AdminVouchers from "@/views/admin/voucher/Index.vue"
 
 // Auth Views
 import Login from "../views/auth/Login.vue";
@@ -81,18 +80,12 @@ const routes = [
             },
             {
                 path: "/event-creator/dashboard",
-                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR'] },
+                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER'] },
                 component: EventCreatorDashboard,
             },
             {
-                path: "/event-creator/profile",
-                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR'] },
-
-                component: EventCreatorProfile,
-            },
-            {
                 path: "/event-creator/events",
-                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR'] },
+                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER'] },
                 component: EventCreatorEvents,
             },
             {
@@ -103,7 +96,7 @@ const routes = [
             {
                 path: "/event-creator/update/:id",
                 name: 'UpdateEventForm',
-                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR'] },
+                meta: { requiresAuth: true, roles: ['ROLE_EVENT_CREATOR', 'ROLE_EVENT_MANAGER'] },
                 component: UpdateEventForm,
             },
             {
@@ -117,13 +110,23 @@ const routes = [
                 meta: { requiresAuth: true, roles: ['ROLE_ADMINISTRATOR'] },
                 component: EventManagerEvents,
             },
+            {
+                path: "/admin/vouchers/create",
+                meta: { requiresAuth: true, roles: ['ROLE_ADMINISTRATOR'] },
+                component: CreateVoucher,
+            },
+            {
+                path: "/admin/vouchers",
+                meta: { requiresAuth: true, roles: ['ROLE_ADMINISTRATOR'] },
+                component: AdminVouchers,
+            },
         ],
     },
     {
         path: "/",
         redirect: "/dashboard",
         component: Auth,
-        meta: { requiresAuth: false },
+        // meta: { requiresAuth: false },
         children: [
             {
                 path: "/auth/login",
@@ -176,7 +179,7 @@ router.beforeEach(async (to, from, next) => {
             );
 
             if (!hasRequiredRole) {
-                next({ path: '/auth/login' });
+                next({ path: '/dashboard' });
                 return;
             }
         }

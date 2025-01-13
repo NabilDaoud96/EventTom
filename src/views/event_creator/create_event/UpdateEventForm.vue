@@ -134,7 +134,9 @@
                       required
                       class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                   />
-                  <p class="text-xs text-blueGray-400 mt-1">Final price: {{formatPrice(calculatePrice(formData.basePrice, formData.totalTickets > formData.thresholdValue)) }}</p>
+                  <p class="text-xs text-blueGray-400 mt-1">
+                    Final price: {{ formatPrice(finalPrice) }}
+                  </p>
                 </div>
               </div>
               <div class="w-full lg:w-6/12 px-4">
@@ -186,7 +188,7 @@
 <script>
 import { useManager } from "@/composables/useManager";
 import { useEvent } from "@/composables/useEvent";
-import { onMounted, ref, computed } from 'vue';
+import {onMounted, ref, computed, watch} from 'vue';
 import { useRoute } from 'vue-router';
 import {formatPrice} from "../../../utils/formatter";
 
@@ -211,12 +213,21 @@ export default {
       price: 0,
       managerIds: []
     });
-    const calculatePrice = (basePrice, thresholdReached) => {
-      if (!basePrice) return 0;
+
+    const finalPrice = computed(() => {
+      const basePrice = formData.value.basePrice || 0;
+      const isAboveThreshold = formData.value.totalTickets > formData.value.thresholdValue;
       const THRESHOLD_MULTIPLIER = 1.2;
-      return thresholdReached ? basePrice * THRESHOLD_MULTIPLIER : basePrice;
-    };
-    // Get current date and format it for datetime-local min attribute
+      return isAboveThreshold ? basePrice * THRESHOLD_MULTIPLIER : basePrice;
+    });
+
+    watch([
+      () => formData.value.totalTickets,
+      () => formData.value.thresholdValue,
+      () => formData.value.basePrice
+    ], () => {
+    });
+
     const minDateTime = computed(() => {
       const now = new Date();
       now.setFullYear(now.getFullYear());
@@ -298,7 +309,7 @@ export default {
       maxDateTime,
       dateError,
       handleSubmit,
-      calculatePrice
+      finalPrice
     };
   }
 }

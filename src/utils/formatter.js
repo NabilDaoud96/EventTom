@@ -29,3 +29,15 @@ export const formatPrice = (amount) => {
         maximumFractionDigits: 2
     }).format(amount);
 };
+
+
+export const preventNonNumeric = (event) => {
+    if (!/^[0-9.]$/.test(event.data)) {
+        event.preventDefault()
+    }
+
+    // Prevent multiple decimal points
+    if (event.data === '.' && event.target.value.includes('.')) {
+        event.preventDefault()
+    }
+}

@@ -1,5 +1,6 @@
 package API.EventTom.services.vouchers;
 
+import API.EventTom.dto.request.BulkVoucherGenerationRequestDTO;
 import API.EventTom.models.event.Voucher;
 import API.EventTom.models.event.VoucherType;
 import API.EventTom.repositories.VoucherRepository;
@@ -31,10 +32,12 @@ class VoucherGenerationServiceImpl implements IVoucherGenerationService {
     }
 
     @Override
-    public List<Voucher> generateBulkVouchers(BigDecimal amount, int validityDays, VoucherType type, int count) {
-        return IntStream.range(0, count)
-                .mapToObj(i -> generateVoucher(amount, validityDays, type))
+    public List<Voucher> generateBulkVouchers(BulkVoucherGenerationRequestDTO bulkVoucherGenerationRequestDTO) {
+        return IntStream.range(0, bulkVoucherGenerationRequestDTO.getCount())
+                .mapToObj(i -> generateVoucher(bulkVoucherGenerationRequestDTO.getAmount(), bulkVoucherGenerationRequestDTO.getValidityDays(), bulkVoucherGenerationRequestDTO.getType()))
                 .collect(Collectors.toList());
     }
+
+
 }
 

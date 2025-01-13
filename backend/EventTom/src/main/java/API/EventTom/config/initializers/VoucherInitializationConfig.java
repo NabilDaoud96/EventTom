@@ -1,5 +1,7 @@
 package API.EventTom.config.initializers;
 
+import API.EventTom.dto.request.BulkVoucherGenerationRequestDTO;
+import API.EventTom.dto.request.VoucherGenerationRequestDTO;
 import API.EventTom.models.event.Voucher;
 import API.EventTom.models.event.VoucherType;
 import API.EventTom.services.vouchers.interfaces.IVoucherGenerationService;
@@ -33,12 +35,13 @@ public class VoucherInitializationConfig {
     private void createPromotionalVouchers() {
         try {
             // Create 5 promotional vouchers worth $20 each, valid for 30 days
-            List<Voucher> promoVouchers = voucherGenerationService.generateBulkVouchers(
-                    new BigDecimal("20.00"),
-                    30,
-                    VoucherType.PROMOTIONAL,
-                    5
-            );
+            BulkVoucherGenerationRequestDTO requestDTO = new BulkVoucherGenerationRequestDTO();
+            requestDTO.setAmount(new BigDecimal("20.00"));
+            requestDTO.setValidityDays(30);
+            requestDTO.setType(VoucherType.PROMOTIONAL);
+            requestDTO.setCount(5);
+
+            List<Voucher> promoVouchers = voucherGenerationService.generateBulkVouchers(requestDTO);
             System.out.println("Created " + promoVouchers.size() + " promotional vouchers");
         } catch (Exception e) {
             System.err.println("Failed to create promotional vouchers: " + e.getMessage());
@@ -48,12 +51,13 @@ public class VoucherInitializationConfig {
     private void createLoyaltyVouchers() {
         try {
             // Create 3 loyalty vouchers worth $50 each, valid for 60 days
-            List<Voucher> loyaltyVouchers = voucherGenerationService.generateBulkVouchers(
-                    new BigDecimal("50.00"),
-                    60,
-                    VoucherType.LOYALTY,
-                    3
-            );
+            BulkVoucherGenerationRequestDTO requestDTO = new BulkVoucherGenerationRequestDTO();
+            requestDTO.setAmount(new BigDecimal("50.00"));
+            requestDTO.setValidityDays(60);
+            requestDTO.setType(VoucherType.LOYALTY);
+            requestDTO.setCount(3);
+
+            List<Voucher> loyaltyVouchers = voucherGenerationService.generateBulkVouchers(requestDTO);
             System.out.println("Created " + loyaltyVouchers.size() + " loyalty vouchers");
         } catch (Exception e) {
             System.err.println("Failed to create loyalty vouchers: " + e.getMessage());
@@ -63,12 +67,13 @@ public class VoucherInitializationConfig {
     private void createSpecialEventVouchers() {
         try {
             // Create 10 special event vouchers worth $15 each, valid for 14 days
-            List<Voucher> specialEventVouchers = voucherGenerationService.generateBulkVouchers(
-                    new BigDecimal("15.00"),
-                    14,
-                    VoucherType.PROMOTIONAL,
-                    10
-            );
+            BulkVoucherGenerationRequestDTO requestDTO = new BulkVoucherGenerationRequestDTO();
+            requestDTO.setAmount(new BigDecimal("15.00"));
+            requestDTO.setValidityDays(14);
+            requestDTO.setType(VoucherType.PROMOTIONAL);
+            requestDTO.setCount(10);
+
+            List<Voucher> specialEventVouchers = voucherGenerationService.generateBulkVouchers(requestDTO);
             System.out.println("Created " + specialEventVouchers.size() + " special event vouchers");
         } catch (Exception e) {
             System.err.println("Failed to create special event vouchers: " + e.getMessage());
@@ -78,26 +83,26 @@ public class VoucherInitializationConfig {
     private void createBulkDiscountVouchers() {
         try {
             // Create different tiers of bulk discount vouchers
-            List<Voucher> smallBulkVouchers = voucherGenerationService.generateBulkVouchers(
-                    new BigDecimal("25.00"),
-                    45,
-                    VoucherType.PROMOTIONAL,
-                    3
-            );
+            BulkVoucherGenerationRequestDTO smallBulkDTO = new BulkVoucherGenerationRequestDTO();
+            smallBulkDTO.setAmount(new BigDecimal("25.00"));
+            smallBulkDTO.setValidityDays(45);
+            smallBulkDTO.setType(VoucherType.PROMOTIONAL);
+            smallBulkDTO.setCount(3);
+            List<Voucher> smallBulkVouchers = voucherGenerationService.generateBulkVouchers(smallBulkDTO);
 
-            List<Voucher> mediumBulkVouchers = voucherGenerationService.generateBulkVouchers(
-                    new BigDecimal("75.00"),
-                    45,
-                    VoucherType.PROMOTIONAL,
-                    2
-            );
+            BulkVoucherGenerationRequestDTO mediumBulkDTO = new BulkVoucherGenerationRequestDTO();
+            mediumBulkDTO.setAmount(new BigDecimal("75.00"));
+            mediumBulkDTO.setValidityDays(45);
+            mediumBulkDTO.setType(VoucherType.PROMOTIONAL);
+            mediumBulkDTO.setCount(2);
+            List<Voucher> mediumBulkVouchers = voucherGenerationService.generateBulkVouchers(mediumBulkDTO);
 
-            List<Voucher> largeBulkVouchers = voucherGenerationService.generateBulkVouchers(
-                    new BigDecimal("100.00"),
-                    45,
-                    VoucherType.PROMOTIONAL,
-                    1
-            );
+            BulkVoucherGenerationRequestDTO largeBulkDTO = new BulkVoucherGenerationRequestDTO();
+            largeBulkDTO.setAmount(new BigDecimal("100.00"));
+            largeBulkDTO.setValidityDays(45);
+            largeBulkDTO.setType(VoucherType.PROMOTIONAL);
+            largeBulkDTO.setCount(1);
+            List<Voucher> largeBulkVouchers = voucherGenerationService.generateBulkVouchers(largeBulkDTO);
 
             System.out.println("Created bulk discount vouchers of different tiers");
         } catch (Exception e) {

@@ -5,6 +5,7 @@
     import API.EventTom.dto.response.VoucherResponseDTO;
     import API.EventTom.mappers.StandardDTOMapper;
     import API.EventTom.models.event.Voucher;
+    import API.EventTom.models.event.VoucherType;
     import API.EventTom.repositories.VoucherRepository;
     import API.EventTom.services.common.BaseQueryService;
     import API.EventTom.services.vouchers.interfaces.IVoucherQueryService;
@@ -52,4 +53,10 @@
             Page<Voucher> voucherPage = voucherRepository.findByUserId(userId, pageable);
             return voucherPage.map(mapperFunction);
         }
+
+        @Override
+        public List<VoucherType> getAllVoucherTypes() {
+            return List.of(VoucherType.values());
+        }
+
     }

@@ -81,8 +81,13 @@ public class StandardDTOMapper {
         );
     }
     public VoucherDTO mapVoucherToVoucherDTO(Voucher voucher) {
+        long userId = -1L;
+        if (voucher.getCustomer() != null && voucher.getCustomer().getUser() != null) {
+            userId = voucher.getCustomer().getUser().getId();
+        }
+
         return new VoucherDTO(
-                voucher.getCustomer().getUser().getId(),
+                userId,
                 voucher.getAmount(),
                 voucher.getExpirationDate(),
                 voucher.isUsed(),

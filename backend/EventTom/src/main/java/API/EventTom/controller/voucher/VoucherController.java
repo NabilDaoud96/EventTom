@@ -6,6 +6,7 @@ import API.EventTom.dto.request.BulkVoucherGenerationRequestDTO;
 import API.EventTom.dto.request.VoucherGenerationRequestDTO;
 import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.models.event.Voucher;
+import API.EventTom.models.event.VoucherType;
 import API.EventTom.services.vouchers.interfaces.IVoucherClaimService;
 import API.EventTom.services.vouchers.interfaces.IVoucherGenerationService;
 import API.EventTom.services.vouchers.interfaces.IVoucherQueryService;
@@ -34,8 +35,21 @@ public class VoucherController {
     private final IVoucherUsageService voucherUsageService;
     private final IVoucherQueryService voucherQueryService;
 
+    @GetMapping("all")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+    public ResponseEntity<Page<VoucherDTO>> getAllVouchers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction
+    ) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(voucherQueryService.getAll(pageable));
+    }
+
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR', 'EVENT_MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     public ResponseEntity<VoucherResponseDTO> generateVoucher(
             @Valid @RequestBody VoucherGenerationRequestDTO request) {
         Voucher voucher = voucherGenerationService.generateVoucher(
@@ -47,14 +61,11 @@ public class VoucherController {
     }
 
     @PostMapping("/bulk")
-    @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_CREATOR', 'EVENT_MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     public ResponseEntity<List<VoucherResponseDTO>> generateBulkVouchers(
             @Valid @RequestBody BulkVoucherGenerationRequestDTO request) {
         List<Voucher> vouchers = voucherGenerationService.generateBulkVouchers(
-                request.getAmount(),
-                request.getValidityDays(),
-                request.getType(),
-                request.getCount()
+                request
         );
         return ResponseEntity.ok(
                 vouchers.stream()
@@ -97,5 +108,13 @@ public class VoucherController {
     ) {
         List<VoucherDTO> vouchers = voucherQueryService.findAllByUserId(userId);
         return ResponseEntity.ok(vouchers);
+    }
+
+
+    @GetMapping("/types")
+    @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
+    public ResponseEntity<List<VoucherType>> getVoucherTypes() {
+        List<VoucherType> types = voucherQueryService.getAllVoucherTypes();
+        return ResponseEntity.ok(types);
     }
 }

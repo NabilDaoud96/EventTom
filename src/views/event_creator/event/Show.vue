@@ -12,16 +12,16 @@
         <p class="mt-2 text-center text-gray-600">Location: {{ event.location }}</p>
         <p class="mt-2 text-center text-gray-600">Available Tickets: {{ event.availableTickets }}</p>
         <p class="mt-4 text-center text-xl font-bold">Price: €{{ event.price }}</p>
-        
+
         <!-- Buttons für Ticketkauf und Gutscheinverwendung -->
         <div class="flex justify-between mt-6">
-          <button 
+          <button
             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
             @click="updateTicket"
           >
             <i class="fa fa-shopping-cart mr-2"></i> Update Ticket
           </button>
-          <button 
+          <button
             class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
             @click="deleteTicket"
           >
@@ -51,7 +51,7 @@ export default {
     };
   },
   methods: {
-   
+
   }
 };
 </script>
