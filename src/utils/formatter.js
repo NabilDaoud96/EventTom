@@ -39,13 +39,14 @@ export const preventNonNumeric = (event) => {
         return;
     }
 
-    // For actual input, only allow numbers and decimal point
-    if (!/^[0-9.]$/.test(event.data)) {
+    // For actual input, allow numbers, decimal point, and comma
+    if (!/^[0-9.,]$/.test(event.data)) {
         event.preventDefault();
     }
 
-    // Prevent multiple decimal points
-    if (event.data === '.' && event.target.value.includes('.')) {
+    // Prevent multiple decimal points and commas
+    if ((event.data === '.' && event.target.value.includes('.')) ||
+        (event.data === ',' && event.target.value.includes(','))) {
         event.preventDefault();
     }
-}
+};

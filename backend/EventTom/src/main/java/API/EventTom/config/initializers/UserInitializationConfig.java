@@ -54,26 +54,31 @@ public class UserInitializationConfig {
     }
 
     private void createEventManagerEmployee() {
-        Set<Roles> managerRoles = EnumSet.of(
-                Roles.EVENT_MANAGER,
-                Roles.EVENT_CREATOR
-        );
-
+        Set<Roles> managerRoles = EnumSet.of(Roles.EVENT_MANAGER);
         EmployeeRegisterRequestDTO managerRequest = new EmployeeRegisterRequestDTO(
                 "manager@eventtom.com",
-                "Manager123!",
+                "password123",
                 "Event",
                 "Manager",
                 managerRoles
         );
 
+        Set<Roles> creatorRoles = EnumSet.of(Roles.EVENT_CREATOR);
+        EmployeeRegisterRequestDTO creatorRequest = new EmployeeRegisterRequestDTO(
+                "creator@eventtom.com",
+                "password123",
+                "Event",
+                "Creator",
+                creatorRoles
+        );
+
         try {
             registrationService.registerEmployee(managerRequest);
+            registrationService.registerEmployee(creatorRequest);
         } catch (Exception e) {
-            System.err.println("Failed to create manager employee: " + e.getMessage());
+            System.err.println("Failed to create employees: " + e.getMessage());
         }
     }
-
     private void createSalesRepEmployee() {
         Set<Roles> salesRoles = EnumSet.of(
                 Roles.SALES_REP
