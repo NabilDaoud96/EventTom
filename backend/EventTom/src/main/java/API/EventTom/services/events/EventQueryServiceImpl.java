@@ -70,9 +70,8 @@ public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Lon
 
         boolean isManager = event.getManagers().stream()
                 .anyMatch(manager -> manager.getId().equals(userId));
-        boolean isCreator = event.getCreator().getId().equals(userId);
 
-        if (!isManager && !isCreator) {
+        if (!isManager) {
             throw new AccessDeniedException("User does not have permission to access this event");
         }
 

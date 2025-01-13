@@ -59,8 +59,8 @@ public class EventCommandServiceImpl implements IEventCommandService {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
 
-        boolean isAuthorized = event.getCreator().getId().equals(userId) ||
-                event.getManagers().stream().anyMatch(manager -> manager.getId().equals(userId));
+        boolean isAuthorized = event.getManagers().stream().anyMatch(manager -> manager.getId().equals(userId));
+
 
         if (!isAuthorized) {
             throw new AccessDeniedException("User is not authorized to update this event");

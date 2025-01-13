@@ -7,7 +7,7 @@
             <h6 class="text-blueGray-800 text-xl font-bold">Update Event</h6>
           </div>
         </div>
-        <div v-if="eventError" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+        <div v-if="eventError" class="mt-4 p-4  text-red-500 rounded">
           <p class="font-medium">Error</p>
           <p>{{ eventError }}</p>
         </div>
