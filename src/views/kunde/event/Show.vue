@@ -92,48 +92,78 @@
         </div>
     </div>
 </template>
-
 <script>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useEvent } from "@/composables/useEvent";
 import { formatDate, formatPrice } from "@/utils/formatter";
+import websocketService from "@/utils/websocket";
 
 export default {
-    name: 'CustomerEventView',
+  name: 'CustomerEventView',
 
-    setup() {
-        const route = useRoute();
-        const { error, loading, getEvent } = useEvent();
-        const event = ref(null);
+  setup() {
+    const route = useRoute();
+    const { error, loading, getEvent } = useEvent();
+    const event = ref(null);
 
-        const useVoucher = () => {
-            if (event.value?.hasVoucher) {
-                const discount = 10;
-                event.value.price -= discount;
-                alert(`Gutschein eingelöst! Neuer Preis: ${formatPrice(event.value.price)}`);
-                event.value.hasVoucher = false;
-            }
-        };
+    const useVoucher = () => {
+      if (event.value?.hasVoucher) {
+        const discount = 10;
+        event.value.price -= discount;
+        alert(`Gutschein eingelöst! Neuer Preis: ${formatPrice(event.value.price)}`);
+        event.value.hasVoucher = false;
+      }
+    };
 
-        const fetchEvent = async () => {
-            try {
-                event.value = await getEvent(route.params.id);
-            } catch (err) {
-                console.error("Error loading event:", err);
-            }
-        };
+    const fetchEvent = async () => {
+      try {
+        event.value = await getEvent(route.params.id);
+      } catch (err) {
+        console.error("Error loading event:", err);
+      }
+    };
 
-        onMounted(fetchEvent);
+    const setupWebSocketListener = () => {
+      const eventUpdateUnsub = websocketService.on('eventUpdate', (updatedEvent) => {
+        if (updatedEvent.id.toString() === route.params.id.toString()) {
 
-        return {
-            event,
-            error,
-            loading,
-            formatDate,
-            formatPrice,
-            useVoucher
-        };
-    }
+          event.value = updatedEvent;
+        }
+
+      });
+
+      const notificationUnsub = websocketService.on('userNotification', (notification) => {
+        console.log('Received notification:', notification);
+      });
+
+      return [eventUpdateUnsub, notificationUnsub];
+    };
+
+    onMounted(async () => {
+      await fetchEvent();
+
+      try {
+        await websocketService.connect();
+        const unsubCallbacks = setupWebSocketListener();
+
+        onBeforeUnmount(() => {
+          unsubCallbacks.forEach(cleanup => cleanup());
+          websocketService.disconnect();
+        });
+      } catch (error) {
+        console.error('Failed to connect to WebSocket:', error);
+      }
+    });
+
+    return {
+      event,
+      error,
+      loading,
+      formatDate,
+      formatPrice,
+      useVoucher
+    };
+  }
 };
 </script>

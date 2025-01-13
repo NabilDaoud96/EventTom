@@ -7,5 +7,4 @@ public interface ITicketValidator {
     void validatePurchaseRequest(Event event, PurchaseTicketDTO dto);
     void validateTicketAvailability(Event event, int requestedAmount);
     void validateEventDate(Event event);
-    void validatePurchaseAmount(int amount);
 }

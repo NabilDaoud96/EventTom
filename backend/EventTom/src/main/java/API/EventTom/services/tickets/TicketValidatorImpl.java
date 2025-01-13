@@ -21,7 +21,6 @@ public class TicketValidatorImpl implements ITicketValidator {
     public void validatePurchaseRequest(Event event, PurchaseTicketDTO dto) {
         validateTicketAvailability(event, dto.amount());
         validateEventDate(event);
-        validatePurchaseAmount(dto.amount());
     }
 
     @Override
@@ -38,18 +37,6 @@ public class TicketValidatorImpl implements ITicketValidator {
     public void validateEventDate(Event event) {
         if (event.getDateOfEvent().isBefore(LocalDateTime.now())) {
             throw new EventDatePassedException("Cannot purchase tickets for past events");
-        }
-    }
-
-    @Override
-    public void validatePurchaseAmount(int amount) {
-        if (amount <= 0) {
-            throw new InvalidPurchaseAmountException("Purchase amount must be greater than zero");
-        }
-        if (amount > MAX_TICKETS_PER_PURCHASE) {
-            throw new InvalidPurchaseAmountException(
-                    String.format("Cannot purchase more than %d tickets at once", MAX_TICKETS_PER_PURCHASE)
-            );
         }
     }
 }
