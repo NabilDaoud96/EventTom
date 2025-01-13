@@ -21,6 +21,7 @@ import EventCreatorDashboard from "@/views/event_creator/dashboard/Index.vue";
 
 // Admin Views
 import RegisterEmployee from "@/views/admin/employee/Create.vue"
+import EventManagerEvents from "../views/admin/event/Index.vue";
 
 // Auth Views
 import Login from "../views/auth/Login.vue";
@@ -110,6 +111,11 @@ const routes = [
                 name: 'RegisterEmployee',
                 meta: { requiresAuth: true, roles: ['ROLE_ADMINISTRATOR'] },
                 component: RegisterEmployee,
+            },
+            {
+                path: "/admin/events",
+                meta: { requiresAuth: true, roles: ['ROLE_ADMINISTRATOR'] },
+                component: EventManagerEvents,
             },
         ],
     },
