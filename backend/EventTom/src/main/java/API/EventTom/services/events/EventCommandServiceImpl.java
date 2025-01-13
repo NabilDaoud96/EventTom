@@ -37,7 +37,6 @@ public class EventCommandServiceImpl implements IEventCommandService {
                 .orElseThrow(() -> new ResourceNotFoundException("Creator not found"));
 
         Event event = new Event();
-        System.out.println(eventCreateDTO.dateOfEvent());
         event.setTitle(eventCreateDTO.title());
         event.setDateOfEvent(eventCreateDTO.dateOfEvent());
         event.setMaxTotalTickets(eventCreateDTO.totalTickets());
@@ -66,7 +65,6 @@ public class EventCommandServiceImpl implements IEventCommandService {
         if (!isAuthorized) {
             throw new AccessDeniedException("User is not authorized to update this event");
         }
-        System.out.println(eventUpdateDTO.basePrice());
         event.setTitle(eventUpdateDTO.title());
         event.setLocation(eventUpdateDTO.location());
         event.setDateOfEvent(eventUpdateDTO.dateOfEvent());

@@ -58,7 +58,6 @@ public class WebsiteNotificationServiceImpl implements IWebsiteNotificationServi
     @Transactional
     @Override
     public void markMultipleAsRead(NotificationAsRead notificationAsReads, Long userId) {
-        System.out.println(notificationAsReads.notificationIds());
         List<Notification> notifications = notificationRepository.findAllById(notificationAsReads.notificationIds());
 
         for (Notification notification : notifications) {
