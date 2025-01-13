@@ -58,12 +58,12 @@ export default {
     BasePagination
   },
   setup() {
-    const { loading, error, getUserNotifications, markAsRead } = useNotifications();
+    const { loading, error, getUserNotifications, markMultipleAsRead  } = useNotifications();
     return {
       loading,
       error,
       getUserNotifications,
-      markAsRead
+      markMultipleAsRead
     };
   },
   data() {
@@ -94,11 +94,13 @@ export default {
         this.notifications = response.content;
         this.totalPages = response.totalPages;
         this.currentPage = response.number;
-      }
 
-      for (const notification of this.notifications) {
-        if (!notification.isRead) {
-          await this.markAsRead(notification.id);
+        const unreadNotificationIds = this.notifications
+            .filter(notification => !notification.isRead)
+            .map(notification => notification.id);
+        if (unreadNotificationIds.length > 0) {
+          console.log(unreadNotificationIds)
+          await this.markMultipleAsRead(unreadNotificationIds);
         }
       }
     },

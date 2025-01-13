@@ -56,6 +56,22 @@ export function useNotifications() {
             loading.value = false;
         }
     };
+    const markMultipleAsRead = async (notificationIds) => {
+        try {
+            loading.value = true;
+            error.value = '';
+            const response = await api.put('notifications/mark-multiple-read', {
+                notificationIds: notificationIds
+            });
+            return response.data;
+        } catch (err) {
+            if (err.response) {
+                error.value = err.response.data.message;
+            }
+        } finally {
+            loading.value = false;
+        }
+    };
     return {
         loading,
         error,
@@ -64,6 +80,7 @@ export function useNotifications() {
         totalElements,
         currentPage,
         getUserNotifications,
-        markAsRead
+        markAsRead,
+        markMultipleAsRead
     };
 }

@@ -40,7 +40,7 @@ public class EventInitializationConfig {
                     500,
                     50,
                     new BigDecimal("199.99"),
-                    Arrays.asList(2L, 3L)  // Example manager IDs
+                    Arrays.asList(2L, 3L)
             );
 
             createSampleEvent(
@@ -50,7 +50,7 @@ public class EventInitializationConfig {
                     300,
                     30,
                     new BigDecimal("79.99"),
-                    Arrays.asList(1L, 3L)  // Example manager IDs
+                    Arrays.asList(1L, 3L)
             );
         };
     }

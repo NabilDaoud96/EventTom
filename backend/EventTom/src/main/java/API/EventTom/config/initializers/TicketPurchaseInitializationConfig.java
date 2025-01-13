@@ -70,7 +70,7 @@ public class TicketPurchaseInitializationConfig {
         try {
             var vouchers = voucherRepository.findAll();
             if (!vouchers.isEmpty()) {
-                for (int i = 0; i < 3; i++) { // Create 3 purchases with vouchers
+                for (int i = 0; i < 3; i++) {
                     Customer randomCustomer = customers.get(random.nextInt(customers.size()));
                     Event randomEvent = events.get(random.nextInt(events.size()));
                     String randomVoucherCode = vouchers.get(random.nextInt(vouchers.size())).getCode();

@@ -57,7 +57,7 @@ export function useVoucher() {
 
         } catch (err) {
             if (err.response) {
-                error.value = err.response.data.error
+                error.value = err.response.data.message
             }
         } finally {
             loading.value = false;

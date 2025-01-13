@@ -76,7 +76,7 @@ public class TokenStorageServiceImpl implements ITokenStorageService {
     }
 
     @Override
-    @Scheduled(cron = "0 0 18 * * ?", zone = "Europe/Berlin") // Runs daily at 6 PM Berlin time
+    @Scheduled(cron = "0 0 18 * * ?", zone = "Europe/Berlin")
     @Transactional
     public void cleanupExpiredTokens() {
         try {

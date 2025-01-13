@@ -34,7 +34,7 @@ public class JwtUtils {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        return generateTokenFromEmailAndRoles(email, roleNames); // Changed method name
+        return generateTokenFromEmailAndRoles(email, roleNames);
     }
 
     public String getEmailFromJwtToken(String token) {

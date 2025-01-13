@@ -40,7 +40,13 @@
 
           <div class="flex items-center">
             <span
-                v-if="event.availableTickets > 0"
+                v-if="isEventPassed(event.dateOfEvent)"
+                class="px-3 py-1 rounded-full text-gray-500 font-semibold"
+            >
+              Bereits stattgefunden
+            </span>
+            <span
+                v-else-if="event.availableTickets > 0"
                 class="px-3 py-1 rounded-full text-emerald-500 font-semibold"
             >
               {{ event.availableTickets }} Tickets verfügbar
@@ -64,13 +70,19 @@
           </router-link>
 
           <router-link
-              v-if="event.availableTickets > 0"
+              v-if="!isEventPassed(event.dateOfEvent) && event.availableTickets > 0"
               :to="{ name: 'PurchaseTicket', params: { id: event.id } }"
               class="text-white bg-green-500 hover:bg-green-600 px-4 py-2 rounded text-sm inline-flex items-center"
           >
             <i class="fas fa-ticket-alt mr-2"></i>
             Kaufen
           </router-link>
+          <span
+              v-else-if="isEventPassed(event.dateOfEvent)"
+              class="text-gray-500 text-sm font-medium py-2"
+          >
+            Bereits stattgefunden
+          </span>
           <span
               v-else
               class="text-red-500 text-sm font-medium py-2"
@@ -92,99 +104,105 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue';
+import {ref, onMounted, onUnmounted} from 'vue';
 import api from "@/utils/axios-auth";
 import BasePagination from '@/components/BasePagination.vue';
 import SearchInput from '@/components/SearchComponent.vue';
 import websocketService from '@/utils/websocket';
-import { formatDate, formatPrice } from "@/utils/formatter";
+import {formatDate, formatPrice} from "@/utils/formatter";
 import {useEvent} from "@/composables/useEvent";
 
 export default {
-    components: {
-        BasePagination,
-        SearchInput
-    },
+  components: {
+    BasePagination,
+    SearchInput
+  },
 
-    setup() {
-        const events = ref([]);
-        const currentPage = ref(1);
-        const rowsPerPage = ref(12);
-        const totalElements = ref(0);
-        const totalPages = ref(0);
-        const searchQuery = ref('');
-        let unsubscribeNewEvent = null;
-        let unsubscribeEventUpdate = null;
-        const {error, loading, getAllEvents} = useEvent()
-        const handleNewEvent = (newEvent) => {
-            if (!searchQuery.value ||
-                newEvent.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                newEvent.location.toLowerCase().includes(searchQuery.value.toLowerCase())) {
-                events.value.unshift(newEvent);
-            }
-        };
+  setup() {
+    const events = ref([]);
+    const currentPage = ref(1);
+    const rowsPerPage = ref(12);
+    const totalElements = ref(0);
+    const totalPages = ref(0);
+    const searchQuery = ref('');
+    let unsubscribeNewEvent = null;
+    let unsubscribeEventUpdate = null;
+    const {error, loading, getAllEvents} = useEvent();
 
-        const handleEventUpdate = (updatedEvent) => {
-            const index = events.value.findIndex(event => event.id === updatedEvent.id);
-            if (index !== -1) {
-                events.value[index] = updatedEvent;
-            }
-        };
+    const isEventPassed = (dateOfEvent) => {
+      return new Date(dateOfEvent) < new Date();
+    };
 
-        const fetchEvents = async () => {
-            try {
-                const response = await getAllEvents({
-                  page: currentPage.value - 1,
-                  size: rowsPerPage.value,
-                  sortBy: 'dateOfEvent',
-                  search: searchQuery.value
-                })
+    const handleNewEvent = (newEvent) => {
+      if (!searchQuery.value ||
+          newEvent.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+          newEvent.location.toLowerCase().includes(searchQuery.value.toLowerCase())) {
+        events.value.unshift(newEvent);
+      }
+    };
 
-                events.value = response.content;
-                totalElements.value = response.totalElements;
-                totalPages.value = response.totalPages;
-            } catch (error) {
-                console.error("Error loading data:", error.response?.data?.error);
-            }
-        };
+    const handleEventUpdate = (updatedEvent) => {
+      const index = events.value.findIndex(event => event.id === updatedEvent.id);
+      if (index !== -1) {
+        events.value[index] = updatedEvent;
+      }
+    };
 
-        const handlePageChange = (page) => {
-            currentPage.value = page + 1;
-            fetchEvents();
-        };
-
-        const handleSearch = (value) => {
-            searchQuery.value = value;
-            currentPage.value = 1;
-            fetchEvents();
-        };
-
-        onMounted(async () => {
-            try {
-                await websocketService.connect();
-                unsubscribeNewEvent = websocketService.on('newEvent', handleNewEvent);
-                unsubscribeEventUpdate = websocketService.on('eventUpdate', handleEventUpdate);
-                await fetchEvents();
-            } catch (error) {
-                console.error('Failed to setup WebSocket connection:', error);
-            }
+    const fetchEvents = async () => {
+      try {
+        const response = await getAllEvents({
+          page: currentPage.value - 1,
+          size: rowsPerPage.value,
+          sortBy: 'dateOfEvent',
+          search: searchQuery.value
         });
 
-        onUnmounted(() => {
-            if (unsubscribeNewEvent) unsubscribeNewEvent();
-            if (unsubscribeEventUpdate) unsubscribeEventUpdate();
-        });
+        events.value = response.content;
+        totalElements.value = response.totalElements;
+        totalPages.value = response.totalPages;
+      } catch (error) {
+        console.error("Error loading data:", error.response?.data?.error);
+      }
+    };
 
-        return {
-            events,
-            currentPage,
-            totalPages,
-            searchQuery,
-            handlePageChange,
-            handleSearch,
-            formatDate,
-            formatPrice
-        };
-    }
+    const handlePageChange = (page) => {
+      currentPage.value = page + 1;
+      fetchEvents();
+    };
+
+    const handleSearch = (value) => {
+      searchQuery.value = value;
+      currentPage.value = 1;
+      fetchEvents();
+    };
+
+    onMounted(async () => {
+      try {
+        await websocketService.connect();
+        unsubscribeNewEvent = websocketService.on('newEvent', handleNewEvent);
+        unsubscribeEventUpdate = websocketService.on('eventUpdate', handleEventUpdate);
+        await fetchEvents();
+      } catch (error) {
+        console.error('Failed to setup WebSocket connection:', error);
+      }
+    });
+
+    onUnmounted(() => {
+      if (unsubscribeNewEvent) unsubscribeNewEvent();
+      if (unsubscribeEventUpdate) unsubscribeEventUpdate();
+    });
+
+    return {
+      events,
+      currentPage,
+      totalPages,
+      searchQuery,
+      handlePageChange,
+      handleSearch,
+      formatDate,
+      formatPrice,
+      isEventPassed
+    };
+  }
 };
 </script>

@@ -74,7 +74,6 @@ public class EventCommandServiceImpl implements IEventCommandService {
         event.setThresholdValue(eventUpdateDTO.thresholdValue());
         event.setBasePrice(eventUpdateDTO.basePrice());
 
-        // Update managers if provided
         if (eventUpdateDTO.managerIds() != null && !eventUpdateDTO.managerIds().isEmpty()) {
             List<Employee> newManagers = new ArrayList<>();
             for (Long managerId : eventUpdateDTO.managerIds()) {

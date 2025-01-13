@@ -350,7 +350,7 @@ export default {
           voucherError.value = '';
         }
       } catch (err) {
-        voucherError.value = err.response?.data?.error || 'Invalid voucher code';
+        voucherError.value = err.response?.data?.message || 'Invalid voucher code';
       }
     }
 

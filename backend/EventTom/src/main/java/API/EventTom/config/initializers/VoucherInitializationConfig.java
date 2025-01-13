@@ -24,7 +24,6 @@ public class VoucherInitializationConfig {
     @Order(3)
     public CommandLineRunner initializeVouchers() {
         return args -> {
-            // Create different types of vouchers
             createPromotionalVouchers();
             createLoyaltyVouchers();
             createSpecialEventVouchers();
@@ -34,7 +33,6 @@ public class VoucherInitializationConfig {
 
     private void createPromotionalVouchers() {
         try {
-            // Create 5 promotional vouchers worth $20 each, valid for 30 days
             BulkVoucherGenerationRequestDTO requestDTO = new BulkVoucherGenerationRequestDTO();
             requestDTO.setAmount(new BigDecimal("20.00"));
             requestDTO.setValidityDays(30);
@@ -50,7 +48,6 @@ public class VoucherInitializationConfig {
 
     private void createLoyaltyVouchers() {
         try {
-            // Create 3 loyalty vouchers worth $50 each, valid for 60 days
             BulkVoucherGenerationRequestDTO requestDTO = new BulkVoucherGenerationRequestDTO();
             requestDTO.setAmount(new BigDecimal("50.00"));
             requestDTO.setValidityDays(60);
@@ -66,7 +63,6 @@ public class VoucherInitializationConfig {
 
     private void createSpecialEventVouchers() {
         try {
-            // Create 10 special event vouchers worth $15 each, valid for 14 days
             BulkVoucherGenerationRequestDTO requestDTO = new BulkVoucherGenerationRequestDTO();
             requestDTO.setAmount(new BigDecimal("15.00"));
             requestDTO.setValidityDays(14);
@@ -82,7 +78,6 @@ public class VoucherInitializationConfig {
 
     private void createBulkDiscountVouchers() {
         try {
-            // Create different tiers of bulk discount vouchers
             BulkVoucherGenerationRequestDTO smallBulkDTO = new BulkVoucherGenerationRequestDTO();
             smallBulkDTO.setAmount(new BigDecimal("25.00"));
             smallBulkDTO.setValidityDays(45);

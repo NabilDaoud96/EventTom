@@ -2,6 +2,7 @@ package API.EventTom.controller;
 
 import API.EventTom.config.security.AuthenticatedUserId;
 import API.EventTom.dto.NotificationDTO;
+import API.EventTom.dto.request.NotificationAsRead;
 import API.EventTom.models.Notification;
 import API.EventTom.services.notifications.INotificationQueryService;
 import API.EventTom.services.notifications.IWebsiteNotificationService;
@@ -47,9 +48,15 @@ public class NotificationController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/mark-all-read")
+    @PutMapping("/mark-all-read")
     public ResponseEntity<Void> markAllAsRead(@AuthenticatedUserId Long userId) {
         notificationService.markAllAsRead(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/mark-multiple-read")
+    public ResponseEntity<Void> markMultipleAsRead(@RequestBody NotificationAsRead notification, @AuthenticatedUserId Long userId) {
+        notificationService.markMultipleAsRead(notification, userId);
         return ResponseEntity.ok().build();
     }
 }

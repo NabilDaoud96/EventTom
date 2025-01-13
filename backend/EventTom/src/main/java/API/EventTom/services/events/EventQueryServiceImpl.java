@@ -76,7 +76,7 @@ public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Lon
             throw new AccessDeniedException("User does not have permission to access this event");
         }
 
-        return standardDTOMapper.mapEventToEventUpdateDTO(event);  // Use the new mapper method
+        return standardDTOMapper.mapEventToEventUpdateDTO(event);
     }
 
     @Override
