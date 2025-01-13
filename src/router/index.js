@@ -15,7 +15,7 @@ import Notifications from "@/views/kunde/notification/Index.vue";
 import EventCreatorEvents from "../views/event_creator/event/Index.vue";
 import EventCreatorCreateEvent from "../views/event_creator/create_event/Create.vue"
 import EventCreatorDashboard from "@/views/event_creator/dashboard/Index.vue";
-
+import EventCreatorProfile from "@/views/event_creator/profile/Edit.vue"
 // Admin Views
 import RegisterEmployee from "@/views/admin/employee/Create.vue"
 import EventManagerEvents from "../views/admin/event/Index.vue";
@@ -61,6 +61,10 @@ const routes = [
             {
                 path: "/profile",
                 component: Profile,
+            },
+            {
+                path: "event-creator/profile",
+                component: EventCreatorProfile,
             },
             {
                 path: "/notifications",

@@ -1,5 +1,7 @@
 package API.EventTom.controller.users;
 
+import API.EventTom.config.security.AuthenticatedUserId;
+import API.EventTom.dto.CustomerDTO;
 import API.EventTom.dto.EmployeeDTO;
 import API.EventTom.services.users.interfaces.IEmployeeQueryService;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +35,11 @@ public class EmployeeController{
         return ResponseEntity.ok(employeeDTO);
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<EmployeeDTO> getLoggedInEmployeeById(@AuthenticatedUserId Long userId) {
+        EmployeeDTO customerDTO = employeeService.getById(userId);
+        return ResponseEntity.ok(customerDTO);
+    }
 
     @GetMapping("/event-managers")
     @PreAuthorize("hasAnyRole('ADMINISTRATOR', 'EVENT_MANAGER', 'EVENT_CREATOR')")

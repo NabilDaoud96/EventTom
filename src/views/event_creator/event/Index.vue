@@ -1,30 +1,26 @@
 <template>
   <div class="p-6 w-full">
-    <!-- Search Component -->
     <div class="mb-6 bg-white p-4 rounded-lg shadow">
       <div class="max-w-md">
-        <p class="text-xl mb-2 font-bold text-gray-800">Search Events</p>
+        <p class="text-xl mb-2 font-bold text-gray-800">Veranstaltungen suchen</p>
         <SearchInput
             v-model="searchQuery"
-            placeholder="Search by title or location"
+            placeholder="Nach Titel oder Ort suchen"
             @search="handleSearch"
         />
       </div>
     </div>
 
-    <!-- Grid of Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div
           v-for="event in events"
           :key="event.id"
           class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
       >
-        <!-- Card Header -->
         <div class="p-4 border-b border-gray-200 bg-gray-50">
           <h3 class="text-xl font-semibold text-gray-900 truncate">{{ event.title }}</h3>
         </div>
 
-        <!-- Card Content -->
         <div class="p-4 space-y-3">
           <div class="flex items-center text-gray-600">
             <i class="fas fa-calendar-alt mr-2"></i>
@@ -42,18 +38,17 @@
               <span>{{ formatPrice(event.price) }}</span>
             </div>
             <div class="flex items-center text-gray-500 text-sm ml-5">
-              <span>Base price: {{ formatPrice(event.basePrice) }}</span>
+              <span>Grundpreis: {{ formatPrice(event.basePrice) }}</span>
             </div>
           </div>
 
           <div class="space-y-2">
-            <!-- Available Tickets -->
             <div class="flex items-center">
               <span
                   v-if="event.availableTickets > 0"
-                  class="px-3 py-1 rounded-full text-emerald-500 font-semibold"
+                  class="rounded-full text-emerald-500 font-semibold"
               >
-                {{ event.availableTickets }} tickets available
+                {{ event.availableTickets }} Tickets verfügbar
               </span>
               <span
                   v-else
@@ -63,12 +58,11 @@
               </span>
             </div>
 
-            <!-- Threshold Indicator -->
             <div class="flex items-center">
               <div class="w-full">
                 <div class="flex justify-between text-sm mb-1">
-                  <span>Sold: {{ event.soldTickets }}</span>
-                  <span>Threshold: {{ event.thresholdValue }}</span>
+                  <span>Verkauft: {{ event.soldTickets }}</span>
+                  <span>Schwellenwert: {{ event.thresholdValue }}</span>
                 </div>
                 <div
                     class="flex items-center space-x-2"
@@ -85,14 +79,13 @@
           </div>
         </div>
 
-        <!-- Card Actions -->
         <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between">
           <router-link
               :to="{ name: 'UpdateEventForm', params: { id: event.id } }"
               class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center"
           >
             <i class="fas fa-edit mr-2"></i>
-            Update
+            Bearbeiten
           </router-link>
 
           <button
@@ -100,23 +93,20 @@
               class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm inline-flex items-center"
           >
             <i class="fas fa-trash mr-2"></i>
-            Delete
+            Löschen
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Loading State -->
     <div v-if="loading" class="flex justify-center items-center mt-4">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
     </div>
 
-    <!-- Error State -->
     <div v-if="error" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
       {{ error }}
     </div>
 
-    <!-- Pagination -->
     <div class="mt-6">
       <BasePagination
           :current-page="currentPage - 1"
@@ -166,12 +156,12 @@ export default {
     formatDate,
     getThresholdClass(event) {
       const ratio = event.soldTickets / event.thresholdValue;
-      if (ratio >= 1.1) { // More than 10% above threshold
+      if (ratio >= 1.1) {
         return 'text-emerald-500';
-      } else if (ratio <= 0.9) { // More than 10% below threshold
+      } else if (ratio <= 0.9) {
         return 'text-red-500';
       }
-      return ''; // Within 10% of threshold
+      return '';
     },
     getThresholdIcon(event) {
       const ratio = event.soldTickets / event.thresholdValue;
@@ -187,11 +177,11 @@ export default {
       const percentage = Math.abs((ratio - 1) * 100).toFixed(1);
 
       if (ratio >= 1.1) {
-        return `${percentage}% above threshold`;
+        return `${percentage}% über Schwellenwert`;
       } else if (ratio <= 0.9) {
-        return `${percentage}% below threshold`;
+        return `${percentage}% unter Schwellenwert`;
       }
-      return 'Near threshold';
+      return 'Nahe am Schwellenwert';
     },
     handlePageChange(page) {
       this.currentPage = page + 1;

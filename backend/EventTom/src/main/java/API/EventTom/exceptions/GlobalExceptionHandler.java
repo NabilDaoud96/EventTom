@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ErrorMessageDTO> handleBadCredentialsException(BadCredentialsException e) {
-        return buildResponseEntity("Invalid username or password", HttpStatus.UNAUTHORIZED, e);
+        return buildResponseEntity("Invalid username or password", HttpStatus.BAD_REQUEST, e);
     }
 
     @ExceptionHandler(AuthenticationException.class)

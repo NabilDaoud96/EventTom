@@ -160,8 +160,8 @@
                                             required
                                             class="border-0 px-3 py-3 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150 h-32"
                                     >
-                                        <option v-for="manager in eventManagers" :key="manager.id" :value="manager.id">
-                                            {{ manager.firstName }} {{ manager.lastName }} ({{ manager.employeeNumber }})
+                                        <option v-for="manager in eventManagers" :key="manager.user.id" :value="manager.user.id">
+                                          {{ manager.user.firstName }} {{ manager.user.lastName }} ({{ manager.employeeNumber }})
                                         </option>
                                     </select>
                                     <p class="text-xs text-blueGray-400 mt-1">Hold Ctrl/Cmd to select multiple managers</p>

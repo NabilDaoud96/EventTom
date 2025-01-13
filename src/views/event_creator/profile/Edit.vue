@@ -112,12 +112,12 @@ import image from "@/assets/img/team-1-800x800.jpg"; // Default Profile Image
 
 export default {
   setup() {
-    const { editUser, getUser, loading, error } = useUser();
+    const { editUser, getCurrentEmployee, loading, error } = useUser();
     return {
       loading,
       error,
       editUser,
-      getUser
+      getCurrentEmployee
     };
   },
   data() {
@@ -135,7 +135,7 @@ export default {
     async loadUserData() {
       try {
         // Get user data
-        const userData = await this.getUser();
+        const userData = await this.getCurrentEmployee();
         if (userData) {
           this.profile.firstName = userData.user.firstName || '';
           this.profile.lastName = userData.user.lastName || '';

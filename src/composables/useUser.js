@@ -6,11 +6,11 @@ export function useUser() {
     const loading = ref(false);
     const error = ref('');
 
-    const getUser = async () => {
+    const getCurrentEmployee = async () => {
         try {
             loading.value = true;
             error.value = '';
-            const response = await api.get('user/query/user');
+            const response = await api.get('employees/user');
             return response.data;
 
         } catch (err) {
@@ -21,6 +21,7 @@ export function useUser() {
             loading.value = false;
         }
     };
+
     const getCurrentCustomer = async () => {
         try {
             loading.value = true;
@@ -54,7 +55,7 @@ export function useUser() {
     return {
         loading,
         error,
-        getUser,
+        getCurrentEmployee,
         getCurrentCustomer,
         editUser
     }
