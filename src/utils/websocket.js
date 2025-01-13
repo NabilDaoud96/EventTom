@@ -15,20 +15,15 @@ class WebSocketService {
         const socket = new SockJS('http://localhost:8080/ws');
         this.stompClient = Stomp.over(socket);
 
-        this.stompClient.debug = (str) => {
-            console.log('STOMP Debug:', str);
-        };
 
         return new Promise((resolve, reject) => {
             this.stompClient.connect({},
                 frame => {
-                    console.log('Connected to WebSocket:', frame);
                     this.isConnected = true;
                     this.setupSubscriptions();
                     resolve(frame);
                 },
                 error => {
-                    console.error('WebSocket connection error:', error);
                     this.isConnected = false;
                     reject(error);
                 }
@@ -39,7 +34,6 @@ class WebSocketService {
     disconnect() {
         if (this.stompClient && this.isConnected) {
             this.stompClient.disconnect(() => {
-                console.log('Disconnected from WebSocket');
                 this.isConnected = false;
             });
         }
@@ -49,7 +43,6 @@ class WebSocketService {
         try {
             // First set up user notifications
             this.subscribeToUserNotifications();
-            console.log('User notifications subscription set up');
 
             // Then set up other subscriptions
             this.subscribe('/topic/events/new', message => {
@@ -89,11 +82,9 @@ class WebSocketService {
         if (!this.stompClient || !this.isConnected) {
             throw new Error('WebSocket is not connected');
         }
-        console.log('Subscribing to destination:', destination);
 
         try {
             const subscription = this.stompClient.subscribe(destination, callback);
-            console.log('Successfully subscribed to:', destination);
             return subscription;
         } catch (error) {
             console.error('Error subscribing to:', destination, error);

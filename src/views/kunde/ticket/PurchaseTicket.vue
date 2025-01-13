@@ -6,7 +6,12 @@
         <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-indigo-600"></div>
       </div>
 
+      <!-- Error State -->
+
+
       <div class="bg-white shadow-xl rounded-md overflow-hidden">
+
+
         <div class="px-6 py-8 space-y-8">
           <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
             <h3 class="text-xl font-semibold text-gray-900 mb-6">Event Details</h3>
@@ -151,19 +156,15 @@
               </div>
             </div>
           </div>
-
-          <!-- Success Message -->
           <div v-if="showSuccess" class="mt-4 mb-2 p-4 bg-emerald-200 border border-emerald-400 text-green-700 rounded mx-4">
             <div class="flex items-center">
               <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
               </svg>
-              <p class="font-medium">Success! Tickets have been purchased successfully.</p>
+              <p class="font-medium">Erfolg! Tickets wurde erfolgreich gekauft.</p>
             </div>
           </div>
-
-          <!-- Error States -->
-          <div v-if="error" class="bg-red-50 border-l-4 border-red-400 shadow-lg rounded-lg p-6 mt-4">
+          <div v-else-if="error" class="bg-red-50 border-l-4 border-red-400 shadow-lg rounded-lg p-6 mt-4">
             <div class="flex items-center">
               <div class="flex-shrink-0">
                 <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
@@ -176,7 +177,6 @@
               </div>
             </div>
           </div>
-
           <div v-if="purchaseError" class="mt-6">
             <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-md">
               <div class="flex">
@@ -187,7 +187,6 @@
               </div>
             </div>
           </div>
-
           <!-- Actions -->
           <div class="flex justify-end space-x-4 pt-6">
             <button
@@ -208,6 +207,8 @@
               <span v-else>Purchase Tickets</span>
             </button>
           </div>
+
+
         </div>
       </div>
     </div>
@@ -223,38 +224,34 @@ import { createRouter as $router, useRoute } from 'vue-router'
 import { useTickets } from "@/composables/useTickets"
 import router from "@/router"
 import websocketService from '@/utils/websocket'
-import { formatPrice, preventNonNumeric } from "@/utils/formatter"
-import SockJS from 'sockjs-client'
-import { Stomp } from '@stomp/stompjs'
+import {formatPrice, preventNonNumeric} from "@/utils/formatter";
 
 export default {
   name: 'PurchaseTicket',
 
   setup() {
-    // Router and route
     const route = useRoute()
-    const eventId = route.params.id
-
-    // State refs
     const event = ref(null)
     const customer = ref(null)
     const vouchers = ref([])
     const newVoucherCode = ref('')
     const purchaseLoading = ref(false)
     const purchaseError = ref('')
-    const showSuccess = ref(false)
-    const stompClient = ref(null)
-    const isConnected = ref(false)
+    const showSuccess = ref(false);
 
-    // Composables
-    const {error, loading, getEvent} = useEvent()
-    const {error: customerError, loading: customerLoading, getCurrentCustomer} = useUser()
-    const {error: voucherError, loading: voucherLoading, getUserVoucherAll, validateVoucher} = useVoucher()
-    const {purchaseTicket} = useTickets()
+    const { error, loading, getEvent } = useEvent()
+    const { error: customerError, loading: customerLoading, getCurrentCustomer } = useUser()
+    const { error: voucherError, loading: voucherLoading, getUserVoucherAll, validateVoucher } = useVoucher()
+    const { purchaseTicket } = useTickets()
 
-    // WebSocket handling
+    const eventId = route.params.id
+
+    let unsubscribeFromEventUpdates = null
+
     const handleEventUpdate = (updatedEvent) => {
+
       if (updatedEvent.id.toString() === eventId) {
+        console.log(event)
         event.value = updatedEvent
       }
     }
@@ -265,56 +262,47 @@ export default {
           await websocketService.connect()
         }
 
-        // Subscribe to event updates
-        const unsubscribe = websocketService.on('eventUpdate', handleEventUpdate)
+        unsubscribeFromEventUpdates = websocketService.on('eventUpdate', handleEventUpdate)
 
-        return unsubscribe
       } catch (error) {
         console.error('Failed to setup WebSocket connection:', error)
-        throw error
       }
     }
 
-    let unsubscribeFromEventUpdates = null
-
-    // Component Lifecycle
     onMounted(async () => {
       if (route.params.id) {
         try {
-          // Fetch initial event data
           event.value = await getEvent(eventId)
-
-          // Setup WebSocket connection
-          unsubscribeFromEventUpdates = await setupWebSocket()
-
-          // Fetch other data
-          const [vouchersData, customerData] = await Promise.all([
-            getUserVoucherAll(),
-            getCurrentCustomer()
-          ])
-
-          vouchers.value = vouchersData
-          customer.value = customerData
+          await setupWebSocket()
         } catch (err) {
-          console.error('Error during component mount:', err)
+          console.error('Error fetching event:', err)
+        }
+        try {
+          vouchers.value = await getUserVoucherAll()
+        } catch (err) {
+          console.error('Error fetching vouchers:', err)
+        }
+        try {
+          customer.value = await getCurrentCustomer()
+        } catch (err) {
+          console.error('Error fetching Customer:', err)
         }
       }
     })
 
-    // Cleanup WebSocket subscription
+    // Cleanup WebSocket subscription when component is destroyed
     onBeforeUnmount(() => {
       if (unsubscribeFromEventUpdates) {
         unsubscribeFromEventUpdates()
       }
     })
 
-    // Form data
+    // Rest of the component code remains the same...
     const formData = ref({
       amount: 0,
       voucherCodes: [],
     })
 
-    // Computed properties
     const calculateSubtotal = computed(() => {
       if (!event.value?.price || !formData.value.amount) return 0
       return event.value.price * formData.value.amount
@@ -337,7 +325,6 @@ export default {
       return vouchers.value.filter(voucher => !voucher.used)
     })
 
-    // Methods
     const addVoucherCode = async () => {
       if (!newVoucherCode.value) return;
 
@@ -403,6 +390,7 @@ export default {
             }
           });
         }
+
       } catch (err) {
         purchaseError.value = err.response?.data?.error || 'Failed to complete purchase. Please try again.';
       } finally {
@@ -410,9 +398,7 @@ export default {
       }
     }
 
-    // Return composable state and methods
     return {
-      // State
       error,
       loading,
       customerError,
@@ -424,21 +410,17 @@ export default {
       vouchers,
       formData,
       newVoucherCode,
-      purchaseLoading,
-      purchaseError,
-      showSuccess,
-
-      // Computed
       unusedVouchers,
+      addVoucherCode,
+      removeVoucherCode,
       calculateTotal,
       calculateSubtotal,
       totalVoucherAmount,
-
-      // Methods
-      addVoucherCode,
-      removeVoucherCode,
+      handlePurchase,
+      purchaseLoading,
+      purchaseError,
       getVoucherAmount,
-      handlePurchase
+      showSuccess
     }
   },
 
