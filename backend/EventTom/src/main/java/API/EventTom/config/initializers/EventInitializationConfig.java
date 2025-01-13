@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ public class EventInitializationConfig {
     private final EventCommandServiceImpl eventCommandService;
 
     @Bean
+    @Order(2)
     public CommandLineRunner initializeEvents() {
         return args -> {
             createSampleEvent(

@@ -24,14 +24,14 @@
         <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg shadow-md">
           <div class="flex">
             <div class="ml-3">
-              <h3 class="text-sm font-medium text-red-800">Purchase failed</h3>
-              <div class="mt-2 text-sm text-red-700">{{ purchaseError }}</div>
+              <h3 class="text-sm font-medium text-red-500">Purchase failed</h3>
+              <div class="mt-2 text-sm text-red-500">{{ purchaseError }}</div>
             </div>
           </div>
         </div>
       </div>
       <!-- Main Content -->
-      <div v-else class="bg-white shadow-xl rounded-md overflow-hidden">
+      <div class="bg-white shadow-xl rounded-md overflow-hidden">
 
 
         <div class="px-6 py-8 space-y-8">
@@ -48,7 +48,7 @@
               </div>
               <div class="space-y-2">
                 <label class="block text-sm font-medium text-gray-500">Price</label>
-                <p class="text-lg font-medium text-indigo-600">{{ event?.price }} $</p>
+                <p class="text-lg font-medium text-indigo-600">{{ formatPrice(event?.price) }}</p>
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@
                       class="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                   />
                   <label class="ml-4 flex items-center justify-between flex-grow">
-                    <span class="text-sm font-medium text-gray-900">{{ voucher.voucherCode }}</span>
+                    <span class="text-sm ml-2 font-medium text-gray-900">{{ voucher.voucherCode }}</span>
                     <span class="text-sm font-semibold text-indigo-600">{{ voucher.amount }}$</span>
                   </label>
                 </div>
@@ -137,7 +137,7 @@
                      class="flex justify-between items-center p-3 bg-indigo-50 rounded-lg border border-indigo-100">
                   <div class="flex items-center space-x-3">
                     <span class="text-sm font-medium text-indigo-900">{{ code }}</span>
-                    <span class="text-sm font-semibold text-indigo-600">{{ getVoucherAmount(code) }}$</span>
+                    <span class="text-sm font-semibold text-indigo-600 ml-2">{{ getVoucherAmount(code) }}$</span>
                   </div>
                   <button
                       @click="removeVoucherCode(code)"
@@ -216,7 +216,7 @@ import { createRouter as $router, useRoute } from 'vue-router'
 import { useTickets } from "@/composables/useTickets"
 import router from "@/router"
 import websocketService from '@/utils/websocket'
-import {preventNonNumeric} from "@/utils/formatter";
+import {formatPrice, preventNonNumeric} from "@/utils/formatter";
 
 export default {
   name: 'PurchaseTicket',
@@ -411,6 +411,7 @@ export default {
   },
 
   methods: {
+    formatPrice,
     preventNonNumeric,
     router() {
       return router

@@ -31,7 +31,6 @@ public class Ticket {
 
     @Column(name = "final_price")
     @NotNull(message = "Final price is required")
-    @Positive(message = "Final price must be positive")
     private BigDecimal finalPrice;
 
     @Column(name = "base_price")

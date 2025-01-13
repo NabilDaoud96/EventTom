@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import java.util.Arrays;
 
@@ -16,6 +17,7 @@ public class RoleConfig {
 
     private final RoleRepository roleRepository;
     @Bean
+    @Order(0)
     CommandLineRunner initRoles() {
         return args -> {
             if (roleRepository.count() == 0) {

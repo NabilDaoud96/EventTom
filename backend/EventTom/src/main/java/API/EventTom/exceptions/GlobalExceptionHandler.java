@@ -92,5 +92,8 @@ public class GlobalExceptionHandler {
         return buildResponseEntity("An unexpected error occurred", HttpStatus.BAD_REQUEST, e);
     }
 
-
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorMessageDTO> handleGenericException(Exception e) {
+        return buildResponseEntity("An unexpected error occurred", HttpStatus.INTERNAL_SERVER_ERROR, e);
+    }
 }

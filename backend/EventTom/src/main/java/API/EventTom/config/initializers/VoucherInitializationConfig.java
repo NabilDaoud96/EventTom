@@ -21,7 +21,7 @@ public class VoucherInitializationConfig {
     private final IVoucherGenerationService voucherGenerationService;
 
     @Bean
-    @Order(2) // Run after user initialization but before events
+    @Order(3)
     public CommandLineRunner initializeVouchers() {
         return args -> {
             // Create different types of vouchers
