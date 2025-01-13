@@ -382,7 +382,7 @@ export default {
         if (response) {
           showSuccess.value = true;
 
-          await new Promise(resolve => setTimeout(resolve, 3000));
+          await new Promise(resolve => setTimeout(resolve, 1000));
 
           showSuccess.value = false;
           router.push({

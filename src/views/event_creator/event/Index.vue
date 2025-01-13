@@ -1,127 +1,128 @@
 <template>
-  <div class="p-6 w-full">
-    <div class="mb-6 bg-white p-4 rounded-lg shadow">
-      <div class="max-w-md">
-        <p class="text-xl mb-2 font-bold text-gray-800">Veranstaltungen suchen</p>
-        <SearchInput
-            v-model="searchQuery"
-            placeholder="Nach Titel oder Ort suchen"
-            @search="handleSearch"
-        />
-      </div>
-    </div>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div
-          v-for="event in events"
-          :key="event.id"
-          class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-      >
-        <div class="p-4 border-b border-gray-200 bg-gray-50">
-          <h3 class="text-xl font-semibold text-gray-900 truncate">{{ event.title }}</h3>
+    <div class="p-6 w-full">
+        <div class="mb-6 bg-white p-4 rounded-lg shadow">
+            <div class="max-w-md">
+                <p class="text-xl mb-2 font-bold text-gray-800">Veranstaltungen suchen</p>
+                <SearchInput
+                        v-model="searchQuery"
+                        placeholder="Nach Titel oder Ort suchen"
+                        @search="handleSearch"
+                />
+            </div>
         </div>
 
-        <div class="p-4 space-y-3">
-          <div class="flex items-center text-gray-600">
-            <i class="fas fa-calendar-alt mr-2"></i>
-            <span>{{ formatDate(event.dateOfEvent) }}</span>
-          </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div
+                    v-for="event in events"
+                    :key="event.id"
+                    class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+            >
+                <div class="p-4 border-b border-gray-200 bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-900 break-words">{{ event.title }}</h3>
+                </div>
 
-          <div class="flex items-center text-gray-600">
-            <i class="fas fa-map-marker-alt mr-2"></i>
-            <span>{{ event.location }}</span>
-          </div>
+                <div class="p-4 space-y-3">
+                    <div class="flex items-center text-gray-600">
+                        <i class="fas fa-calendar-alt mr-2 flex-shrink-0"></i>
+                        <span class="break-words">{{ formatDate(event.dateOfEvent) }}</span>
+                    </div>
 
-          <div class="space-y-1">
-            <div class="flex items-center font-semibold">
-              <i class="fas fa-tag mr-2"></i>
-              <span>{{ formatPrice(event.price) }}</span>
-            </div>
-            <div class="flex items-center text-gray-500 text-sm ml-5">
-              <span>Grundpreis: {{ formatPrice(event.basePrice) }}</span>
-            </div>
-          </div>
+                    <div class="flex items-center text-gray-600">
+                        <i class="fas fa-map-marker-alt mr-2 flex-shrink-0"></i>
+                        <span class="break-words">{{ event.location }}</span>
+                    </div>
 
-          <div class="space-y-2">
-            <div class="flex items-center">
+                    <div class="space-y-1">
+                        <div class="flex items-center font-semibold">
+                            <i class="fas fa-tag mr-2 flex-shrink-0"></i>
+                            <span class="break-words">{{ formatPrice(event.price) }}</span>
+                        </div>
+                        <div class="flex items-center text-gray-500 text-sm ml-5">
+                            <span class="break-words">Grundpreis: {{ formatPrice(event.basePrice) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex items-center">
               <span
-                  v-if="event.availableTickets > 0"
-                  class="rounded-full text-emerald-500 font-semibold"
+                      v-if="event.availableTickets > 0"
+                      class="rounded-full text-emerald-500 font-semibold break-words"
               >
                 {{ event.availableTickets }} Tickets verfügbar
               </span>
-              <span
-                  v-else
-                  class="rounded-full text-red-500 font-semibold"
-              >
+                            <span
+                                    v-else
+                                    class="rounded-full text-red-500 font-semibold break-words"
+                            >
                 Ausverkauft
               </span>
-            </div>
+                        </div>
 
-            <div class="flex items-center">
-              <div class="w-full">
-                <div class="flex justify-between text-sm mb-1">
-                  <span>Verkauft: {{ event.soldTickets }}</span>
-                  <span>Schwellenwert: {{ event.thresholdValue }}</span>
+                        <div class="flex items-center">
+                            <div class="w-full">
+                                <div class="flex justify-between text-sm mb-1 flex-wrap gap-2">
+                                    <span class="break-words">Verkauft: {{ event.soldTickets }}</span>
+                                    <span class="break-words">Schwellenwert: {{ event.thresholdValue }}</span>
+                                </div>
+                                <div
+                                        class="flex items-center space-x-2"
+                                        :class="getThresholdClass(event)"
+                                >
+                                    <i
+                                            class="fas mr-1 flex-shrink-0"
+                                            :class="getThresholdIcon(event)"
+                                    ></i>
+                                    <span class="break-words">{{ getThresholdMessage(event) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div
-                    class="flex items-center space-x-2"
-                    :class="getThresholdClass(event)"
-                >
-                  <i
-                      class="fas mr-1"
-                      :class="getThresholdIcon(event)"
-                  ></i>
-                  <span>{{ getThresholdMessage(event) }}</span>
+
+                <div class="p-4 bg-gray-50 border-t border-gray-200 flex flex-wrap gap-2 justify-between">
+                    <router-link
+                            :to="{ name: 'UpdateEventForm', params: { id: event.id } }"
+                            class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center"
+                    >
+                        <i class="fas fa-edit mr-2"></i>
+                        Bearbeiten
+                    </router-link>
+                    <router-link
+                            :to="{ name: 'EventCreatorEventShow', params: { id: event.id } }"
+                            class="text-white bg-emerald-400 hover:text-blueGray-300 px-4 py-2 rounded text-sm inline-flex items-center"
+                    >
+                        <i class="fas fa-eye mr-2"></i>
+                        Zeigen
+                    </router-link>
+                    <button
+                            @click="handleDelete(event.id)"
+                            class="text-white mt-1 bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm inline-flex items-center"
+                    >
+                        <i class="fas fa-trash mr-2"></i>
+                        Löschen
+                    </button>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
 
-        <div class="p-4 bg-gray-50 border-t border-gray-200 flex justify-between">
-          <router-link
-              :to="{ name: 'UpdateEventForm', params: { id: event.id } }"
-              class="text-white bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded text-sm inline-flex items-center"
-          >
-            <i class="fas fa-edit mr-2"></i>
-            Bearbeiten
-          </router-link>
-          <router-link
-              :to="{ name: 'EventCreatorEventShow', params: { id: event.id } }"
-              class="text-white bg-emerald-400 hover:text-blueGray-300 px-4 py-2 rounded text-sm inline-flex items-center"
-          >
-            <i class="fas fa-eye mr-2"></i>
-            Zeigen
-          </router-link>
-          <button
-              @click="handleDelete(event.id)"
-              class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-sm inline-flex items-center"
-          >
-            <i class="fas fa-trash mr-2"></i>
-            Löschen
-          </button>
+        <div v-if="loading" class="flex justify-center items-center mt-4">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
         </div>
-      </div>
-    </div>
 
-    <div v-if="loading" class="flex justify-center items-center mt-4">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-    </div>
+        <div v-if="error" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
+            {{ error }}
+        </div>
 
-    <div v-if="error" class="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-md">
-      {{ error }}
+        <div class="mt-6">
+            <BasePagination
+                    :current-page="currentPage - 1"
+                    :total-pages="totalPages"
+                    @page-change="handlePageChange"
+            />
+        </div>
     </div>
-
-    <div class="mt-6">
-      <BasePagination
-          :current-page="currentPage - 1"
-          :total-pages="totalPages"
-          @page-change="handlePageChange"
-      />
-    </div>
-  </div>
 </template>
+
 
 <script>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
