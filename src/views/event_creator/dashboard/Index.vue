@@ -1,9 +1,7 @@
 <template>
     <div class="flex flex-col items-center justify-start min-h-screen mt-6">
-        <!-- Karten-Raster -->
         <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-6 w-full px-4">
-            <!-- Veranstaltung erstellen Karte -->
-            <router-link
+            <router-link v-if="hasEventCreatorRole"
                     to="/event-creator/create"
                     class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
@@ -26,13 +24,11 @@
                         </div>
                     </div>
                     <p class="text-sm text-blueGray-400 mt-4">
-                        <!-- Removed whitespace-nowrap from here -->
                         <span>Klicken Sie hier, um eine neue Veranstaltung zu erstellen</span>
                     </p>
                 </div>
             </router-link>
 
-            <!-- Meine Veranstaltungen Karte -->
             <router-link
                     to="/event-creator/events"
                     class="relative flex flex-col min-w-0 break-words bg-white rounded mb-6 xl:mb-0 shadow-lg hover:shadow-xl transition-shadow duration-300"
@@ -66,4 +62,5 @@
 </template>
 
 <script setup>
+import {hasEventCreatorRole} from "@/utils/roles";
 </script>

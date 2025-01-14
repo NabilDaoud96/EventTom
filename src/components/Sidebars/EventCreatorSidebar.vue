@@ -175,22 +175,11 @@ import NotificationDropdown from "@/components/Dropdowns/NotificationDropdown.vu
 import UserDropdown from "@/components/Dropdowns/UserDropdown.vue";
 import { useAuth } from "@/composables/useAuth";
 import router from "@/router";
-import { computed } from 'vue'
-import { useStore } from 'vuex'
+import {hasEventCreatorRole} from "@/utils/roles";
 
 export default {
   setup() {
     const { logout } = useAuth()
-    const store = useStore()
-
-    const hasEventCreatorRole = computed(() => {
-      const userRoles = store.getters['auth/userRoles']
-      return Array.isArray(userRoles) ?
-          userRoles.includes('ROLE_EVENT_CREATOR') :
-          (userRoles && userRoles.valueOf ?
-              userRoles.valueOf().includes('ROLE_EVENT_CREATOR') :
-              false)
-    })
 
     const handleLogout = async () => {
       try {

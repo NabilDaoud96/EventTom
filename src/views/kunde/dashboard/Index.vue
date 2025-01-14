@@ -46,12 +46,12 @@
           <div v-if="dashboardInfo?.nextEvent" class="text-sm text-blueGray-400 mt-4">
             <p>{{ formatDate(dashboardInfo.nextEvent.dateOfEvent) }}</p>
             <p>{{ dashboardInfo.nextEvent.location }}</p>
-            <router-link to="/events" class="text-red-500 hover:text-red-600">
+            <router-link to="/events" class="text-red-500 hover:text-red-700">
               Alle Veranstaltungen anzeigen →
             </router-link>
           </div>
           <p v-else class="text-sm text-blueGray-400 mt-4">
-            <router-link to="/events" class="text-red-500 hover:text-red-600">
+            <router-link to="/events" class="text-red-500 hover:text-red-700">
               Verfügbare Veranstaltungen durchsuchen →
             </router-link>
           </p>
@@ -77,7 +77,7 @@
           </div>
           <p class="text-sm text-blueGray-400 mt-4">
             {{ dashboardInfo?.voucherDashboard?.count || 0 }} Gutscheine verfügbar
-            <router-link to="/vouchers" class="block text-blue-500 hover:text-blue-600 mt-1">
+            <router-link to="/vouchers" class="block text-blue-500 hover:text-blue-700 mt-1">
               Gutscheine anzeigen →
             </router-link>
           </p>

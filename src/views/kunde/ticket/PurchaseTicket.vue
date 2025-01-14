@@ -150,39 +150,66 @@
                                     </div>
                                 </div>
 
-                                <div v-if="formData.amount > 0" class="bg-white border border-gray-200 rounded-lg p-4">
-                                    <h4 class="text-sm font-medium text-gray-700 mb-3">Preisaufschlüsselung für Tickets</h4>
-                                    <div class="space-y-4">
-                                        <div v-for="index in formData.amount" :key="index">
-                                            <div class="relative">
-                                                <div class="flex mb-2 items-center justify-between">
-                                                    <div class="text-xs font-semibold text-gray-700">
-                                                        Ticket {{ index }}
-                                                    </div>
-                                                    <div class="text-xs font-semibold" :class="getTicketPriceColor(index)">
-                                                        {{ formatPrice(getTicketPrice(index)) }}
+                                <div
+                                    class="mt-3 transition-all duration-200"
+                                >
+                                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                                        <button v-if="formData.amount > 0"
+                                            @click="isTicketDetailsOpen = !isTicketDetailsOpen"
+                                            class="flex items-center gap-2 mb-4 text-gray-700 hover:text-gray-900"
+                                        >
+                                            <span class="text-sm font-medium">Ticket Details</span>
+                                            <svg
+                                                class="w-5 h-5 transition-transform duration-200"
+                                                :class="{ 'rotate-180': isTicketDetailsOpen }"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <polyline points="6 9 12 15 18 9"></polyline>
+                                            </svg>
+                                        </button>
+
+                                            <div v-if="formData.amount > 0 && isTicketDetailsOpen" class="bg-white border border-gray-200 rounded-lg p-4">
+
+                                                <h4 class="text-sm font-medium text-gray-700 mb-3">Preisaufschlüsselung für Tickets</h4>
+                                                <div class="space-y-4">
+                                                    <div v-for="index in formData.amount" :key="index">
+                                                        <div class="relative">
+                                                            <div class="flex mb-2 items-center justify-between">
+                                                                <div class="text-xs font-semibold text-gray-700">
+                                                                    Ticket {{ index }}
+                                                                </div>
+                                                                <div class="text-xs font-semibold" :class="getTicketPriceColor(index)">
+                                                                    {{ formatPrice(getTicketPrice(index)) }}
+                                                                </div>
+                                                            </div>
+                                                            <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
+                                                                <div class="bg-indigo-500" :style="{ width: `${getTicketPricePercentage(index)}%` }"></div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="overflow-hidden h-2 text-xs flex rounded bg-gray-200">
-                                                    <div class="bg-indigo-500" :style="{ width: `${getTicketPricePercentage(index)}%` }"></div>
+
+                                                <!-- Savings Summary -->
+                                                <div v-if="totalVoucherAmount > 0" class="mt-4 bg-indigo-50 p-3 rounded-md">
+                                                    <p class="text-xs text-indigo-700">
+                                                        Gesamtersparnis: {{ formatPrice(totalVoucherAmount) }}
+                                                        ({{ Math.round((totalVoucherAmount / calculateSubtotal) * 100) }}%)
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Savings Summary -->
-                                    <div v-if="totalVoucherAmount > 0" class="mt-4 bg-indigo-50 p-3 rounded-md">
-                                        <p class="text-xs text-indigo-700">
-                                            Gesamtersparnis: {{ formatPrice(totalVoucherAmount) }}
-                                            ({{ Math.round((totalVoucherAmount / calculateSubtotal) * 100) }}%)
-                                        </p>
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div v-if="showSuccess" class="mt-4 mb-2 p-4 bg-emerald-200 border border-emerald-400 text-green-700 rounded mx-4">
+                            <div v-if="showSuccess" class="mt-4 mb-2 p-4 bg-emerald-200 border border-emerald-400 text-green-700 rounded mx-4">
                         <div class="flex items-center">
                             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
@@ -262,6 +289,7 @@ export default {
     const purchaseLoading = ref(false)
     const purchaseError = ref('')
     const showSuccess = ref(false);
+    const isTicketDetailsOpen = ref(true)
 
     const { error, loading, getEvent } = useEvent()
     const { error: customerError, loading: customerLoading, getCurrentCustomer } = useUser()
@@ -442,7 +470,8 @@ export default {
       purchaseLoading,
       purchaseError,
       getVoucherAmount,
-      showSuccess
+      showSuccess,
+        isTicketDetailsOpen
     }
   },
 
