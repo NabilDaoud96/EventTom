@@ -99,7 +99,6 @@ public class EventQueryServiceImpl extends BaseQueryService<Event, EventDTO, Lon
             Join<Event, Employee> managersJoin = root.join("managers", JoinType.LEFT);
 
             return cb.or(
-                    cb.equal(root.get("creator").get("id"), userId),
                     cb.equal(managersJoin.get("id"), userId)
             );
         };
