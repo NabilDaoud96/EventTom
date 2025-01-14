@@ -43,24 +43,10 @@ public class Ticket {
     @JsonBackReference
     private Event event;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "voucher_id")
-    private Voucher appliedVoucher;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonBackReference
     private Customer customer;
 
-    @Transient
-    public void calculateFinalPrice() {
-        BigDecimal basePrice = event.getBasePrice();
-        if (appliedVoucher != null && !appliedVoucher.isUsed()) {
-            BigDecimal discountedPrice = basePrice.subtract(appliedVoucher.getAmount());
-            this.finalPrice = discountedPrice.max(BigDecimal.ZERO);
-            appliedVoucher.setUsed(true);
-        } else {
-            this.finalPrice = basePrice;
-        }
-    }
 }
