@@ -251,7 +251,6 @@ export default {
       });
 
       const notificationUnsub = websocketService.on('userNotification', (notification) => {
-        // Handle notification
       });
 
       return [newEventUnsub, eventUpdateUnsub, notificationUnsub];
@@ -274,9 +273,7 @@ export default {
       }
     });
 
-    // Return everything that's used in the template
     return {
-      // State
       events,
       currentPage,
       rowsPerPage,

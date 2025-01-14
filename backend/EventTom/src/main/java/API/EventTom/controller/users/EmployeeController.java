@@ -20,7 +20,6 @@ import java.util.List;
 public class EmployeeController{
     private final IEmployeeQueryService employeeService;
 
-
     @GetMapping
     @PreAuthorize("hasAnyRole('ADMINISTRATOR')")
     public ResponseEntity<List<EmployeeDTO>> getAllEmployees() {
