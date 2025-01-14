@@ -10,7 +10,7 @@
           <thead>
           <tr>
             <th class="px-6 py-3 bg-gray-50 text-left text-x font-medium text-gray-500 uppercase tracking-wider">
-              Event Name
+              Veranstaltungsname
             </th>
             <th class="px-6 py-3 bg-gray-50 text-left text-x font-medium text-gray-500 uppercase tracking-wider">
               Datum
@@ -19,10 +19,10 @@
               Ort
             </th>
             <th class="px-6 py-3 bg-gray-50 text-left text-x font-medium text-gray-500 uppercase tracking-wider">
-              Final Preis
+              Finaler Preis
             </th>
             <th class="px-6 py-3 bg-gray-50 text-left text-x font-medium text-gray-500 uppercase tracking-wider">
-              Days Left
+              Tage bis Verantwaltung
             </th>
           </tr>
           </thead>
