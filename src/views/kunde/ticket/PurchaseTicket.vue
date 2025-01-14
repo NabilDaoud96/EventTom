@@ -23,6 +23,12 @@
                                 <label class="block text-sm font-medium text-gray-500">Preis</label>
                                 <p class="text-lg font-medium text-indigo-600">{{ formatPrice(event?.price) }}</p>
                             </div>
+                            <div class="space-y-2">
+                                <label class="block text-sm font-medium text-gray-500">Verfügbare Tickets</label>
+                                <p class="text-lg font-medium text-red-500" :class="{'text-amber-600': event?.availableTickets <= 10, 'text-red-600': event?.availableTickets <= 5}">
+                                    {{ event?.availableTickets || 0 }}
+                                </p>
+                            </div>
                         </div>
                     </div>
 
