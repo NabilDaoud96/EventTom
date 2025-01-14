@@ -91,6 +91,7 @@ public class SecurityConfig implements WebMvcConfigurer  {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("swagger-ui/**").permitAll()
+                        .requestMatchers("/api-docs").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/refreshtoken").permitAll()
                         .requestMatchers("/api/auth/signout").permitAll()
