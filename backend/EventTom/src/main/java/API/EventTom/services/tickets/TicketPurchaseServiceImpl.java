@@ -61,20 +61,20 @@ public class TicketPurchaseServiceImpl implements ITicketPurchaseService {
 
         ticketValidator.validatePurchaseRequest(event, purchaseTicketDTO);
 
-        BigDecimal baseTicketPrice = priceCalculator.calculateBasePrice(event);
         List<Voucher> validatedVouchers = voucherUsageService.validateVouchers(purchaseTicketDTO.voucherCodes());
         BigDecimal totalVoucherDiscount = voucherUsageService.calculateTotalDiscount(validatedVouchers);
         voucherUsageService.markVouchersAsUsed(validatedVouchers, customer);
 
         PurchaseResult purchaseResult = ticketCreationService.processTicketPurchase(
                 event, customer, purchaseTicketDTO.amount(),
-                baseTicketPrice, totalVoucherDiscount
+                totalVoucherDiscount
         );
 
         eventRepository.save(event);
         entityManager.flush();
         entityManager.clear();
         event = eventRepository.findById(event.getId()).orElseThrow();
+        BigDecimal baseTicketPrice = event.getBasePrice();
         eventBroadcastService.broadcastEventUpdate(event, true);
 
 

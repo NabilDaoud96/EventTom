@@ -353,10 +353,7 @@ export default {
       voucherCodes: [],
     })
 
-    const calculateSubtotal = computed(() => {
-      if (!event.value?.price || !formData.value.amount) return 0
-      return event.value.price * formData.value.amount
-    })
+
 
     const totalVoucherAmount = computed(() => {
       return formData.value.voucherCodes.reduce((total, code) => {
@@ -374,6 +371,91 @@ export default {
     const unusedVouchers = computed(() => {
       return vouchers.value.filter(voucher => !voucher.used)
     })
+
+    const getBaseTicketPrice = (ticketIndex) => {
+      if (!event.value) return 0;
+
+      const basePrice = event.value.basePrice;
+      const threshold = event.value.thresholdValue;
+      const availableTickets = event.value.availableTickets;
+      const soldTickets = event.value.soldTickets;
+
+      // Calculate what number ticket this will be overall
+      const ticketNumber = soldTickets + ticketIndex;
+
+      // Apply 20% increase if beyond threshold
+      if (ticketNumber > threshold) {
+        return basePrice * 1.2;
+      }
+
+      return basePrice;
+    };
+
+    const getTicketPrice = (ticketIndex) => {
+      const originalPrice = getBaseTicketPrice(ticketIndex);
+      if (!originalPrice) return 0;
+
+      let remainingVouchers = [...formData.value.voucherCodes].map(code => {
+        const voucher = vouchers.value.find(v => v.voucherCode === code);
+        return voucher?.amount || 0;
+      });
+
+      let currentTicketPrice = originalPrice;
+
+      // Apply vouchers to previous tickets
+      for (let i = 1; i < ticketIndex; i++) {
+        let tempPrice = getBaseTicketPrice(i);
+        for (let j = 0; j < remainingVouchers.length; j++) {
+          if (remainingVouchers[j] >= tempPrice) {
+            remainingVouchers[j] -= tempPrice;
+            tempPrice = 0;
+            break;
+          } else {
+            tempPrice -= remainingVouchers[j];
+            remainingVouchers[j] = 0;
+          }
+        }
+        remainingVouchers = remainingVouchers.filter(amount => amount > 0);
+      }
+
+      // Calculate price for current ticket with remaining vouchers
+      for (let i = 0; i < remainingVouchers.length && currentTicketPrice > 0; i++) {
+        if (remainingVouchers[i] >= currentTicketPrice) {
+          currentTicketPrice = 0;
+          break;
+        } else {
+          currentTicketPrice -= remainingVouchers[i];
+        }
+      }
+
+      return currentTicketPrice;
+    };
+
+    const calculateSubtotal = computed(() => {
+      if (!event.value?.price || !formData.value.amount) return 0;
+
+      let total = 0;
+      for (let i = 1; i <= formData.value.amount; i++) {
+        total += getBaseTicketPrice(i);
+      }
+      return total;
+    });
+
+    const getTicketPricePercentage = (index) => {
+      const originalPrice = event.value?.price || 0;
+      const ticketPrice = getTicketPrice(index);
+      return (ticketPrice / originalPrice) * 100;
+    };
+
+    const getTicketPriceColor = (index) => {
+      const basePrice = event.value?.price || 0;
+      const ticketPrice = getTicketPrice(index);
+      if (ticketPrice === 0) return 'text-emerald-600';
+      if (ticketPrice < basePrice) return 'text-indigo-600';
+      if (ticketPrice > basePrice) return 'text-amber-600';
+      return 'text-gray-700';
+    };
+
 
     const addVoucherCode = async () => {
       if (!newVoucherCode.value) return;
@@ -471,63 +553,18 @@ export default {
       purchaseError,
       getVoucherAmount,
       showSuccess,
-        isTicketDetailsOpen
+      isTicketDetailsOpen,
+      getTicketPrice,
+      getTicketPricePercentage,
+      getTicketPriceColor,
+
     }
   },
 
   methods: {
     formatPrice,
     preventNonNumeric,
-      getTicketPrice(ticketIndex) {
-          const originalPrice = this.event?.price || 0;
-          let remainingVouchers = [...this.formData.voucherCodes].map(code => {
-              const voucher = this.vouchers.find(v => v.voucherCode === code);
-              return voucher?.amount || 0;
-          });
 
-          let currentTicketPrice = originalPrice;
-
-          // Simulate voucher application for previous tickets
-          for (let i = 1; i < ticketIndex; i++) {
-              let tempPrice = originalPrice;
-              for (let j = 0; j < remainingVouchers.length; j++) {
-                  if (remainingVouchers[j] >= tempPrice) {
-                      remainingVouchers[j] -= tempPrice;
-                      tempPrice = 0;
-                      break;
-                  } else {
-                      tempPrice -= remainingVouchers[j];
-                      remainingVouchers[j] = 0;
-                  }
-              }
-              // Remove used up vouchers
-              remainingVouchers = remainingVouchers.filter(amount => amount > 0);
-          }
-
-          // Calculate price for current ticket
-          for (let i = 0; i < remainingVouchers.length && currentTicketPrice > 0; i++) {
-              if (remainingVouchers[i] >= currentTicketPrice) {
-                  currentTicketPrice = 0;
-                  break;
-              } else {
-                  currentTicketPrice -= remainingVouchers[i];
-              }
-          }
-
-          return currentTicketPrice;
-      },
-
-      getTicketPricePercentage(index) {
-          const originalPrice = this.event?.price || 0;
-          const ticketPrice = this.getTicketPrice(index);
-          return (ticketPrice / originalPrice) * 100;
-      },
-
-      getTicketPriceColor(index) {
-          const originalPrice = this.event?.price || 0;
-          const ticketPrice = this.getTicketPrice(index);
-          return ticketPrice < originalPrice ? 'text-indigo-600' : 'text-gray-700';
-      },
     router() {
       return router
     },

@@ -8,6 +8,6 @@ import java.math.BigDecimal;
 
 public interface ITicketCreationService {
     PurchaseResult processTicketPurchase(Event event, Customer customer,
-                                         int amount, BigDecimal basePrice,
+                                         int amount,
                                          BigDecimal totalVoucherDiscount);
 }

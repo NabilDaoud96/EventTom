@@ -8,6 +8,7 @@ import API.EventTom.observers.TicketPurchaseEvent;
 import API.EventTom.repositories.EventRepository;
 import API.EventTom.repositories.TicketRepository;
 import API.EventTom.services.tickets.interfaces.ITicketCreationService;
+import API.EventTom.services.tickets.interfaces.ITicketPriceCalculator;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class TicketCreationServiceImpl implements ITicketCreationService {
 
     @PersistenceContext
     private EntityManager entityManager;
+    private final ITicketPriceCalculator priceCalculator;
 
     private static final int SCALE = 2;
     private static final RoundingMode ROUNDING_MODE = RoundingMode.HALF_UP;
@@ -42,7 +44,6 @@ public class TicketCreationServiceImpl implements ITicketCreationService {
             Event event,
             Customer customer,
             int amount,
-            BigDecimal baseTicketPrice,
             BigDecimal totalVoucherDiscount) {
 
 
@@ -55,6 +56,11 @@ public class TicketCreationServiceImpl implements ITicketCreationService {
         BigDecimal remainingDiscount = totalVoucherDiscount;
 
         for (int i = 0; i < amount; i++) {
+            entityManager.flush();
+            entityManager.clear();
+            event = entityManager.find(Event.class, event.getId());
+            BigDecimal baseTicketPrice = priceCalculator.calculateBasePrice(event);
+
             TicketPriceResult priceResult = calculateTicketPriceWithDiscount(
                     baseTicketPrice,
                     remainingDiscount);
