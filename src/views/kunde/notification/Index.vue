@@ -121,16 +121,13 @@ export default {
     }
   },
   async mounted() {
-    // First load the initial page of notifications
     await this.loadPage(0);
 
-    // Then connect to WebSocket if not already connected
     try {
       if (!websocketService.isConnected) {
         await websocketService.connect();
       }
 
-      // Subscribe to user notifications
       this.unsubscribeWebSocket = websocketService.on('userNotification', this.handleNewNotification);
     } catch (error) {
       console.error('Failed to connect to WebSocket:', error);

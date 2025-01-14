@@ -105,7 +105,6 @@
 
 <script>
 import {ref, onMounted, onUnmounted} from 'vue';
-import api from "@/utils/axios-auth";
 import BasePagination from '@/components/BasePagination.vue';
 import SearchInput from '@/components/SearchComponent.vue';
 import websocketService from '@/utils/websocket';
@@ -177,14 +176,22 @@ export default {
     };
 
     onMounted(async () => {
+
       try {
+          await fetchEvents();
+      } catch (error) {
+          console.error('Failed to setup WebSocket connection:', error);
+      }
+
+        try {
+
         await websocketService.connect();
         unsubscribeNewEvent = websocketService.on('newEvent', handleNewEvent);
         unsubscribeEventUpdate = websocketService.on('eventUpdate', handleEventUpdate);
-        await fetchEvents();
       } catch (error) {
         console.error('Failed to setup WebSocket connection:', error);
-      }
+        }
+
     });
 
     onUnmounted(() => {

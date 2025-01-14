@@ -259,7 +259,7 @@ export default {
 
     // Lifecycle hooks
     onMounted(async () => {
-      fetchEvents();
+      await fetchEvents();
 
       try {
         await websocketService.connect();

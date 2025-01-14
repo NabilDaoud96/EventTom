@@ -22,7 +22,6 @@ const processQueue = (error) => {
     failedQueue = [];
 };
 
-// Response interceptor
 api.interceptors.response.use(
     (response) => response,
     async (error) => {

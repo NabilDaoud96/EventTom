@@ -3,6 +3,7 @@ package API.EventTom.exceptions;
 import API.EventTom.dto.response.ErrorMessageDTO;
 
 import API.EventTom.exceptions.notFoundExceptions.ResourceNotFoundException;
+import API.EventTom.exceptions.tokenException.TokenRefreshException;
 import API.EventTom.exceptions.tokenException.UserNotAuthenticatedException;
 import API.EventTom.exceptions.userExceptions.EmailAlreadyExistsException;
 import io.jsonwebtoken.JwtException;
@@ -36,6 +37,10 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.joining(", "));
 
         return buildResponseEntity(errorMessage, HttpStatus.BAD_REQUEST, e);
+    }
+    @ExceptionHandler(TokenRefreshException.class)
+    public ResponseEntity<ErrorMessageDTO> handleTokenRefreshException(TokenRefreshException e) {
+        return buildResponseEntity("Invalid refresh token", HttpStatus.UNAUTHORIZED, e);
     }
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorMessageDTO> handleNoHandlerFoundException(NoHandlerFoundException e) {

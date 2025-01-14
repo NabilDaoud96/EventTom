@@ -95,7 +95,7 @@ public class SecurityConfig implements WebMvcConfigurer  {
                         .requestMatchers("/api/auth/refreshtoken").permitAll()
                         .requestMatchers("/api/auth/signout").permitAll()
                         .requestMatchers("/api/registration/**").permitAll()
-                        .requestMatchers("/api/customers").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 );
                 http.authenticationProvider(authenticationProvider());
