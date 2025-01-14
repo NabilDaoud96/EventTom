@@ -179,9 +179,9 @@
               <button
                   type="button"
                   @click="$router.back()"
-                  class="bg-blueGray-500 text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
+                  class="bg-blueGray-600 text-white active:bg-blueGray-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none ease-linear transition-all duration-150"
               >
-                Cancel
+                Abbrechen
               </button>
             </div>
           </form>

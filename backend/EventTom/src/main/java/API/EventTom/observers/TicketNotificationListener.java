@@ -73,7 +73,7 @@ public class TicketNotificationListener {
                         "Event: %s\n" +
                         "Date: %s\n" +
                         "Purchase Time: %s\n" +
-                        "Price: $%.2f\n\n" +
+                        "Price: %.2f €\n\n" +
                         "Please keep this confirmation for your records.",
                 event.getEvent().getTitle(),
                 event.getEvent().getDateOfEvent(),

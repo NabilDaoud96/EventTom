@@ -87,7 +87,10 @@ Use a better box model (opinionated).
     padding: 1.5rem;
     /* Padding around the content */
 }
-
+.pl-6 {
+    padding-left: 1.5rem;
+    /* Padding around the content */
+}
 /* Transition for Smooth Hover Effect */
 .transition {
     transition-property: all;
@@ -2588,7 +2591,15 @@ select {
 .ml-3 {
     margin-left: 0.75rem;
 }
-
+.ml-4 {
+    margin-left: 1rem;
+}
+.ml-5 {
+    margin-left: 1.25rem;
+}
+.ml-5 {
+    margin-left: 1.25rem;
+}
 .mt-4 {
     margin-top: 1rem;
 }

@@ -14,7 +14,7 @@
             </div>
 
             <div class="p-6 space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pl-6">
                     <div class="space-y-3">
                         <div class="flex items-center text-gray-600">
                             <i class="fas fa-calendar-alt mr-3 text-xl"></i>
@@ -50,12 +50,10 @@
                     </div>
                 </div>
 
-                <!-- Ticket Information -->
                 <div class="bg-gray-50 rounded-lg p-6">
                     <h2 class="text-xl font-semibold mb-4">Ticket Status</h2>
 
                     <div class="space-y-6">
-                        <!-- Available Tickets -->
                         <div class="flex items-center justify-between">
                             <span class="text-gray-600">Verfügbare Tickets:</span>
                             <span
@@ -83,18 +81,14 @@
                             <span class="font-semibold">{{ event.thresholdValue }}</span>
                         </div>
 
-                        <div
-                            class="flex items-center justify-end space-x-2"
-                            :class="getThresholdClass(event)"
-                        >
-                            <i
-                                class="fas mr-1 text-lg"
-                                :class="getThresholdIcon(event)"
-                            ></i>
-                            <span class="font-semibold">{{ getThresholdMessage(event) }}</span>
+                        <div class="flex items-center justify-between space-x-2">
+                            <span class="text-sm font-medium font-semibold text-gray-600">Verkaufte vs. Schwellenwert</span>
+                            <div class="flex items-center space-x-2" :class="getThresholdClass(event)">
+                                <i class="fas mr-1 text-lg" :class="getThresholdIcon(event)"></i>
+                                <span class="font-semibold">{{ getThresholdMessage(event) }}</span>
+                            </div>
                         </div>
-                        <div class="text-sm font-medium text-gray-600 mb-2">Verkaufte vs. Schwellenwert</div>
-                        <div class="relative w-32 h-32 m-4">
+                        <div class="relative w-32 h-32 pl-6 ml-2 mt-2">
                             <svg class="w-full h-full -rotate-90">
                                 <circle
                                     cx="64"
@@ -115,13 +109,11 @@
                                     class="transition-all duration-500"
                                 />
                             </svg>
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
 
-                            </div>
                         </div>
-
-                        <!-- Threshold Information -->
-
+                        <div class="text-sm text-gray-500 opacity-75">
+                            Fortschritt zum Schwellenwert {{ Number(progressPercentage.toFixed(2)) }}%
+                        </div>
                     </div>
                 </div>
             </div>
